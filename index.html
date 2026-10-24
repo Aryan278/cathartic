@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>APP_NAME — Notice it. Pick it up.</title>
+    <meta name="description" content="Pick up street litter, drop it at your society's point, and earn coins you can spend with partner cafés. Launching society by society in Gurgaon." />
+    <meta name="theme-color" content="#101110" />
+    <meta property="og:title" content="Notice it. Pick it up." />
+    <meta property="og:description" content="Two photos make a bag. Streets get cleaner, and every bag earns you coins." />
+    <meta property="og:image" content="assets/shots/home.webp" />
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700;800&family=Martian+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script>document.documentElement.classList.add('js');</script>
+    <script src="config.js"></script>
+  </head>
+  <body>
+    <!-- Atmosphere: dappled light drifting over the page, grain on top, a glow that follows the pointer. -->
+    <div class="light" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="glow" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="progress" aria-hidden="true"><span></span></div>
+
+    <header class="nav">
+      <a class="brand" href="#top" aria-label="Back to top">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span data-app-name>APP_NAME</span>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#how">How it works</a>
+        <a href="#rewards">Rewards</a>
+        <a href="#rwa">For RWAs</a>
+        <a href="#film">Film</a>
+      </nav>
+      <a class="btn btn-small magnetic" data-contact href="#">Get early access</a>
+    </header>
+
+    <main id="top">
+      <!-- 1 · HERO -->
+      <section class="hero">
+        <div class="hero-field" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <p class="eyebrow reveal">Gurgaon · society by society</p>
+          <h1 class="display split">
+            <span class="line">Notice it.</span>
+            <span class="line lit">Pick it up.</span>
+          </h1>
+          <p class="lede reveal">Drop what you find at your society's point. Streets get cleaner, and every bag earns you coins you can spend at partner cafés.</p>
+          <div class="hero-actions reveal">
+            <a class="btn magnetic" data-contact href="#">Get early access</a>
+            <a class="btn btn-ghost" href="#how">See how it works</a>
+          </div>
+          <ul class="hero-chips reveal" aria-label="At a glance">
+            <li><b>2</b> photos make a bag</li>
+            <li><b>30</b> coins a bag</li>
+            <li><b>0</b> coins for sale, ever</li>
+          </ul>
+        </div>
+
+        <div class="hero-stage" aria-hidden="true">
+          <div class="orbit"><span></span><span></span></div>
+          <div class="phone phone-hero">
+            <img src="assets/shots/home.webp" alt="" width="390" height="844" />
+          </div>
+          <div class="bag-catch">
+            <img class="bag" src="assets/img/eco-bag@2x.webp" alt="" />
+            <div class="litter-rain"></div>
+          </div>
+          <div class="pop pop-a">+30</div>
+          <div class="pop pop-b">12-day streak</div>
+        </div>
+      </section>
+
+      <!-- MARQUEE -->
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-track">
+          <span>Pick up</span><i>✦</i><span>Drop off</span><i>✦</i><span>Earn coins</span><i>✦</i><span>Report, hands off</span><i>✦</i><span>Climb the ranks</span><i>✦</i><span>Spend at partner cafés</span><i>✦</i>
+          <span>Pick up</span><i>✦</i><span>Drop off</span><i>✦</i><span>Earn coins</span><i>✦</i><span>Report, hands off</span><i>✦</i><span>Climb the ranks</span><i>✦</i><span>Spend at partner cafés</span><i>✦</i>
+        </div>
+      </div>
+
+      <!-- 2 · HOW IT WORKS — pinned; scrolling plays the two-photo chain -->
+      <section class="how" id="how">
+        <div class="how-pin">
+          <div class="how-copy">
+            <p class="eyebrow">How it works</p>
+            <h2 class="display h2">Two photos make a bag.</h2>
+            <ol class="steps">
+              <li class="step is-on" data-step="0"><span class="step-n">01</span><div><h3>Find it</h3><p>Spot loose litter anywhere — your lane, the park, the road outside. Snap it where it lies.</p></div></li>
+              <li class="step" data-step="1"><span class="step-n">02</span><div><h3>Drop it</h3><p>Carry it to your society's registered drop point and snap it going in.</p></div></li>
+              <li class="step" data-step="2"><span class="step-n">03</span><div><h3>Earn it</h3><p>The pair is checked — place, time, no repeats — and 30 coins are minted to you.</p></div></li>
+            </ol>
+          </div>
+
+          <div class="how-stage">
+            <div class="phone phone-optic">
+              <div class="optic">
+                <div class="strip">
+                  <div class="frame frame-find"><span>FIND</span><img src="assets/img/pile.webp" alt="" /></div>
+                  <i class="strip-line"><b></b></i>
+                  <div class="frame frame-drop"><span>DROP</span><div class="drop-thumb"></div></div>
+                </div>
+                <div class="viewfinder">
+                  <div class="vf-scene vf-find"><img src="assets/img/pile.webp" alt="" /></div>
+                  <div class="vf-scene vf-drop">
+                    <svg viewBox="0 0 200 200" aria-hidden="true">
+                      <rect x="56" y="70" width="88" height="96" rx="12" fill="#2a4224" stroke="#9bb444" stroke-width="3" />
+                      <rect x="48" y="58" width="104" height="16" rx="6" fill="#314926" stroke="#9bb444" stroke-width="3" />
+                      <path d="M88 108 q12 -14 24 0 q-12 14 -24 0z" fill="#b2c74b" />
+                      <text x="100" y="150" text-anchor="middle" font-family="Martian Mono" font-size="8.5" fill="#e1ec97" letter-spacing="1.2">DROP POINT</text>
+                    </svg>
+                    <img class="vf-bag" src="assets/img/eco-bag@2x.webp" alt="" />
+                  </div>
+                  <i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i>
+                  <div class="flash"></div>
+                </div>
+                <div class="receipt-card">
+                  <p class="mono-label">Verified · Sector 45</p>
+                  <div class="coin coin-big"><span>+30</span></div>
+                  <p class="receipt-line">Two photos, one bag. Nice work.</p>
+                </div>
+                <div class="shutter"><i></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 · COLLECT vs REPORT -->
+      <section class="split-section">
+        <header class="section-head reveal">
+          <p class="eyebrow">Two ways to help</p>
+          <h2 class="display h2">Pick it up — or point it out.</h2>
+        </header>
+        <div class="duo">
+          <article class="card card-collect tilt reveal">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 9h10l-1 11H8L7 9z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" /><path d="M9.5 9a2.5 2.5 0 0 1 5 0" fill="none" stroke="currentColor" stroke-width="1.7" /><path d="M10 14.5c1.5-2 3-2 4 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>
+            </div>
+            <p class="mono-label">Collect</p>
+            <h3>Loose litter, in your hands.</h3>
+            <p>Wrappers, bottles, cups — surface litter only. Two photos, a drop at your society's point, and coins land in your balance.</p>
+            <ul class="ticks"><li>Earns 30 coins a bag</li><li>Mystery 2× bonus, sometimes</li><li>Builds your streak</li></ul>
+          </article>
+          <article class="card card-report tilt reveal">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M6 21V4m0 1h11l-2 4 2 4H6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round" /></svg>
+            </div>
+            <p class="mono-label">Report</p>
+            <h3>Too big to carry? Point it out.</h3>
+            <p>A dumping pile or a blocked drain gets a photo, not your hands. Each report becomes a case your RWA, then the municipality, can act on.</p>
+            <div class="safety"><b>Hands off.</b> Never reach into drains or sludge — just photograph it.</div>
+            <img class="card-peek" src="assets/shots/report.webp" alt="The Report map with case pins" loading="lazy" />
+          </article>
+        </div>
+      </section>
+
+      <!-- 4 · REWARDS -->
+      <section class="rewards" id="rewards">
+        <div class="rewards-copy reveal">
+          <p class="eyebrow">Rewards</p>
+          <h2 class="display h2">Coins you can actually spend.</h2>
+          <p class="lede">A café menu, cheapest first. Your balance draws a line across it — everything above is yours today. Order, and a code prints for the counter.</p>
+        </div>
+        <div class="rewards-stage">
+          <div class="menu reveal">
+            <p class="mono-label">The menu</p>
+            <ul class="menu-list">
+              <li><span>Filter coffee</span><i class="leader"></i><b>300</b></li>
+              <li><span>Masala chai &amp; bun</span><i class="leader"></i><b>420</b></li>
+              <li><span>Cold coffee</span><i class="leader"></i><b>650</b></li>
+              <li><span>Paneer wrap</span><i class="leader"></i><b>900</b></li>
+              <li class="menu-balance"><span>You · 1,240</span></li>
+              <li class="menu-locked"><span>Lunch for two</span><i class="leader"></i><b>1,800</b></li>
+            </ul>
+          </div>
+          <div class="receipt" aria-label="A redemption code printed as a till receipt">
+            <div class="receipt-paper">
+              <p class="mono-label dark">Partner café</p>
+              <p class="receipt-item">1 × Cold coffee</p>
+              <p class="receipt-code">K7Q-4M2</p>
+              <p class="receipt-small">Show at the counter · valid 15 min</p>
+              <div class="receipt-bars" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 · RANKS & STREAKS -->
+      <section class="ranks">
+        <header class="section-head reveal">
+          <p class="eyebrow">Ranks &amp; streaks</p>
+          <h2 class="display h2">Your society, your streak, your stub.</h2>
+        </header>
+        <div class="ranks-stage">
+          <div class="stubs" aria-label="Top three this week">
+            <div class="stub s2"><span class="stub-rank">02</span><b>Arjun Verma</b><em>15 bags</em></div>
+            <div class="stub s1"><span class="stub-rank">01</span><b>Meera Kapoor</b><em>18 bags</em></div>
+            <div class="stub s3"><span class="stub-rank">03</span><b>Sana Dutta</b><em>12 bags</em></div>
+          </div>
+          <div class="streak reveal">
+            <p class="mono-label">Streak milestones</p>
+            <div class="milestones">
+              <div class="ms"><span class="ms-dot"></span><b>7</b><em>days</em></div>
+              <div class="ms"><span class="ms-dot"></span><b>30</b><em>days</em></div>
+              <div class="ms"><span class="ms-dot"></span><b>100</b><em>days</em></div>
+              <i class="ms-track"><b></b></i>
+            </div>
+            <p class="streak-note">Bigger rewards at each milestone — and one free skipped day a month, so a busy Tuesday doesn't break it.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 · FOR RWAs -->
+      <section class="rwa" id="rwa">
+        <div class="rwa-copy reveal">
+          <p class="eyebrow">For RWAs</p>
+          <h2 class="display h2">See your society get cleaner.</h2>
+          <ul class="ticks big">
+            <li>A hotspot plan of your society — blocks, heat and pins, never a street map</li>
+            <li>Every resident who joined, and the power to remove an outsider</li>
+            <li>Schedule pickups from your drop point, with slots and capacity</li>
+          </ul>
+          <a class="btn magnetic" data-contact href="#">Bring it to your society</a>
+        </div>
+        <div class="rwa-stage">
+          <svg class="plan" viewBox="0 0 360 300" aria-label="A schematic society plan with litter hotspots">
+            <g class="plan-roads"><path d="M0 110 H360 M0 220 H360 M120 0 V300 M250 0 V300" /></g>
+            <g class="plan-blocks">
+              <rect x="14" y="14" width="92" height="82" rx="10" /><rect x="134" y="14" width="102" height="82" rx="10" /><rect x="264" y="14" width="82" height="82" rx="10" />
+              <rect x="14" y="124" width="92" height="82" rx="10" /><rect x="134" y="124" width="102" height="82" rx="10" /><rect x="264" y="124" width="82" height="82" rx="10" />
+              <rect x="14" y="234" width="92" height="52" rx="10" /><rect x="134" y="234" width="102" height="52" rx="10" /><rect x="264" y="234" width="82" height="52" rx="10" />
+            </g>
+            <g class="heat"><circle cx="190" cy="110" r="38" /><circle cx="70" cy="220" r="30" /><circle cx="300" cy="160" r="24" /></g>
+            <g class="pins">
+              <g class="pin" transform="translate(190 104)"><path d="M0 0c-9-11-13-17-13-23a13 13 0 0 1 26 0c0 6-4 12-13 23z" /><text y="-20">1</text></g>
+              <g class="pin" transform="translate(70 214)"><path d="M0 0c-9-11-13-17-13-23a13 13 0 0 1 26 0c0 6-4 12-13 23z" /><text y="-20">2</text></g>
+              <g class="pin" transform="translate(300 154)"><path d="M0 0c-9-11-13-17-13-23a13 13 0 0 1 26 0c0 6-4 12-13 23z" /><text y="-20">3</text></g>
+            </g>
+          </svg>
+          <div class="phone phone-admin"><img src="assets/shots/admin.webp" alt="The RWA admin overview" loading="lazy" width="390" height="844" /></div>
+        </div>
+      </section>
+
+      <!-- 7 · SCREENS -->
+      <section class="screens">
+        <header class="section-head reveal">
+          <p class="eyebrow">Inside the app</p>
+          <h2 class="display h2">Made to feel like dappled light.</h2>
+        </header>
+        <div class="reel" aria-label="App screens">
+          <div class="reel-track">
+            <figure class="phone"><img src="assets/shots/welcome.webp" alt="Welcome" loading="lazy" /></figure>
+            <figure class="phone"><img src="assets/shots/home.webp" alt="Home" loading="lazy" /></figure>
+            <figure class="phone"><img src="assets/shots/scan.webp" alt="Collect" loading="lazy" /></figure>
+            <figure class="phone"><img src="assets/shots/report.webp" alt="Report" loading="lazy" /></figure>
+            <figure class="phone"><img src="assets/shots/marketplace.webp" alt="Rewards" loading="lazy" /></figure>
+            <figure class="phone"><img src="assets/shots/leaderboard.webp" alt="Ranks" loading="lazy" /></figure>
+            <figure class="phone"><img src="assets/shots/profile.webp" alt="Profile" loading="lazy" /></figure>
+            <figure class="phone"><img src="assets/shots/hotspots.webp" alt="RWA hotspots" loading="lazy" /></figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8 · FILM -->
+      <section class="film" id="film">
+        <header class="section-head reveal">
+          <p class="eyebrow">The film</p>
+          <h2 class="display h2">Sixty seconds on one street.</h2>
+        </header>
+        <div class="film-frame reveal">
+          <div class="film-poster">
+            <img data-poster src="assets/shots/home.webp" alt="" />
+            <button class="film-play magnetic" type="button" aria-label="Play the film"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></button>
+            <p class="film-soon mono-label">Film coming soon</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9 · NUMBERS -->
+      <section class="numbers">
+        <div class="num reveal"><b data-count="40">0</b><span>starter coins when you join</span></div>
+        <div class="num reveal"><b data-count="30">0</b><span>coins for every verified bag</span></div>
+        <div class="num reveal"><b data-count="2">0</b><span>photos make a bag</span></div>
+        <div class="num reveal"><b data-count="100">0</b><span>days to the biggest streak bonus</span></div>
+      </section>
+
+      <!-- 10 · CTA -->
+      <section class="cta">
+        <div class="cta-card reveal">
+          <div class="coin coin-cta" aria-hidden="true"><span>✦</span></div>
+          <h2 class="display h2">Bring <span data-app-name>APP_NAME</span> to your street.</h2>
+          <p class="lede">We launch society by society in Gurgaon, starting with each RWA. Tell us about yours and we'll be in touch.</p>
+          <a class="btn btn-big magnetic" data-contact href="#">Get early access</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span><span data-app-name>APP_NAME</span> · Gurgaon</span>
+      <span>Coins are earned, never sold.</span>
+      <a href="#top">Back to top ↑</a>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
