@@ -1,5 +1,5 @@
 /**
- * The site's one place for things that will change. The app's name isn't final (CLAUDE.md §0), so
+ * The site's one place for things that will change. The app is Cathartic; if the name changes,
  * every visible name on the page reads from here — renaming is this line and nothing else.
  *
  *   name     the app's name
@@ -9,7 +9,7 @@
  *   poster   the image shown before the film plays
  */
 window.SITE = {
-  name: 'APP_NAME',
+  name: 'Cathartic',
   contact: 'mailto:ops@example.org?subject=Early%20access',
   video: '',
   poster: 'assets/shots/home.webp',

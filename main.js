@@ -11,7 +11,7 @@
   const hasGsap = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
 
   /* ── Config: the name, the button, the film ─────────────────────────────────── */
-  const name = SITE.name || 'APP_NAME';
+  const name = SITE.name || 'Cathartic';
   $$('[data-app-name]').forEach((el) => (el.textContent = name));
   document.title = `${name} — Notice it. Pick it up.`;
   $$('[data-contact]').forEach((a) => (a.href = SITE.contact || '#'));

@@ -1,4 +1,4 @@
-# APP_NAME — website
+# Cathartic — website
 
 The landing page for the litter-collection app: *Notice it. Pick it up.*
 A plain static site (HTML, CSS, JS) with GSAP scroll animations. No build step.

@@ -1,4 +1,4 @@
-# CLAUDE.md — the APP_NAME website
+# CLAUDE.md — the Cathartic website
 
 The landing page for a litter-collection app in Gurgaon: residents pick up loose street litter,
 drop it at their society's registered drop point, and earn coins they spend at partner cafés.
@@ -9,7 +9,7 @@ from `main`, root). The owner is Aryan.
 - Plain static site: `index.html`, `styles.css`, `main.js`, `config.js`. No build step, no npm.
 - GSAP 3.12.5 + ScrollTrigger from cdnjs for scroll animation. Fonts: Funnel Display (headlines),
   Plus Jakarta Sans (body), Martian Mono (labels) from Google Fonts.
-- `config.js` is the one place for things that change: `name` (the app name is NOT final — never
+- `config.js` is the one place for things that change: `name` (the app name is "Cathartic" — never
   hardcode it; elements with `data-app-name` read it), `contact` (the "Get early access" link), `video`
   (the film: repo path to an MP4 or a YouTube/Vimeo embed URL), `poster`.
 - `assets/shots/` are real app screenshots (demo data); `assets/img/` holds the app's field
