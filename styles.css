@@ -174,43 +174,74 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .marquee i { font-style: normal; color: var(--signal); font-size: 18px; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
-/* ── How it works ────────────────────────────────────────────────────────────── */
+/* ── How it works: the screen becomes the app's camera ───────────────────────── */
 .how { padding: 0; width: 100%; margin: 0; }
-.how-pin { width: var(--col); margin: 0 0 0 var(--col-x); min-height: 100svh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; padding: 110px 0 60px; }
-.steps { list-style: none; padding: 0; margin: 40px 0 0; display: grid; gap: 8px; }
-.step { display: flex; gap: 20px; padding: 18px 20px; border-radius: 22px; border: 1px solid transparent; opacity: 0.38; transition: opacity 0.5s var(--ease-out), background 0.5s, border-color 0.5s; }
-.step.is-on { opacity: 1; background: rgba(var(--iv), 0.06); border-color: rgba(var(--iv), 0.14); }
-.step-n { font: 600 12px/1.9 var(--mono); color: var(--signal); }
-.step h3 { margin: 0; font: 700 24px/1.2 var(--display); }
-.step p { margin: 6px 0 0; color: rgba(var(--iv), 0.66); font-size: 15px; }
-.how-stage { display: grid; place-items: center; }
+/* Desktop: scenes fill the screen, the viewfinder frame sits inside it, the steps panel on the left. */
+.how-pin {
+  /* --cx: the middle of the space right of the steps panel; the photo, drop point, strip and shutter centre on it. */
+  --panel: min(480px, 40vw);
+  --cx: calc((var(--rail) + (100vw - var(--rail) - min(var(--max), 100vw - 2 * var(--gutter) - var(--rail))) / 2 + var(--panel) + 100vw) / 2);
+  --fx: calc(var(--cx) - var(--rail) - 32px);
+  position: relative; min-height: 100svh; overflow: hidden; display: grid; grid-template-columns: var(--panel); align-items: center; padding: 120px 40px 80px var(--col-x);
+}
+.how-scenes { position: absolute; inset: 0; z-index: 0; overflow: hidden; background: #0c0e0c; }
+.scene { position: absolute; inset: 0; }
+/* The photo keeps its own shape (full height, over a blurred copy of itself), so the focus box,
+   placed in % of it, always sits on the loose litter. */
+.scene-bg { position: absolute; left: -40px; top: -40px; width: calc(100% + 80px); height: calc(100% + 80px); object-fit: cover; filter: blur(28px) brightness(0.5) saturate(0.9); }
+.scene-img { position: absolute; left: var(--cx); top: 50%; height: 100%; aspect-ratio: 780 / 1120; translate: -50% -50%; transform-origin: 50% 70%; -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+.scene-img img { width: 100%; height: 100%; object-fit: cover; }
+.scene-find::after { content: ''; position: absolute; inset: 0; background: radial-gradient(70% 80% at var(--cx) 55%, transparent 35%, rgba(16, 17, 16, 0.7)), linear-gradient(90deg, rgba(16, 17, 16, 0.7), transparent 45%); }
+.scene-drop { opacity: 0; background: radial-gradient(60% 70% at var(--cx) 50%, #314926, #141a12 60%, #0c0e0c); }
+.scene-dim { position: absolute; inset: 0; opacity: 0; background: rgba(12, 14, 12, 0.72); }
+.flash { position: absolute; inset: 0; z-index: 3; background: var(--ivory); opacity: 0; }
+.reticle { position: absolute; z-index: 1; border: 1.5px solid var(--bright); border-radius: 18px; box-shadow: 0 0 30px rgba(225, 236, 151, 0.25), inset 0 0 30px rgba(225, 236, 151, 0.08); }
+.reticle { animation: focus 3.2s var(--ease-out) infinite; }
+@keyframes focus { 0% { transform: scale(1.05); } 25%, 100% { transform: scale(1); } }
+.reticle span { position: absolute; left: -1px; top: calc(100% + 10px); white-space: nowrap; font: 600 10px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); background: var(--bright); padding: 7px 9px; border-radius: 7px; }
+.reticle-find { left: 19%; right: 16%; top: 60%; bottom: 19%; }
+.reticle-find span { top: auto; bottom: calc(100% + 10px); }
+.reticle-drop { inset: 20% 14% 2%; }
 
-.phone-optic { width: clamp(250px, 24vw, 310px); }
-.optic { position: relative; height: 100%; border-radius: 38px; overflow: hidden; background: radial-gradient(120% 70% at 50% 45%, #2a3a20, #141a12 60%, #0c0e0c); }
-.strip { position: absolute; z-index: 3; top: 52px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; padding: 6px; border-radius: 18px; background: rgba(16, 17, 16, 0.55); border: 1px solid rgba(var(--iv), 0.16); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-.frame { position: relative; width: 52px; height: 52px; border-radius: 13px; display: grid; place-items: center; overflow: hidden; border: 1.5px dashed rgba(var(--iv), 0.35); font: 600 9px/1 var(--mono); letter-spacing: 0.1em; color: rgba(var(--iv), 0.7); }
+.how-frame { position: absolute; z-index: 1; left: calc(var(--rail) + 32px); right: 40px; top: 84px; bottom: 40px; }
+.corner { position: absolute; z-index: 2; width: 56px; height: 56px; border: 3px solid var(--ivory); opacity: 0.9; }
+.c1 { left: 0; top: 0; border-right: 0; border-bottom: 0; border-radius: 16px 0 0 0; }
+.c2 { right: 0; top: 0; border-left: 0; border-bottom: 0; border-radius: 0 16px 0 0; }
+.c3 { left: 0; bottom: 0; border-right: 0; border-top: 0; border-radius: 0 0 0 16px; }
+.c4 { right: 0; bottom: 0; border-left: 0; border-top: 0; border-radius: 0 0 16px 0; }
+.strip { position: absolute; z-index: 3; top: 18px; left: var(--fx); transform: translateX(-50%); display: flex; align-items: center; gap: 8px; padding: 6px; border-radius: 18px; background: rgba(16, 17, 16, 0.6); border: 1px solid rgba(var(--iv), 0.18); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.frame { position: relative; width: 56px; height: 56px; border-radius: 13px; display: grid; place-items: center; overflow: hidden; border: 1.5px dashed rgba(var(--iv), 0.35); font: 600 9px/1 var(--mono); letter-spacing: 0.1em; color: rgba(var(--iv), 0.7); }
 .frame img, .drop-thumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.4); }
 .drop-thumb { background: radial-gradient(circle at 50% 60%, var(--signal), var(--deep)); }
 .frame-find { border-style: solid; border-color: var(--bright); box-shadow: 0 0 18px rgba(225, 236, 151, 0.35); }
 .strip-line { position: relative; width: 22px; height: 2px; background: rgba(var(--iv), 0.2); border-radius: 2px; overflow: hidden; }
 .strip-line b { position: absolute; inset: 0; background: var(--bright); transform: scaleX(0); transform-origin: 0 50%; }
-.viewfinder { position: absolute; inset: 130px 24px 120px; border-radius: 20px; overflow: hidden; background: #0e110d; }
-.vf-scene { position: absolute; inset: 0; display: grid; place-items: center; }
-.vf-scene img { width: 100%; height: 100%; object-fit: cover; }
-.vf-drop { opacity: 0; background: radial-gradient(circle at 50% 70%, #314926, #141a12 70%); }
-.vf-drop svg { width: 78%; }
-.vf-bag { position: absolute; width: 74px; left: 50%; top: 6%; margin-left: -37px; }
-.corner { position: absolute; z-index: 2; width: 26px; height: 26px; border: 2px solid var(--ivory); opacity: 0.9; }
-.c1 { left: 12px; top: 12px; border-right: 0; border-bottom: 0; border-radius: 8px 0 0 0; }
-.c2 { right: 12px; top: 12px; border-left: 0; border-bottom: 0; border-radius: 0 8px 0 0; }
-.c3 { left: 12px; bottom: 12px; border-right: 0; border-top: 0; border-radius: 0 0 0 8px; }
-.c4 { right: 12px; bottom: 12px; border-left: 0; border-top: 0; border-radius: 0 0 8px 0; }
-.flash { position: absolute; inset: 0; z-index: 3; background: var(--ivory); opacity: 0; }
-.receipt-card { position: absolute; z-index: 4; left: 20px; right: 20px; top: 34%; padding: 22px 18px 20px; border-radius: 24px; text-align: center; background: linear-gradient(160deg, rgba(var(--iv), 0.18), rgba(var(--iv), 0.06)); border: 1px solid rgba(var(--iv), 0.28); box-shadow: inset 0 1px 0 rgba(var(--iv), 0.5); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); opacity: 0; transform: translateY(30px) scale(0.94); }
+.how-count { display: none; position: absolute; right: 28px; top: 30px; margin: 0; font: 600 11px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--bright); }
+.js .how-count { display: block; }
+.drop-art { position: absolute; left: var(--fx); top: 50%; width: min(30vw, 44svh); aspect-ratio: 1; translate: -50% -50%; opacity: 0; }
+.drop-art svg { width: 100%; height: 100%; }
+.vf-bag { position: absolute; width: 34%; left: 33%; top: 4%; opacity: 0; }
+.receipt-card { position: absolute; z-index: 4; left: var(--fx); top: 50%; width: 300px; translate: -50% -50%; padding: 22px 18px 20px; border-radius: 24px; text-align: center; background: linear-gradient(160deg, rgba(var(--iv), 0.18), rgba(var(--iv), 0.06)); border: 1px solid rgba(var(--iv), 0.28); box-shadow: inset 0 1px 0 rgba(var(--iv), 0.5), 0 30px 80px rgba(0, 0, 0, 0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); opacity: 0; transform: translateY(30px) scale(0.94); }
 .receipt-card .mono-label { margin-bottom: 16px; }
 .receipt-line { margin: 16px 0 0; font-size: 13px; color: rgba(var(--iv), 0.75); }
-.shutter { position: absolute; z-index: 3; bottom: 36px; left: 50%; width: 64px; height: 64px; margin-left: -32px; border-radius: 50%; border: 3px solid rgba(var(--iv), 0.8); display: grid; place-items: center; }
-.shutter i { width: 48px; height: 48px; border-radius: 50%; background: var(--ivory); transition: transform 0.15s; }
+.shutter { position: absolute; z-index: 3; bottom: 20px; left: var(--fx); width: 76px; height: 76px; margin-left: -38px; border-radius: 50%; border: 4px solid rgba(var(--iv), 0.85); display: grid; place-items: center; box-shadow: 0 0 0 10px rgba(16, 17, 16, 0.25); }
+.shutter i { width: 58px; height: 58px; border-radius: 50%; background: var(--ivory); transition: transform 0.15s; }
+
+.how-copy { position: relative; z-index: 2; padding: 30px 30px 28px; border-radius: 30px; background: rgba(16, 17, 16, 0.58); border: 1px solid rgba(var(--iv), 0.18); box-shadow: inset 0 1px 0 rgba(var(--iv), 0.25), 0 30px 80px rgba(0, 0, 0, 0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+.how .h2 { font-size: clamp(34px, 4vw, 60px); text-wrap: balance; }
+.steps { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 16px; }
+.step { display: flex; gap: 16px; }
+.step-n { font: 600 12px/2.1 var(--mono); color: var(--signal); }
+.step h3 { margin: 0; font: 700 26px/1.2 var(--display); }
+.step p { margin: 6px 0 0; color: rgba(var(--iv), 0.7); font-size: 15.5px; line-height: 1.5; }
+/* While the scroll plays it, only the current step shows; without it (no JS, reduced motion) all three list. */
+.how.is-live .steps { grid-template-areas: 'step'; }
+.how.is-live .step { grid-area: step; opacity: 0; transform: translateY(10px); transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out); }
+.how.is-live .step.is-on { opacity: 1; transform: none; }
+.how-dots { display: none; gap: 8px; margin-top: 22px; }
+.js .how-dots { display: flex; }
+.how-dots i { flex: 1; height: 4px; border-radius: 4px; background: rgba(var(--iv), 0.18); transition: background-color 0.4s, box-shadow 0.4s; }
+.how-dots i.on { background: var(--bright); box-shadow: 0 0 10px rgba(225, 236, 151, 0.6); }
 
 /* ── Coin ────────────────────────────────────────────────────────────────────── */
 .coin { position: relative; margin: 0 auto; width: 96px; height: 96px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 34% 28%, #f6fbc8, var(--bright) 30%, var(--signal) 62%, var(--sage)); box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.28), inset 0 -6px 12px rgba(42, 66, 36, 0.4), 0 14px 40px rgba(178, 199, 75, 0.45); transform-style: preserve-3d; }
@@ -348,17 +379,40 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
   .rail a.is-on .rail-ic { color: var(--signal); }
   .rail a.is-on::before { content: ''; position: absolute; top: -1px; left: 50%; width: 28px; height: 3px; margin-left: -14px; border-radius: 0 0 3px 3px; background: var(--signal); box-shadow: 0 0 12px var(--signal); }
   .foot { padding-bottom: calc(50px + 64px + env(safe-area-inset-bottom)); }
-  .how-pin, .rewards, .ranks-stage, .rwa, .duo { grid-template-columns: 1fr; }
-  .how-pin { gap: 28px; padding-top: 90px; }
-  .steps { margin-top: 24px; }
-  .step { padding: 12px 14px; }
-  .step p { display: none; }
-  .step.is-on p { display: block; }
+  .rewards, .ranks-stage, .rwa, .duo { grid-template-columns: 1fr; }
+  /* Phones: the camera frame fills the space above the panel, the panel sits clear of the tab bar. */
+  .how-pin { --fx: 50%; display: flex; flex-direction: column; align-items: stretch; padding: 72px 16px calc(80px + env(safe-area-inset-bottom)); }
+  .how-frame { position: relative; inset: auto; flex: 1 1 auto; min-height: 300px; margin-bottom: 12px; }
+  .scene-bg { display: none; }
+  .scene-img { left: 50%; top: 0; height: auto; width: max(100%, 80svh); translate: -50% -31%; -webkit-mask-image: none; mask-image: none; }
+  .scene-find::after { background: radial-gradient(90% 60% at 50% 40%, transparent 35%, rgba(16, 17, 16, 0.7)), linear-gradient(180deg, transparent 50%, rgba(16, 17, 16, 0.92) 78%); }
+  .scene-drop { background: radial-gradient(80% 50% at 50% 38%, #314926, #141a12 60%, #0c0e0c); }
+  .reticle-find { left: 30%; right: 28%; top: 60%; bottom: 21%; }
+  .reticle-find span { top: calc(100% + 10px); bottom: auto; }
+  .corner { width: 36px; height: 36px; border-width: 2.5px; }
+  .strip { top: 12px; }
+  .frame { width: 46px; height: 46px; border-radius: 11px; }
+  .how-count { display: none !important; }
+  .drop-art { left: 50%; top: 52%; width: min(60vw, 30svh); }
+  .receipt-card { left: 50%; top: 52%; width: min(280px, 82vw); }
+  .shutter { display: none; }
+  .how-copy { flex: none; padding: 18px 18px 16px; border-radius: 22px; }
+  .how .h2 { font-size: clamp(24px, 6.5vw, 40px); max-width: none; }
+  .steps { margin-top: 14px; }
+  .step:not(.is-on) p { display: none; }
+  .step h3 { font-size: 21px; }
+  .step p { font-size: 14px; }
+  .how-dots { margin-top: 14px; }
   .rewards-stage { flex-direction: column; align-items: stretch; }
   .receipt { margin: -30px 0 0 auto; }
   .stubs { height: 340px; }
   .rwa-stage { min-height: 520px; }
   .numbers { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 960px) and (max-height: 700px) {
+  .how-copy .eyebrow { display: none; }
+  .how .h2 { font-size: 22px; }
+  .step p { font-size: 13px; }
 }
 @media (max-width: 560px) {
   h1.display { font-size: 15vw; }
@@ -377,15 +431,6 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
   .stub b { font-size: 15px; }
   .stub em { font-size: 10px; }
   .receipt-code { font-size: 26px; }
-  .how .h2 { font-size: 30px; }
-  .how-pin { padding-top: 84px; gap: 18px; }
-  .step h3 { font-size: 19px; }
-  .phone-optic { width: min(188px, 50vw); }
-  .phone-optic .strip { top: 40px; }
-  .phone-optic .viewfinder { inset: 104px 16px 96px; }
-  .phone-optic .shutter { bottom: 24px; width: 52px; height: 52px; margin-left: -26px; }
-  .phone-optic .shutter i { width: 38px; height: 38px; }
-  .phone-optic .receipt-card { left: 12px; right: 12px; padding: 16px 12px; }
   .coin-big { width: 72px; height: 72px; }
   .coin-big span { font-size: 20px; }
   .plan { width: 100%; position: relative; top: 0; transform: none; }

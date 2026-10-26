@@ -85,9 +85,48 @@
         </div>
       </div>
 
-      <!-- 2 · HOW IT WORKS — pinned; scrolling plays the two-photo chain -->
+      <!-- 2 · HOW IT WORKS — pinned; the whole screen becomes the app's camera and scrolling plays the two-photo chain -->
       <section class="how" id="how">
         <div class="how-pin">
+          <div class="how-scenes" aria-hidden="true">
+            <div class="scene scene-find">
+              <img class="scene-bg" src="assets/img/pile.webp" alt="" />
+              <div class="scene-img">
+                <img src="assets/img/pile.webp" alt="" />
+                <i class="reticle reticle-find"><span>Loose litter · in reach</span></i>
+              </div>
+            </div>
+            <div class="scene scene-drop"></div>
+            <div class="scene-dim"></div>
+            <div class="flash"></div>
+          </div>
+
+          <div class="how-frame" aria-hidden="true">
+            <i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i>
+            <div class="strip">
+              <div class="frame frame-find"><span>FIND</span><img src="assets/img/pile.webp" alt="" /></div>
+              <i class="strip-line"><b></b></i>
+              <div class="frame frame-drop"><span>DROP</span><div class="drop-thumb"></div></div>
+            </div>
+            <p class="how-count">Step <b>1</b> / 3</p>
+            <div class="drop-art">
+              <svg viewBox="0 0 200 200">
+                <rect x="56" y="70" width="88" height="96" rx="12" fill="#2a4224" stroke="#9bb444" stroke-width="3" />
+                <rect x="48" y="58" width="104" height="16" rx="6" fill="#314926" stroke="#9bb444" stroke-width="3" />
+                <path d="M88 108 q12 -14 24 0 q-12 14 -24 0z" fill="#b2c74b" />
+                <text x="100" y="150" text-anchor="middle" font-family="Martian Mono" font-size="8.5" fill="#e1ec97" letter-spacing="1.2">DROP POINT</text>
+              </svg>
+              <img class="vf-bag" src="assets/img/eco-bag@2x.webp" alt="" />
+              <i class="reticle reticle-drop"><span>Your society's drop point</span></i>
+            </div>
+            <div class="receipt-card">
+              <p class="mono-label">Verified · Sector 45</p>
+              <div class="coin coin-big"><span>+30</span></div>
+              <p class="receipt-line">Two photos, one bag. Nice work.</p>
+            </div>
+            <div class="shutter"><i></i></div>
+          </div>
+
           <div class="how-copy">
             <p class="eyebrow">How it works</p>
             <h2 class="display h2">Two photos make a bag.</h2>
@@ -96,38 +135,7 @@
               <li class="step" data-step="1"><span class="step-n">02</span><div><h3>Drop it</h3><p>Carry it to your society's registered drop point and snap it going in.</p></div></li>
               <li class="step" data-step="2"><span class="step-n">03</span><div><h3>Earn it</h3><p>The pair is checked — place, time, no repeats — and 30 coins are minted to you.</p></div></li>
             </ol>
-          </div>
-
-          <div class="how-stage">
-            <div class="phone phone-optic">
-              <div class="optic">
-                <div class="strip">
-                  <div class="frame frame-find"><span>FIND</span><img src="assets/img/pile.webp" alt="" /></div>
-                  <i class="strip-line"><b></b></i>
-                  <div class="frame frame-drop"><span>DROP</span><div class="drop-thumb"></div></div>
-                </div>
-                <div class="viewfinder">
-                  <div class="vf-scene vf-find"><img src="assets/img/pile.webp" alt="" /></div>
-                  <div class="vf-scene vf-drop">
-                    <svg viewBox="0 0 200 200" aria-hidden="true">
-                      <rect x="56" y="70" width="88" height="96" rx="12" fill="#2a4224" stroke="#9bb444" stroke-width="3" />
-                      <rect x="48" y="58" width="104" height="16" rx="6" fill="#314926" stroke="#9bb444" stroke-width="3" />
-                      <path d="M88 108 q12 -14 24 0 q-12 14 -24 0z" fill="#b2c74b" />
-                      <text x="100" y="150" text-anchor="middle" font-family="Martian Mono" font-size="8.5" fill="#e1ec97" letter-spacing="1.2">DROP POINT</text>
-                    </svg>
-                    <img class="vf-bag" src="assets/img/eco-bag@2x.webp" alt="" />
-                  </div>
-                  <i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i>
-                  <div class="flash"></div>
-                </div>
-                <div class="receipt-card">
-                  <p class="mono-label">Verified · Sector 45</p>
-                  <div class="coin coin-big"><span>+30</span></div>
-                  <p class="receipt-line">Two photos, one bag. Nice work.</p>
-                </div>
-                <div class="shutter"><i></i></div>
-              </div>
-            </div>
+            <div class="how-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
           </div>
         </div>
       </section>

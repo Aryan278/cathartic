@@ -140,6 +140,14 @@
     $$('.frame img, .drop-thumb').forEach((el) => Object.assign(el.style, { opacity: 1, transform: 'none' }));
     $$('.strip-line b').forEach((el) => (el.style.transform = 'none'));
     Object.assign($('.receipt-card').style, { opacity: 1, transform: 'none' });
+    // How it works rests on its last frame: the drop point, dimmed, with the coin card on top.
+    $('.scene-find').style.opacity = 0;
+    $('.scene-drop').style.opacity = 1;
+    $('.scene-dim').style.opacity = 1;
+    $('.drop-art').style.opacity = 0.3;
+    $('.reticle-drop').style.opacity = 0;
+    $$('.how-dots i').forEach((d) => d.classList.add('on'));
+    $('.how-count b').textContent = 3;
     $$('.ms').forEach((m) => m.classList.add('on'));
     $('.ms-track b').style.transform = 'none';
     $$('.step').forEach((s) => s.classList.add('is-on'));
@@ -188,9 +196,16 @@
   };
   LITTER.forEach((_, i) => drop(i));
 
-  // How it works: pinned, and the scroll plays find → drop → minted.
+  // How it works: pinned, and the scroll plays find → drop → minted, one step showing at a time.
   const steps = $$('.step');
-  const setStep = (n) => steps.forEach((s, i) => s.classList.toggle('is-on', i === n));
+  const dots = $$('.how-dots i');
+  const count = $('.how-count b');
+  const setStep = (n) => {
+    steps.forEach((s, i) => s.classList.toggle('is-on', i === n));
+    dots.forEach((d, i) => d.classList.toggle('on', i <= n));
+    count.textContent = n + 1;
+  };
+  $('.how').classList.add('is-live');
   const mm = gsap.matchMedia();
   mm.add('(min-width: 961px)', () => howTimeline('+=240%'));
   mm.add('(max-width: 960px)', () => howTimeline('+=180%'));
@@ -206,7 +221,7 @@
         onUpdate: (self) => setStep(self.progress < 0.36 ? 0 : self.progress < 0.7 ? 1 : 2),
       },
     });
-    tl.to('.vf-find img', { scale: 1.12, duration: 1 })
+    tl.to('.scene-img', { scale: 1.06, duration: 1 })
       .to('.shutter i', { scale: 0.82, duration: 0.15 }, 0.85)
       .to('.shutter i', { scale: 1, duration: 0.2 }, 1)
       .fromTo('.flash', { opacity: 0 }, { opacity: 0.9, duration: 0.08 }, 0.95)
@@ -215,16 +230,19 @@
       .to('.strip-line b', { scaleX: 1, duration: 0.5 }, 1.2)
       .to('.frame-find', { borderColor: 'rgba(249,253,214,.3)', boxShadow: '0 0 0 rgba(0,0,0,0)', duration: 0.3 }, 1.4)
       .to('.frame-drop', { borderStyle: 'solid', borderColor: '#e1ec97', boxShadow: '0 0 18px rgba(225,236,151,.35)', duration: 0.3 }, 1.4)
-      .to('.vf-find', { opacity: 0, duration: 0.5 }, 1.5)
-      .to('.vf-drop', { opacity: 1, duration: 0.5 }, 1.5)
-      .fromTo('.vf-bag', { y: -40, opacity: 0 }, { y: 70, opacity: 1, duration: 0.9, ease: 'power2.in' }, 1.8)
+      .to('.scene-find', { opacity: 0, duration: 0.5 }, 1.5)
+      .to('.scene-drop', { opacity: 1, duration: 0.5 }, 1.5)
+      .to('.drop-art', { opacity: 1, duration: 0.5 }, 1.5)
+      .fromTo('.vf-bag', { yPercent: -160, opacity: 0 }, { yPercent: 70, opacity: 1, duration: 0.9, ease: 'power2.in' }, 1.8)
       .to('.vf-bag', { opacity: 0, scale: 0.6, duration: 0.2 }, 2.6)
       .to('.shutter i', { scale: 0.82, duration: 0.15 }, 2.7)
       .to('.shutter i', { scale: 1, duration: 0.2 }, 2.85)
       .fromTo('.flash', { opacity: 0 }, { opacity: 0.9, duration: 0.08 }, 2.8)
       .to('.flash', { opacity: 0, duration: 0.35 }, 2.88)
       .to('.frame-drop .drop-thumb', { opacity: 1, scale: 1, duration: 0.4 }, 2.85)
-      .to('.viewfinder', { filter: 'blur(6px) brightness(.6)', duration: 0.5 }, 3.1)
+      .to('.scene-dim', { opacity: 1, duration: 0.5 }, 3.1)
+      .to('.drop-art', { opacity: 0.3, duration: 0.5 }, 3.1)
+      .to('.reticle-drop', { opacity: 0, duration: 0.3 }, 3.1)
       .to('.receipt-card', { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'back.out(1.6)' }, 3.2)
       .fromTo('.coin-big', { rotateY: -540, scale: 0.4 }, { rotateY: 0, scale: 1, duration: 1.1, ease: 'power3.out' }, 3.3)
       .to({}, { duration: 0.6 });
