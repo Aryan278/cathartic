@@ -151,7 +151,7 @@
   gsap.registerPlugin(ScrollTrigger);
   const ease = 'expo.out';
 
-  // Hero: words rise, the phone swings in, the chips pop.
+  // Hero: words rise, the phone rises up from the bottom of the screen, the tags pop.
   gsap
     .timeline({ defaults: { ease } })
     .from('.hero .word', { yPercent: 115, rotate: 4, duration: 1.3, stagger: 0.08 }, 0.1)
