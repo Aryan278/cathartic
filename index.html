@@ -24,19 +24,26 @@
     <div class="grain" aria-hidden="true"></div>
     <div class="progress" aria-hidden="true"><span></span></div>
 
-    <header class="nav">
+    <!-- The name and the button sit in the top corners; the sections live in the rail below. -->
+    <header class="top">
       <a class="brand" href="#top" aria-label="Back to top">
         <span class="brand-mark" aria-hidden="true"></span>
         <span data-app-name>Cathartic</span>
       </a>
-      <nav aria-label="Sections">
-        <a href="#how">How it works</a>
-        <a href="#rewards">Rewards</a>
-        <a href="#rwa">For RWAs</a>
-        <a href="#film">Film</a>
-      </nav>
       <a class="btn btn-small magnetic" data-contact href="#">Get early access</a>
     </header>
+
+    <!-- Desktop: an icon rail on the left that opens into a panel on hover. Phones: a bottom tab bar. -->
+    <nav class="rail" aria-label="Sections">
+      <p class="rail-head" aria-hidden="true"><span>Sections</span><span>04</span></p>
+      <ul class="rail-list">
+        <li><a href="#how"><span class="rail-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 11V6a1.5 1.5 0 0 1 3 0v4M10 10V4.5a1.5 1.5 0 0 1 3 0V10M13 10V5.5a1.5 1.5 0 0 1 3 0V11M16 11V8a1.5 1.5 0 0 1 3 0v5a7 7 0 0 1-7 7h-1a6 6 0 0 1-5-2.7L3.5 13a1.5 1.5 0 0 1 2.4-1.8L7 12.5" /></svg></span><span class="rail-label">How it works</span><span class="rail-num" aria-hidden="true">01</span></a></li>
+        <li><a href="#rewards"><span class="rail-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="4.5" /></svg></span><span class="rail-label">Rewards</span><span class="rail-num" aria-hidden="true">02</span></a></li>
+        <li><a href="#rwa"><span class="rail-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 21V8l8-4 8 4v13M9 21v-5h6v5M8 11h.01M12 11h.01M16 11h.01" /></svg></span><span class="rail-label">For RWAs</span><span class="rail-num" aria-hidden="true">03</span></a></li>
+        <li><a href="#film"><span class="rail-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M10 8.5v7l5.5-3.5z" /></svg></span><span class="rail-label">Film</span><span class="rail-num" aria-hidden="true">04</span></a></li>
+      </ul>
+      <div class="rail-foot" aria-hidden="true"><p><span>Read</span><span class="rail-pct">0%</span></p><i class="rail-bar"><b></b></i></div>
+    </nav>
 
     <main id="top">
       <!-- 1 · HERO -->

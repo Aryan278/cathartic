@@ -67,14 +67,42 @@
   );
   $$('[data-count]').forEach((el) => countIo.observe(el));
 
-  /* ── Scroll progress ────────────────────────────────────────────────────────── */
+  /* ── Scroll: progress, the rail's current section, the top corners ─────────── */
   const bar = $('.progress');
+  const rail = $('.rail');
+  const pct = $('.rail-pct');
+  const top = $('.top');
+  const marks = $$('.rail a').map((a) => [a, $(a.hash)]);
+  const phone = window.matchMedia('(max-width: 960px)');
+  let queued = false;
+  let lastY = scrollY;
   const onScroll = () => {
+    queued = false;
     const max = document.documentElement.scrollHeight - innerHeight;
-    bar.style.setProperty('--p', max > 0 ? (scrollY / max).toFixed(4) : 0);
+    // Phones: the tab bar steps aside on the way down and comes back on the way up (and at the end).
+    const dy = scrollY - lastY;
+    if (Math.abs(dy) > 6 || scrollY < 120) {
+      rail.classList.toggle('is-tucked', phone.matches && dy > 0 && scrollY > 120 && max - scrollY > 80);
+      lastY = scrollY;
+    }
+    const p = max > 0 ? scrollY / max : 0;
+    bar.style.setProperty('--p', p.toFixed(4));
+    rail.style.setProperty('--p', p.toFixed(4));
+    pct.textContent = `${Math.round(p * 100)}%`;
+    top.classList.toggle('is-scrolled', scrollY > 40);
+    // The current section is the last one whose top has passed 45% of the screen.
+    let on = null;
+    marks.forEach(([a, sec]) => sec && sec.getBoundingClientRect().top <= innerHeight * 0.45 && (on = a));
+    marks.forEach(([a]) => (a.classList.toggle('is-on', a === on), a === on ? a.setAttribute('aria-current', 'location') : a.removeAttribute('aria-current')));
   };
-  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('scroll', () => queued || ((queued = true), requestAnimationFrame(onScroll)), { passive: true });
+  addEventListener('resize', onScroll);
   onScroll();
+
+  // A tap leaves focus on the link, which would hold the desktop panel open; let it close.
+  let pointer = 'mouse';
+  rail.addEventListener('pointerdown', (e) => (pointer = e.pointerType));
+  rail.addEventListener('click', (e) => pointer !== 'mouse' && e.target.closest('a')?.blur());
 
   /* ── Reel: a second copy so the loop never shows a seam ─────────────────────── */
   const reel = $('.reel-track');

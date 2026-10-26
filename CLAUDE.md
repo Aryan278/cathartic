@@ -12,6 +12,9 @@ from `main`, root). The owner is Aryan.
 - `config.js` is the one place for things that change: `name` (the app name is "Cathartic" — never
   hardcode it; elements with `data-app-name` read it), `contact` (the "Get early access" link), `video`
   (the film: repo path to an MP4 or a YouTube/Vimeo embed URL), `poster`.
+- Navigation: name and "Get early access" float in the top corners (`.top`); the sections live in
+  `.rail`, a left icon rail on desktop that opens into a panel on hover/focus, and a bottom tab bar
+  at ≤960px that tucks away while scrolling down. `--rail` in `styles.css` keeps the page column clear of it.
 - `assets/shots/` are real app screenshots (demo data); `assets/img/` holds the app's field
   backgrounds, eco-bag, grain texture and report photos.
 
