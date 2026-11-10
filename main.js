@@ -104,6 +104,23 @@
   rail.addEventListener('pointerdown', (e) => (pointer = e.pointerType));
   rail.addEventListener('click', (e) => pointer !== 'mouse' && e.target.closest('a')?.blur());
 
+  /* ── Rest what can't be seen ──────────────────────────────────────────────────── */
+  // Sections off screen pause their CSS animations; while the hero is up, the page's ambient light (hidden under
+  // its canopy) rests too, and hero-only motion stops once it has scrolled away.
+  const heroIdle = [];
+  let heroOn = true;
+  const seen = new IntersectionObserver((entries) =>
+    entries.forEach((e) => {
+      e.target.classList.toggle('is-off', !e.isIntersecting);
+      if (e.target.classList.contains('hero')) {
+        heroOn = e.isIntersecting;
+        document.documentElement.classList.toggle('hero-in', heroOn);
+        heroIdle.forEach((t) => (heroOn ? t.resume() : t.pause()));
+      }
+    }),
+  );
+  $$('.hero, .marquee, .screens, .rwa, .film, .cta').forEach((el) => seen.observe(el));
+
   /* ── Reel: a second copy so the loop never shows a seam ─────────────────────── */
   const reel = $('.reel-track');
   if (reel) [...reel.children].forEach((c) => reel.appendChild(Object.assign(c.cloneNode(true), { ariaHidden: 'true' })));
@@ -182,10 +199,10 @@
     .to('.focus', { scale: 1, duration: 0.5, ease: 'back.out(3)' }, 1.72);
   // Hovering the word refocuses it.
   if (fine) $('.focus').addEventListener('pointerenter', () => gsap.fromTo('.focus i', { x: (i) => (i % 2 ? 1 : -1) * 8, y: (i) => (i < 2 ? -1 : 1) * 6 }, { x: 0, y: 0, duration: 0.45, ease: 'back.out(2.5)' }));
-  gsap.to('.phone-hero', { y: -14, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.6 });
+  heroIdle.push(gsap.to('.phone-hero', { y: -14, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.6 }));
   // Once out, each panel bobs on its own rhythm.
   panels.forEach((p, i) =>
-    gsap.to($('.hpanel-float', p), { y: i % 2 ? 9 : -9, rotationZ: side[i] * (i % 2 ? 1 : -1) * 1.2, duration: 3.1 + i * 0.45, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2.4 + i * 0.25 }),
+    heroIdle.push(gsap.to($('.hpanel-float', p), { y: i % 2 ? 9 : -9, rotationZ: side[i] * (i % 2 ? 1 : -1) * 1.2, duration: 3.1 + i * 0.45, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2.4 + i * 0.25 })),
   );
   // They lean towards the cursor, the near ones more, like real glass in space.
   if (fine) {
@@ -216,18 +233,26 @@
       const near = !!el.closest('.canopy-near');
       return { el, near, layer: el.closest('.canopy-layer'), qx: gsap.quickTo(el, 'x', { duration: near ? 0.8 : 1.1, ease: 'power3' }), qy: gsap.quickTo(el, 'y', { duration: near ? 0.8 : 1.1, ease: 'power3' }), qr: gsap.quickTo(el, 'rotation', { duration: 1.3, ease: 'power3' }) };
     });
+    // Resting centres, measured once (and again on resize) rather than on every move.
+    const rest = () =>
+      leaves.forEach((l) => {
+        l.cx = l.layer.offsetLeft + l.el.offsetLeft;
+        l.cy = l.layer.offsetTop + l.el.offsetTop;
+      });
+    rest();
+    addEventListener('resize', rest);
     let px = -1e4;
     let py = -1e4;
     let ticking = false;
     const brush = () => {
       ticking = false;
+      if (!heroOn) return;
       const f = field.getBoundingClientRect();
       const x = px - f.left;
       const y = py - f.top;
       leaves.forEach((l) => {
-        // offsetLeft/Top ignore transforms, so this is the leaf's resting centre; the layer's parallax is added back.
-        const cx = l.layer.offsetLeft + l.el.offsetLeft;
-        const cy = l.layer.offsetTop + l.el.offsetTop + gsap.getProperty(l.layer, 'y');
+        const cx = l.cx;
+        const cy = l.cy + gsap.getProperty(l.layer, 'y');
         const dx = cx - x;
         const dy = cy - y;
         const d = Math.hypot(dx, dy) || 1;
@@ -279,7 +304,7 @@
         onUpdate: (self) => setStep(self.progress < 0.36 ? 0 : self.progress < 0.7 ? 1 : 2),
       },
     });
-    tl.to('.scene-img', { scale: 1.06, duration: 1 })
+    tl.to('.scene-img', { '--zoom': 1.06, duration: 1 })
       .to('.shutter i', { scale: 0.82, duration: 0.15 }, 0.85)
       .to('.shutter i', { scale: 1, duration: 0.2 }, 1)
       .fromTo('.flash', { opacity: 0 }, { opacity: 0.9, duration: 0.08 }, 0.95)
@@ -301,7 +326,7 @@
       .to('.scene-dim', { opacity: 1, duration: 0.5 }, 3.1)
       .to('.drop-art', { opacity: 0.3, duration: 0.5 }, 3.1)
       .to('.reticle-drop', { opacity: 0, duration: 0.3 }, 3.1)
-      .to('.receipt-card', { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'back.out(1.6)' }, 3.2)
+      .to('.receipt-card', { opacity: 1, '--cy': '0px', '--cs': 1, duration: 0.7, ease: 'back.out(1.6)' }, 3.2)
       .fromTo('.coin-big', { rotateY: -540, scale: 0.4 }, { rotateY: 0, scale: 1, duration: 1.1, ease: 'power3.out' }, 3.3)
       .to({}, { duration: 0.6 });
     return () => setStep(0);
