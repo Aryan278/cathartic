@@ -75,6 +75,13 @@ h1.display { font-size: clamp(54px, 9.2vw, 138px); }
 .lede { font-size: clamp(16px, 1.4vw, 19px); line-height: 1.6; color: rgba(var(--iv), 0.72); max-width: 46ch; margin: 22px 0 0; }
 .split .line { display: block; overflow: hidden; padding-bottom: 0.06em; }
 .split .word { display: inline-block; }
+/* "Notice it": the word sits in the app's camera focus brackets. */
+.focus { position: relative; display: inline-block; padding: 0 0.09em; }
+.focus i { position: absolute; width: 0.2em; height: 0.2em; border: 0.035em solid var(--bright); }
+.focus i:nth-of-type(1) { left: -0.03em; top: 0.03em; border-right: 0; border-bottom: 0; border-radius: 0.06em 0 0 0; }
+.focus i:nth-of-type(2) { right: -0.03em; top: 0.03em; border-left: 0; border-bottom: 0; border-radius: 0 0.06em 0 0; }
+.focus i:nth-of-type(3) { left: -0.03em; bottom: 0; border-right: 0; border-top: 0; border-radius: 0 0 0 0.06em; }
+.focus i:nth-of-type(4) { right: -0.03em; bottom: 0; border-left: 0; border-top: 0; border-radius: 0 0 0.06em 0; }
 
 /* ── Buttons ─────────────────────────────────────────────────────────────────── */
 .btn { --mx: 0px; --my: 0px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; border-radius: 999px; font: 600 15px/1 var(--text); text-decoration: none; color: var(--ink); background: linear-gradient(180deg, var(--ivory), #f2f8c4); border: 1px solid rgba(var(--iv), 0.6); box-shadow: 0 10px 30px rgba(178, 199, 75, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.6); transform: translate3d(var(--mx), var(--my), 0); transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out); cursor: pointer; }
@@ -145,9 +152,15 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .canopy-pools i { position: absolute; left: var(--x); top: var(--y); width: calc(var(--w) * 1%); aspect-ratio: var(--ar); translate: -50% -50%; rotate: var(--r); border-radius: 50%; background: radial-gradient(closest-side, rgba(225, 236, 151, var(--a)), rgba(178, 199, 75, 0.1) 55%, transparent); animation: breathe var(--d) ease-in-out var(--dl) infinite alternate; }
 @keyframes breathe { from { opacity: 0.55; scale: 0.92; } to { opacity: 1; scale: 1.06; } }
 .canopy-layer { position: absolute; inset: -6%; }
-.canopy-layer svg { width: 100%; height: 100%; fill: #070807; will-change: transform; animation: sway 9s ease-in-out infinite alternate; }
-.canopy-far svg { filter: blur(16px); opacity: 0.5; animation-duration: 11s; }
-.canopy-near svg { filter: blur(9px); opacity: 0.45; animation-delay: -4s; }
+.canopy-sway { position: absolute; inset: 0; animation: sway 9s ease-in-out infinite alternate; }
+.canopy-far .canopy-sway { animation-duration: 11s; }
+.canopy-near .canopy-sway { animation-delay: -4s; }
+/* Each leaf is its own layer so the cursor can push it aside (main.js); its blur is drawn once, not every frame. */
+.leaf { position: absolute; left: var(--lx); top: var(--ly); height: calc(var(--s) * 7.6vmax); aspect-ratio: 7 / 10; translate: -50% -50%; rotate: var(--r); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-35 -50 70 100'%3E%3Cpath d='M0 -50 C 35 -30, 35 30, 0 50 C -35 30, -35 -30, 0 -50 Z' fill='%23070807'/%3E%3C/svg%3E") center / contain no-repeat; will-change: transform; }
+.canopy-far { opacity: 0.5; }
+.canopy-far .leaf { filter: blur(12px); }
+.canopy-near { opacity: 0.5; }
+.canopy-near .leaf { filter: blur(6px); }
 @keyframes sway { from { transform: translate3d(-1%, -0.6%, 0) rotate(-0.6deg); } to { transform: translate3d(1%, 0.8%, 0) rotate(0.6deg); } }
 .hero-copy { display: flex; flex-direction: column; align-items: center; }
 .hero .lede { margin: 22px auto 0; }

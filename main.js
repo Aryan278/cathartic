@@ -30,10 +30,10 @@
   }
 
   /* ── Headline: words to rise ────────────────────────────────────────────────── */
+  // Text splits into words; an element inside a line (the focus brackets) rises as one word.
   $$('.split .line').forEach((line) => {
-    line.innerHTML = line.textContent
-      .trim()
-      .split(/\s+/)
+    line.innerHTML = [...line.childNodes]
+      .flatMap((n) => (n.nodeType === 3 ? n.textContent.trim().split(/\s+/).filter(Boolean) : [n.outerHTML]))
       .map((w) => `<span class="word">${w}</span>`)
       .join(' ');
   });
@@ -175,7 +175,13 @@
     .from('.hero .word', { yPercent: 115, rotate: 4, duration: 1.3, stagger: 0.08 }, 0.1)
     .from('.phone-hero', { y: 120, rotate: 10, opacity: 0, duration: 1.6 }, 0.25)
     .from(movers, { x: (i) => home[i].x, y: (i) => home[i].y, z: -160, rotationY: (i) => -side[i] * 50, scale: 0.45, autoAlpha: 0, duration: 1.6, stagger: 0.12 }, 0.85)
-    .call(() => (lean = true));
+    .call(() => (lean = true))
+    // The focus brackets close in on "it" and lock, with a small squeeze like a camera finding focus.
+    .from('.focus i', { x: (i) => (i % 2 ? 1 : -1) * 18, y: (i) => (i < 2 ? -1 : 1) * 14, opacity: 0, duration: 0.5, ease: 'power3.out', stagger: 0.03 }, 1.05)
+    .to('.focus', { scale: 0.94, duration: 0.12, ease: 'power2.out' }, 1.6)
+    .to('.focus', { scale: 1, duration: 0.5, ease: 'back.out(3)' }, 1.72);
+  // Hovering the word refocuses it.
+  if (fine) $('.focus').addEventListener('pointerenter', () => gsap.fromTo('.focus i', { x: (i) => (i % 2 ? 1 : -1) * 8, y: (i) => (i < 2 ? -1 : 1) * 6 }, { x: 0, y: 0, duration: 0.45, ease: 'back.out(2.5)' }));
   gsap.to('.phone-hero', { y: -14, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.6 });
   // Once out, each panel bobs on its own rhythm.
   panels.forEach((p, i) =>
@@ -203,6 +209,41 @@
   );
   gsap.to('.hero-stage', { yPercent: -12, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   gsap.to('.hero-field', { yPercent: 18, scale: 1.08, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  // Leaves part around the cursor as it brushes through them, and spring back once it has passed.
+  if (fine) {
+    const field = $('.hero-field');
+    const leaves = $$('.leaf').map((el) => {
+      const near = !!el.closest('.canopy-near');
+      return { el, near, layer: el.closest('.canopy-layer'), qx: gsap.quickTo(el, 'x', { duration: near ? 0.8 : 1.1, ease: 'power3' }), qy: gsap.quickTo(el, 'y', { duration: near ? 0.8 : 1.1, ease: 'power3' }), qr: gsap.quickTo(el, 'rotation', { duration: 1.3, ease: 'power3' }) };
+    });
+    let px = -1e4;
+    let py = -1e4;
+    let ticking = false;
+    const brush = () => {
+      ticking = false;
+      const f = field.getBoundingClientRect();
+      const x = px - f.left;
+      const y = py - f.top;
+      leaves.forEach((l) => {
+        // offsetLeft/Top ignore transforms, so this is the leaf's resting centre; the layer's parallax is added back.
+        const cx = l.layer.offsetLeft + l.el.offsetLeft;
+        const cy = l.layer.offsetTop + l.el.offsetTop + gsap.getProperty(l.layer, 'y');
+        const dx = cx - x;
+        const dy = cy - y;
+        const d = Math.hypot(dx, dy) || 1;
+        const reach = l.near ? 330 : 260;
+        const k = d < reach ? (1 - d / reach) ** 2 : 0;
+        const push = (l.near ? 110 : 60) * k;
+        l.qx((dx / d) * push);
+        l.qy((dy / d) * push);
+        l.qr(Math.sign(dx) * k * (l.near ? 22 : 12));
+      });
+    };
+    const queue = () => ticking || ((ticking = true), requestAnimationFrame(brush));
+    addEventListener('pointermove', (e) => ((px = e.clientX), (py = e.clientY), queue()));
+    document.documentElement.addEventListener('pointerleave', () => ((px = py = -1e4), queue()));
+    addEventListener('scroll', () => scrollY < innerHeight * 1.2 && queue(), { passive: true });
+  }
   // The near leaves pass faster than the far ones, for depth.
   gsap.to('.canopy-near', { yPercent: -14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   gsap.to('.canopy-far', { yPercent: -5, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
