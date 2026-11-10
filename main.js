@@ -226,18 +226,24 @@
   );
   gsap.to('.hero-stage', { yPercent: -12, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   gsap.to('.hero-field', { yPercent: 18, scale: 1.08, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
-  // Leaves part around the cursor as it brushes through them, and spring back once it has passed.
+  // Boughs bend away from the cursor as it brushes through them, pivoting at their base on the page edge, and
+  // spring back once it has passed.
   if (fine) {
     const field = $('.hero-field');
     const leaves = $$('.leaf').map((el) => {
       const near = !!el.closest('.canopy-near');
-      return { el, near, layer: el.closest('.canopy-layer'), qx: gsap.quickTo(el, 'x', { duration: near ? 0.8 : 1.1, ease: 'power3' }), qy: gsap.quickTo(el, 'y', { duration: near ? 0.8 : 1.1, ease: 'power3' }), qr: gsap.quickTo(el, 'rotation', { duration: 1.3, ease: 'power3' }) };
+      const ease = { duration: near ? 0.9 : 1.2, ease: 'power3' };
+      return { el, near, layer: el.closest('.canopy-layer'), qx: gsap.quickTo(el, 'x', ease), qy: gsap.quickTo(el, 'y', ease), qr: gsap.quickTo(el, 'rotation', ease) };
     });
-    // Resting centres, measured once (and again on resize) rather than on every move.
+    // Each bough's base, direction and the middle of its leaves, measured once (and again on resize).
     const rest = () =>
       leaves.forEach((l) => {
-        l.cx = l.layer.offsetLeft + l.el.offsetLeft;
-        l.cy = l.layer.offsetTop + l.el.offsetTop;
+        const r = (parseFloat(getComputedStyle(l.el).getPropertyValue('--r')) * Math.PI) / 180;
+        const len = l.el.firstElementChild.offsetHeight * 0.87;
+        l.ux = Math.sin(r);
+        l.uy = -Math.cos(r);
+        l.mx = l.layer.offsetLeft + l.el.offsetLeft + l.ux * len * 0.6;
+        l.my = l.layer.offsetTop + l.el.offsetTop + l.uy * len * 0.6;
       });
     rest();
     addEventListener('resize', rest);
@@ -251,14 +257,11 @@
       const x = px - f.left;
       const y = py - f.top;
       leaves.forEach((l) => {
-        const cx = l.cx;
-        const cy = l.cy + gsap.getProperty(l.layer, 'y');
-        const dx = cx - x;
-        const dy = cy - y;
-        const d = Math.hypot(dx, dy) || 1;
-        const reach = l.near ? 330 : 260;
+        const vx = x - l.mx;
+        const vy = y - (l.my + gsap.getProperty(l.layer, 'y'));
+        const d = Math.hypot(vx, vy) || 1;
+        const reach = l.near ? 320 : 250;
         const k = d < reach ? (1 - d / reach) ** 2 : 0;
-        const push = (l.near ? 110 : 60) * k;
         if (k > 0 && !l.lifted) {
           clearTimeout(l.drop);
           l.el.classList.add('is-pushed');
@@ -268,9 +271,11 @@
           l.lifted = false;
           l.drop = setTimeout(() => l.lifted || l.el.classList.remove('is-pushed'), 1500);
         }
-        l.qx((dx / d) * push);
-        l.qy((dy / d) * push);
-        l.qr(Math.sign(dx) * k * (l.near ? 22 : 12));
+        // Bend away from the side the cursor is on, with a little give at the base.
+        const side = Math.sign(l.ux * vy - l.uy * vx);
+        l.qr(-side * k * (l.near ? 10 : 6));
+        l.qx((-vx / d) * k * (l.near ? 16 : 9));
+        l.qy((-vy / d) * k * (l.near ? 16 : 9));
       });
     };
     const queue = () => ticking || ((ticking = true), requestAnimationFrame(brush));
