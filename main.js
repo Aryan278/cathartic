@@ -259,6 +259,15 @@
         const reach = l.near ? 330 : 260;
         const k = d < reach ? (1 - d / reach) ** 2 : 0;
         const push = (l.near ? 110 : 60) * k;
+        if (k > 0 && !l.lifted) {
+          clearTimeout(l.drop);
+          l.el.classList.add('is-pushed');
+          l.lifted = true;
+        } else if (k === 0 && l.lifted) {
+          // Back at rest once the spring settles; then it folds into its layer again.
+          l.lifted = false;
+          l.drop = setTimeout(() => l.lifted || l.el.classList.remove('is-pushed'), 1500);
+        }
         l.qx((dx / d) * push);
         l.qy((dy / d) * push);
         l.qr(Math.sign(dx) * k * (l.near ? 22 : 12));

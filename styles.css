@@ -87,11 +87,16 @@ h1.display { font-size: clamp(54px, 9.2vw, 138px); }
 .focus i:nth-of-type(4) { right: -0.03em; bottom: 0; border-left: 0; border-top: 0; border-radius: 0 0 0.06em 0; }
 
 /* ── Buttons ─────────────────────────────────────────────────────────────────── */
-.btn { --mx: 0px; --my: 0px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; border-radius: 999px; font: 600 15px/1 var(--text); text-decoration: none; color: var(--ink); background: linear-gradient(180deg, var(--ivory), #f2f8c4); border: 1px solid rgba(var(--iv), 0.6); box-shadow: 0 10px 30px rgba(178, 199, 75, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.6); transform: translate3d(var(--mx), var(--my), 0); transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out); cursor: pointer; }
-.btn:hover { box-shadow: 0 16px 40px rgba(178, 199, 75, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+.btn { position: relative; isolation: isolate; --mx: 0px; --my: 0px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; border-radius: 999px; font: 600 15px/1 var(--text); text-decoration: none; color: var(--ink); background: linear-gradient(180deg, #fbfee9, var(--ivory) 45%, #eaf2bb); border: 1px solid rgba(255, 255, 255, 0.75); box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.95), inset 0 -3px 6px rgba(90, 115, 47, 0.22), 0 2px 0 rgba(155, 180, 68, 0.55), 0 10px 24px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(178, 199, 75, 0.2); transform: translate3d(var(--mx), var(--my), 0); transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out); cursor: pointer; }
+.btn:hover { box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.95), inset 0 -3px 6px rgba(90, 115, 47, 0.22), 0 2px 0 rgba(155, 180, 68, 0.55), 0 16px 34px rgba(0, 0, 0, 0.32), 0 16px 40px rgba(178, 199, 75, 0.34); }
+/* Gloss across the top half of the pill, under its text. */
+.btn::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 52%); pointer-events: none; }
+.btn:not(.btn-ghost):active { box-shadow: inset 0 2px 5px rgba(90, 115, 47, 0.3), 0 1px 0 rgba(155, 180, 68, 0.5), 0 6px 16px rgba(0, 0, 0, 0.25); }
 .btn:active { transform: translate3d(var(--mx), var(--my), 0) scale(0.97); }
 .btn:focus-visible, a:focus-visible, button:focus-visible { outline: 2px solid var(--bright); outline-offset: 3px; }
 .btn-ghost { color: var(--ivory); background: rgba(var(--iv), 0.08); border-color: rgba(var(--iv), 0.24); box-shadow: inset 0 1px 0 rgba(var(--iv), 0.25); }
+.btn-ghost::before { content: none; }
+.btn-ghost:hover { box-shadow: inset 0 1px 0 rgba(var(--iv), 0.3), 0 12px 30px rgba(178, 199, 75, 0.2); }
 .btn-small { min-height: 42px; padding: 0 20px; font-size: 14px; white-space: nowrap; }
 .btn-big { min-height: 60px; padding: 0 36px; font-size: 17px; }
 /* "Get early access" carries the 40 starter coins everyone gets on joining; the coin flips on hover. */
@@ -182,7 +187,8 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
    the image, so moving them costs nothing to redraw. .leaf is a point the cursor pushes; its b holds the sprig. */
 .leaf { position: absolute; left: var(--lx); top: var(--ly); width: 0; height: 0; }
 .leaf b { position: absolute; left: 0; top: 0; width: calc(var(--s) * 21.5vmax); aspect-ratio: 1; translate: -50% -50%; rotate: var(--r); background: center / contain no-repeat; }
-@media (pointer: fine) { .leaf { will-change: transform; } }
+/* A leaf gets its own layer only while the cursor is pushing it (main.js); at rest each layer moves as one image. */
+.leaf.is-pushed { will-change: transform; }
 .canopy-far { opacity: 0.42; }
 .canopy-near { opacity: 0.62; }
 .canopy-far .sp-a { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-30 -30 260 260'%3E%3Cdefs%3E%3Cfilter id='f' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeGaussianBlur stdDeviation='3.4'/%3E%3C/filter%3E%3C/defs%3E%3Cg fill='%23070807' filter='url(%23f)'%3E%3Cpath d='M100.0 196.0 L98.3 187.4 L96.9 178.7 L95.7 170.1 L94.7 161.4 L94.0 152.6 L93.5 143.9 L93.3 135.1 L93.3 126.2 L93.5 117.4 L94.0 108.5 L94.7 99.6 L95.7 90.6 L96.9 81.7 L98.3 72.7 L100.0 63.6 L101.9 54.6 L104.1 45.5 L106.5 36.3 L109.1 27.2 L112.0 18.0' fill='none' stroke='%23070807' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M94.7 161.4 C94.6 141.8 118.1 126.4 140.8 125.9 C134.8 145.6 114.3 164.4 94.7 161.4Z'/%3E%3Cpath d='M93.4 140.3 C75.9 147.2 53.3 133.9 44.1 116.7 C65.1 112.6 89.7 122.2 93.4 140.3Z'/%3E%3Cpath d='M93.5 119.2 C93.1 101.6 113.9 88.1 134.1 87.9 C129.1 105.5 111.0 122.1 93.5 119.2Z'/%3E%3Cpath d='M94.9 97.8 C79.4 104.1 59.6 92.4 51.7 77.1 C70.3 73.2 91.9 81.5 94.9 97.8Z'/%3E%3Cpath d='M97.4 78.1 C96.9 62.5 114.9 50.8 132.7 50.9 C128.5 66.5 112.9 81.0 97.4 78.1Z'/%3E%3Cpath d='M101.1 58.2 C87.6 64.0 70.7 53.9 64.1 40.5 C80.2 36.8 98.8 43.9 101.1 58.2Z'/%3E%3Cpath d='M105.5 40.0 C104.7 26.5 120.1 16.6 135.3 17.0 C132.1 30.5 118.9 42.8 105.5 40.0Z'/%3E%3Cpath d='M111.0 22.0 C100.0 12.0 103.8 -6.9 115.2 -17.8 C124.1 -4.8 123.9 14.5 111.0 22.0Z'/%3E%3C/g%3E%3C/svg%3E"); }
