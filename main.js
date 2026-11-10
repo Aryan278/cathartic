@@ -159,42 +159,50 @@
   gsap.registerPlugin(ScrollTrigger);
   const ease = 'expo.out';
 
-  // Hero: words rise, the phone rises up from the bottom of the screen, the tags pop.
+  // Hero: words rise, the phone rises up from the bottom of the screen, then the spatial panels fan out from behind it.
+  const panels = $$('.hpanel').filter((p) => p.offsetParent);
+  const movers = panels.map((p) => $('.hpanel-move', p));
+  // Each panel starts tucked behind the phone: measure how far that is before anything moves.
+  const pr = $('.phone-hero').getBoundingClientRect();
+  const home = movers.map((m) => {
+    const r = m.getBoundingClientRect();
+    return { x: pr.left + pr.width / 2 - (r.left + r.width / 2), y: pr.top + pr.height * 0.25 - (r.top + r.height / 2) };
+  });
+  const side = panels.map((p) => (parseFloat(getComputedStyle(p).getPropertyValue('--px')) < 0 ? -1 : 1));
+  let lean = false;
   gsap
     .timeline({ defaults: { ease } })
     .from('.hero .word', { yPercent: 115, rotate: 4, duration: 1.3, stagger: 0.08 }, 0.1)
     .from('.phone-hero', { y: 120, rotate: 10, opacity: 0, duration: 1.6 }, 0.25)
-    .from('.bag', { scale: 0, duration: 1.1, ease: 'back.out(1.8)' }, 0.7)
-    .from('.pop', { scale: 0.4, opacity: 0, duration: 0.9, stagger: 0.15, ease: 'back.out(2)' }, 1);
-  gsap.to('.pop-a', { y: -14, duration: 2.4, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-  gsap.to('.pop-b', { y: 12, duration: 3, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 0.6 });
+    .from(movers, { x: (i) => home[i].x, y: (i) => home[i].y, z: -160, rotationY: (i) => -side[i] * 50, scale: 0.45, autoAlpha: 0, duration: 1.6, stagger: 0.12 }, 0.85)
+    .call(() => (lean = true));
   gsap.to('.phone-hero', { y: -14, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.6 });
+  // Once out, each panel bobs on its own rhythm.
+  panels.forEach((p, i) =>
+    gsap.to($('.hpanel-float', p), { y: i % 2 ? 9 : -9, rotationZ: side[i] * (i % 2 ? 1 : -1) * 1.2, duration: 3.1 + i * 0.45, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2.4 + i * 0.25 }),
+  );
+  // They lean towards the cursor, the near ones more, like real glass in space.
+  if (fine) {
+    const q = movers.map((m) => ['rotationY', 'rotationX', 'x', 'y'].map((k) => gsap.quickTo(m, k, { duration: 0.9, ease: 'power3' })));
+    addEventListener('pointermove', (e) => {
+      if (!lean || scrollY > innerHeight) return;
+      const nx = e.clientX / innerWidth - 0.5;
+      const ny = e.clientY / innerHeight - 0.5;
+      q.forEach(([ry, rx, x, y], i) => {
+        const d = i % 2 ? 1.35 : 1;
+        ry(nx * 14 * d);
+        rx(-ny * 10 * d);
+        x(nx * 26 * d);
+        y(ny * 18 * d);
+      });
+    });
+  }
+  // Scrolling away, they drift apart and up at different speeds, while the stage rises.
+  panels.forEach((p, i) =>
+    gsap.to(p, { x: side[i] * (i % 2 ? 140 : 90), y: -(i % 2 ? 200 : 120), ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } }),
+  );
   gsap.to('.hero-stage', { yPercent: -12, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   gsap.to('.hero-field', { yPercent: 18, scale: 1.08, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
-
-  // Litter falls into the bag, forever; the bag gives a little each time.
-  const LITTER = [
-    '<svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="4" rx="1" fill="#e1ec97"/><path d="M8 7h8l1 14H7z" fill="#9bb444" opacity=".9"/></svg>',
-    '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="3" fill="#678133"/><rect x="6" y="8" width="12" height="4" fill="#e1ec97"/></svg>',
-    '<svg viewBox="0 0 24 24"><path d="M3 9l6-5 12 6-5 9-12-3z" fill="#b2c74b"/><path d="M6 10l9 3" stroke="#2a4224" stroke-width="1.5"/></svg>',
-    '<svg viewBox="0 0 24 24"><path d="M6 5h12l-2 16H8z" fill="#f9fdd6"/><path d="M6 5h12" stroke="#9bb444" stroke-width="3"/></svg>',
-  ];
-  const rain = $('.litter-rain');
-  const bag = $('.bag');
-  const drop = (i) => {
-    const el = document.createElement('div');
-    el.className = 'litter';
-    el.innerHTML = LITTER[i % LITTER.length];
-    rain.appendChild(el);
-    gsap
-      .timeline({ delay: 1.6 + i * 0.9, repeat: -1, repeatDelay: LITTER.length * 0.9 - 1.6 })
-      .fromTo(el, { x: gsap.utils.random(-70, 70), y: -40, rotate: gsap.utils.random(-90, 90), opacity: 0, scale: 0.8 }, { opacity: 1, duration: 0.2 })
-      .to(el, { x: 0, y: 210, rotate: '+=200', duration: 1.2, ease: 'power2.in' }, 0)
-      .to(el, { opacity: 0, scale: 0.4, duration: 0.18 }, 1.05)
-      .to(bag, { scaleY: 0.9, scaleX: 1.06, duration: 0.12, ease: 'power2.out' }, 1.1)
-      .to(bag, { scaleY: 1, scaleX: 1, duration: 0.6, ease: 'elastic.out(1, 0.4)' }, 1.22);
-  };
-  LITTER.forEach((_, i) => drop(i));
 
   // How it works: pinned, and the scroll plays find → drop → minted, one step showing at a time.
   const steps = $$('.step');
@@ -206,6 +214,12 @@
     count.textContent = n + 1;
   };
   $('.how').classList.add('is-live');
+  // On the way in, the veil lifts off the scene's top edge and the camera and panel rise into place.
+  const arrive = { trigger: '.how', start: 'top 90%', end: 'top top', scrub: true };
+  // The veil holds while the scene's top edge is still on screen, and lifts only as the section pins.
+  gsap.fromTo('.how-veil', { opacity: 1 }, { opacity: 0, ease: 'none', scrollTrigger: { ...arrive, start: 'top 12%' } });
+  gsap.from('.how-scenes', { scale: 1.08, ease: 'none', scrollTrigger: arrive });
+  gsap.from('.how-frame, .how-copy', { y: 70, opacity: 0, ease: 'power1.out', stagger: 0.1, scrollTrigger: { ...arrive, start: 'top 60%', end: 'top 5%' } });
   const mm = gsap.matchMedia();
   mm.add('(min-width: 961px)', () => howTimeline('+=240%'));
   mm.add('(max-width: 960px)', () => howTimeline('+=180%'));
