@@ -154,13 +154,15 @@
 
   /* ── How it works: the trail through the canopy ─────────────────────────────── */
   // The trail is drawn through the middle of each stop, from off one edge of the page to off the other, from where
-  // the stops actually sit, so it fits any screen. walkTo(f) lights it up to a fraction f of its length, moves the
-  // walker there and marks the stops it has reached.
+  // the stops actually sit, so it fits any screen. show(d) draws it in up to a fraction d of its length, each stop
+  // growing in as the line reaches it; walkTo(f) lights it up to f, moves the walker there and marks the stops.
   const trail = (() => {
     const box = $('.trail');
     const svg = $('.trail-path', box);
-    const paths = $$('path', svg);
-    const lit = paths.filter((p) => !p.classList.contains('trail-ahead'));
+    const ahead = $('.trail-ahead', svg);
+    const reveal = $('.trail-reveal', svg);
+    const mask = $('mask', svg);
+    const lit = $$('.trail-glow, .trail-walked', svg);
     const walker = $('.trail-walker', box);
     const stops = $$('.stop', box);
     const count = $('.how-count b');
@@ -169,31 +171,52 @@
     let samples = [[0, 0]];
     let at = [0.2, 0.5, 0.8];
     let f = 0;
+    let drawn = 1;
     let finished = false;
     // How close (as a share of the trail) the walker must be to a stop to be at it: on phones, within its height.
     let near = 0.02;
+    const paint = () => {
+      const lead = Math.min(f, drawn);
+      lit.forEach((p) => (p.style.strokeDashoffset = len * (1 - lead)));
+      walker.style.opacity = drawn >= f ? 1 : 0;
+    };
+    const show = (d) => {
+      drawn = d;
+      reveal.style.strokeDashoffset = len * (1 - d);
+      // The mask is only needed while the trail draws in; once drawn it would cost a repaint every frame.
+      if (d < 1) ahead.setAttribute('mask', 'url(#trail-drawn)');
+      else ahead.removeAttribute('mask');
+      stops.forEach((s, i) => s.classList.toggle('is-shown', d >= at[i] - 0.04));
+      paint();
+    };
     const walkTo = (to) => {
       f = to;
-      lit.forEach((p) => (p.style.strokeDashoffset = len * (1 - f)));
-      const pt = paths[0].getPointAtLength(len * f);
+      const pt = ahead.getPointAtLength(len * f);
       walker.style.transform = `translate(${pt.x}px, ${pt.y}px)`;
+      paint();
       let reached = 1;
       stops.forEach((s, i) => {
         s.classList.toggle('is-on', Math.abs(f - at[i]) < near);
         s.classList.toggle('is-done', f > at[i] + near);
         if (f >= at[i] - near) reached = i + 1;
       });
-      count.textContent = reached;
+      if (+count.textContent !== reached) {
+        count.textContent = reached;
+        count.classList.remove('roll');
+        void count.offsetWidth; // restart the roll
+        count.classList.add('roll');
+      }
     };
     const build = () => {
       const w = box.offsetWidth;
       const h = box.offsetHeight;
       const list = stops[0].offsetParent;
       const c = stops.map((s) => [list.offsetLeft + s.offsetLeft + s.offsetWidth / 2, list.offsetTop + s.offsetTop + s.offsetHeight / 2]);
-      // Desktop: in from the bottom-left corner, out at the top right. Phones: in from the right, out at the left.
+      // Desktop: in from the left edge below the first stop, out at the right above the last. Phones: in from the
+      // right, out at the left.
       const pts = phone.matches
         ? [[w + 30, c[0][1] - 90], ...c, [-30, c[2][1] + 110]]
-        : [[-30, Math.min(h + 30, c[0][1] + 260)], ...c, [w + 30, c[2][1] - 170]];
+        : [[-30, c[0][1] + 120], ...c, [w + 30, c[2][1] - 110]];
       // A Catmull-Rom curve through the points, as cubic Béziers.
       let d = `M${pts[0][0]} ${pts[0][1]}`;
       for (let i = 0; i < pts.length - 1; i++) {
@@ -201,12 +224,13 @@
         d += ` C${p1[0] + (p2[0] - p0[0]) / 6} ${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6} ${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]} ${p2[1]}`;
       }
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-      paths.forEach((p) => p.setAttribute('d', d));
-      len = paths[0].getTotalLength();
-      lit.forEach((p) => (p.style.strokeDasharray = `${len} ${len}`));
+      Object.entries({ x: -300, y: -300, width: w + 600, height: h + 600 }).forEach(([k, v]) => mask.setAttribute(k, v));
+      [ahead, reveal, ...lit].forEach((p) => p.setAttribute('d', d));
+      len = ahead.getTotalLength();
+      [reveal, ...lit].forEach((p) => (p.style.strokeDasharray = `${len} ${len}`));
       near = phone.matches ? (stops[0].offsetHeight * 0.55) / len : 0.02;
       samples = Array.from({ length: 401 }, (_, i) => {
-        const pt = paths[0].getPointAtLength((len * i) / 400);
+        const pt = ahead.getPointAtLength((len * i) / 400);
         return [pt.x, pt.y];
       });
       // Where along the trail each stop sits.
@@ -215,6 +239,7 @@
         samples.forEach(([sx, sy], i) => (sx - x) ** 2 + (sy - y) ** 2 < (samples[best][0] - x) ** 2 + (samples[best][1] - y) ** 2 && (best = i));
         return best / 400;
       });
+      show(drawn);
       walkTo(finished ? at[2] : f);
     };
     // Phones: the walker keeps pace with the reader, 55% of the way down the screen.
@@ -224,9 +249,9 @@
       samples.forEach(([, sy], j) => sy <= y && (i = j));
       walkTo(i / 400);
     };
-    const finish = () => ((finished = true), walkTo(at[2]));
+    const finish = () => ((finished = true), show(1), walkTo(at[2]));
     build();
-    return { build, walkTo, follow, finish, phone, get at() { return at; } };
+    return { build, show, walkTo, follow, finish, get at() { return at; } };
   })();
   document.fonts?.ready.then(() => (trail.build(), window.ScrollTrigger?.refresh()));
 
@@ -356,21 +381,27 @@
   gsap.to('.hero-field .canopy-near', { yPercent: -14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   gsap.to('.hero-field .canopy-far', { yPercent: -5, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
-  // How it works: the scroll walks the trail through the canopy, stop to stop. Desktop pins the section while it
-  // plays; phones keep scrolling, with the walker keeping pace.
+  // How it works: on the way in the trail draws itself from the left and each stop grows in as it arrives; then the
+  // scroll walks it, stop to stop. Desktop pins the section while it plays; phones keep scrolling, with the walker
+  // keeping pace.
   $('.how').classList.add('is-live');
   ScrollTrigger.addEventListener('refreshInit', trail.build);
-  // On the way in, the veil lifts off the section's top edge and the heading and stops rise into place.
   const arrive = { trigger: '.how', start: 'top 90%', end: 'top top', scrub: true };
   // The veil holds while the section's top edge is still on screen, and lifts only as it settles into place.
   gsap.fromTo('.how-veil', { opacity: 1 }, { opacity: 0, ease: 'none', scrollTrigger: { ...arrive, start: 'top 12%' } });
   gsap.from('.how-field', { scale: 1.08, ease: 'none', scrollTrigger: arrive });
   gsap.from('.how-head', { y: 60, opacity: 0, ease: 'power1.out', scrollTrigger: { ...arrive, start: 'top 70%', end: 'top 10%' } });
-  gsap.from('.stop', { y: 90, ease: 'power1.out', stagger: 0.08, scrollTrigger: { ...arrive, start: 'top 60%', end: 'top 5%' } });
+  // The stops and the trail rise together, so the line always runs through the stops.
+  gsap.from('.trail', { y: 50, ease: 'power1.out', scrollTrigger: { ...arrive, start: 'top 70%', end: 'top 5%' } });
   const mm = gsap.matchMedia();
   mm.add('(min-width: 961px)', () => {
+    const draw = (s) => trail.show(s.progress);
+    ScrollTrigger.create({ trigger: '.how', start: 'top 80%', end: 'top 8%', onUpdate: draw, onRefresh: draw });
+    // As the walk goes on, the boughs drift past, the near ones faster: walking on through the trees.
+    const far = gsap.quickSetter('.how-field .canopy-far', 'x', 'px');
+    const nearby = gsap.quickSetter('.how-field .canopy-near', 'x', 'px');
     const walk = { f: 0 };
-    const go = () => trail.walkTo(walk.f);
+    const go = () => (trail.walkTo(walk.f), far(-walk.f * 20), nearby(-walk.f * 40));
     gsap
       .timeline({
         defaults: { ease: 'power1.inOut', onUpdate: go },
@@ -385,6 +416,7 @@
     go();
   });
   mm.add('(max-width: 960px)', () => {
+    trail.show(1);
     ScrollTrigger.create({ trigger: '.trail', start: 'top bottom', end: 'bottom top', onUpdate: trail.follow, onRefresh: trail.follow });
     trail.follow();
   });

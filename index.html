@@ -13,9 +13,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700;800&family=Martian+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=2026-11-12b" />
+    <link rel="stylesheet" href="styles.css?v=2026-11-12c" />
     <script>document.documentElement.classList.add('js');</script>
-    <script src="config.js?v=2026-11-12b"></script>
+    <script src="config.js?v=2026-11-12c"></script>
   </head>
   <body>
     <!-- Atmosphere: dappled light drifting over the page, grain on top, a glow that follows the pointer. -->
@@ -91,7 +91,7 @@
         </div>
       </div>
 
-      <!-- 2 · HOW IT WORKS — a trail through the canopy: three glass stops, and scrolling walks it (pinned on desktop) -->
+      <!-- 2 · HOW IT WORKS — a trail through the canopy: it draws itself in, then scrolling walks it stop to stop (pinned on desktop) -->
       <section class="how" id="how">
         <div class="how-pin">
           <div class="how-field" aria-hidden="true">
@@ -101,13 +101,15 @@
             <div class="how-veil"></div>
           </div>
           <header class="how-head">
-            <p class="eyebrow">How it works</p>
-            <h2 class="display h2">Two photos make a bag.</h2>
-            <p class="lede">Three stops between noticing it and spending it.</p>
+            <div>
+              <p class="eyebrow">How it works</p>
+              <h2 class="display h2">Two photos make a bag.</h2>
+              <p class="lede">Three stops between noticing it and spending it.</p>
+            </div>
+            <p class="how-count" aria-hidden="true">Step <b>1</b> / 3</p>
           </header>
-          <p class="how-count" aria-hidden="true">Step <b>1</b> / 3</p>
           <div class="trail">
-            <svg class="trail-path" aria-hidden="true"><path class="trail-ahead" /><path class="trail-glow" /><path class="trail-walked" /></svg>
+            <svg class="trail-path" aria-hidden="true"><mask id="trail-drawn" maskUnits="userSpaceOnUse"><path class="trail-reveal" /></mask><path class="trail-ahead" mask="url(#trail-drawn)" /><path class="trail-glow" /><path class="trail-walked" /></svg>
             <i class="trail-walker" aria-hidden="true"></i>
             <ol class="stops">
               <li class="stop">
@@ -121,7 +123,7 @@
                 <p>Carry it to your society's registered drop point and snap it going in.</p>
               </li>
               <li class="stop">
-                <div class="stop-shot" aria-hidden="true"><div class="stop-ph stop-earn"><div class="coin"><span>+30</span></div><p class="mono-label">Verified · Sector 45</p></div><span class="stop-br"><i></i><i></i><i></i><i></i></span></div>
+                <div class="stop-shot" aria-hidden="true"><div class="stop-ph stop-earn"><div class="coin"><span>+30</span></div><p class="mono-label">Verified · Sector 45</p><i class="spark" style="--a: 0deg"></i><i class="spark" style="--a: 45deg"></i><i class="spark" style="--a: 90deg"></i><i class="spark" style="--a: 135deg"></i><i class="spark" style="--a: 180deg"></i><i class="spark" style="--a: 225deg"></i><i class="spark" style="--a: 270deg"></i><i class="spark" style="--a: 315deg"></i></div><span class="stop-br"><i></i><i></i><i></i><i></i></span></div>
                 <div class="stop-hd"><span class="stop-n">03</span><h3>Earn it</h3><span class="stop-ok" aria-hidden="true">✓</span></div>
                 <p>The pair is checked — place, time, no repeats — and 30 coins are minted to you.</p>
               </li>
@@ -308,6 +310,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="main.js?v=2026-11-12b"></script>
+    <script src="main.js?v=2026-11-12c"></script>
   </body>
 </html>
