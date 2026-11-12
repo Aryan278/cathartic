@@ -15,6 +15,9 @@ from `main`, root). The owner is Aryan.
 - Navigation: name and "Get early access" float in the top corners (`.top`); the sections live in
   `.rail`, a left icon rail on desktop that opens into a panel on hover/focus, and a bottom tab bar
   at ≤960px that tucks away while scrolling down. `--rail` in `styles.css` keeps the page column clear of it.
+- The hero canopy's leaves are boughs in `assets/img/canopy/`, drawn by `tools/canopy.py` (edit it, then run
+  `python3 tools/canopy.py`). They grow in from the page edges like real branches: bare wood only where it is
+  thick, foliage from the edge out, never loose floating sprigs. No peepal leaves or shimmering sunflecks (both read wrong).
 - `assets/shots/` are real app screenshots (demo data); `assets/img/` holds the app's field
   backgrounds, eco-bag, grain texture and report photos.
 
