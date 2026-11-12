@@ -119,7 +119,7 @@
       }
     }),
   );
-  $$('.hero, .marquee, .screens, .rwa, .film, .cta').forEach((el) => seen.observe(el));
+  $$('.hero, .marquee, .how, .screens, .rwa, .film, .cta').forEach((el) => seen.observe(el));
 
   /* ── Reel: a second copy so the loop never shows a seam ─────────────────────── */
   const reel = $('.reel-track');
@@ -152,22 +152,91 @@
     });
   }
 
+  /* ── How it works: the trail through the canopy ─────────────────────────────── */
+  // The trail is drawn through the middle of each stop, from off one edge of the page to off the other, from where
+  // the stops actually sit, so it fits any screen. walkTo(f) lights it up to a fraction f of its length, moves the
+  // walker there and marks the stops it has reached.
+  const trail = (() => {
+    const box = $('.trail');
+    const svg = $('.trail-path', box);
+    const paths = $$('path', svg);
+    const lit = paths.filter((p) => !p.classList.contains('trail-ahead'));
+    const walker = $('.trail-walker', box);
+    const stops = $$('.stop', box);
+    const count = $('.how-count b');
+    const phone = window.matchMedia('(max-width: 960px)');
+    let len = 1;
+    let samples = [[0, 0]];
+    let at = [0.2, 0.5, 0.8];
+    let f = 0;
+    let finished = false;
+    // How close (as a share of the trail) the walker must be to a stop to be at it: on phones, within its height.
+    let near = 0.02;
+    const walkTo = (to) => {
+      f = to;
+      lit.forEach((p) => (p.style.strokeDashoffset = len * (1 - f)));
+      const pt = paths[0].getPointAtLength(len * f);
+      walker.style.transform = `translate(${pt.x}px, ${pt.y}px)`;
+      let reached = 1;
+      stops.forEach((s, i) => {
+        s.classList.toggle('is-on', Math.abs(f - at[i]) < near);
+        s.classList.toggle('is-done', f > at[i] + near);
+        if (f >= at[i] - near) reached = i + 1;
+      });
+      count.textContent = reached;
+    };
+    const build = () => {
+      const w = box.offsetWidth;
+      const h = box.offsetHeight;
+      const list = stops[0].offsetParent;
+      const c = stops.map((s) => [list.offsetLeft + s.offsetLeft + s.offsetWidth / 2, list.offsetTop + s.offsetTop + s.offsetHeight / 2]);
+      // Desktop: in from the bottom-left corner, out at the top right. Phones: in from the right, out at the left.
+      const pts = phone.matches
+        ? [[w + 30, c[0][1] - 90], ...c, [-30, c[2][1] + 110]]
+        : [[-30, Math.min(h + 30, c[0][1] + 260)], ...c, [w + 30, c[2][1] - 170]];
+      // A Catmull-Rom curve through the points, as cubic Béziers.
+      let d = `M${pts[0][0]} ${pts[0][1]}`;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const [p0, p1, p2, p3] = [pts[i - 1] || pts[i], pts[i], pts[i + 1], pts[i + 2] || pts[i + 1]];
+        d += ` C${p1[0] + (p2[0] - p0[0]) / 6} ${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6} ${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]} ${p2[1]}`;
+      }
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      paths.forEach((p) => p.setAttribute('d', d));
+      len = paths[0].getTotalLength();
+      lit.forEach((p) => (p.style.strokeDasharray = `${len} ${len}`));
+      near = phone.matches ? (stops[0].offsetHeight * 0.55) / len : 0.02;
+      samples = Array.from({ length: 401 }, (_, i) => {
+        const pt = paths[0].getPointAtLength((len * i) / 400);
+        return [pt.x, pt.y];
+      });
+      // Where along the trail each stop sits.
+      at = c.map(([x, y]) => {
+        let best = 0;
+        samples.forEach(([sx, sy], i) => (sx - x) ** 2 + (sy - y) ** 2 < (samples[best][0] - x) ** 2 + (samples[best][1] - y) ** 2 && (best = i));
+        return best / 400;
+      });
+      walkTo(finished ? at[2] : f);
+    };
+    // Phones: the walker keeps pace with the reader, 55% of the way down the screen.
+    const follow = () => {
+      const y = innerHeight * 0.55 - box.getBoundingClientRect().top;
+      let i = 0;
+      samples.forEach(([, sy], j) => sy <= y && (i = j));
+      walkTo(i / 400);
+    };
+    const finish = () => ((finished = true), walkTo(at[2]));
+    build();
+    return { build, walkTo, follow, finish, phone, get at() { return at; } };
+  })();
+  document.fonts?.ready.then(() => (trail.build(), window.ScrollTrigger?.refresh()));
+
   /* ── The finished state, for "reduce motion" or no GSAP ─────────────────────── */
   const settle = () => {
-    $$('.frame img, .drop-thumb').forEach((el) => Object.assign(el.style, { opacity: 1, transform: 'none' }));
-    $$('.strip-line b').forEach((el) => (el.style.transform = 'none'));
-    Object.assign($('.receipt-card').style, { opacity: 1, transform: 'none' });
-    // How it works rests on its last frame: the drop point, dimmed, with the coin card on top.
-    $('.scene-find').style.opacity = 0;
-    $('.scene-drop').style.opacity = 1;
-    $('.scene-dim').style.opacity = 1;
-    $('.drop-art').style.opacity = 0.3;
-    $('.reticle-drop').style.opacity = 0;
-    $$('.how-dots i').forEach((d) => d.classList.add('on'));
-    $('.how-count b').textContent = 3;
+    // How it works rests at its last stop, the whole trail walked.
+    trail.finish();
+    addEventListener('resize', trail.build);
     $$('.ms').forEach((m) => m.classList.add('on'));
     $('.ms-track b').style.transform = 'none';
-    $$('.step').forEach((s) => s.classList.add('is-on'));
   };
   if (calm || !hasGsap) return settle();
 
@@ -230,7 +299,7 @@
   // spring back once it has passed.
   if (fine) {
     const field = $('.hero-field');
-    const leaves = $$('.leaf').map((el) => {
+    const leaves = $$('.hero-field .leaf').map((el) => {
       const near = !!el.closest('.canopy-near');
       const ease = { duration: near ? 0.9 : 1.2, ease: 'power3' };
       return { el, near, layer: el.closest('.canopy-layer'), qx: gsap.quickTo(el, 'x', ease), qy: gsap.quickTo(el, 'y', ease), qr: gsap.quickTo(el, 'rotation', ease) };
@@ -284,67 +353,41 @@
     addEventListener('scroll', () => scrollY < innerHeight * 1.2 && queue(), { passive: true });
   }
   // The near leaves pass faster than the far ones, for depth.
-  gsap.to('.canopy-near', { yPercent: -14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
-  gsap.to('.canopy-far', { yPercent: -5, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.hero-field .canopy-near', { yPercent: -14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.hero-field .canopy-far', { yPercent: -5, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
-  // How it works: pinned, and the scroll plays find → drop → minted, one step showing at a time.
-  const steps = $$('.step');
-  const dots = $$('.how-dots i');
-  const count = $('.how-count b');
-  const setStep = (n) => {
-    steps.forEach((s, i) => s.classList.toggle('is-on', i === n));
-    dots.forEach((d, i) => d.classList.toggle('on', i <= n));
-    count.textContent = n + 1;
-  };
+  // How it works: the scroll walks the trail through the canopy, stop to stop. Desktop pins the section while it
+  // plays; phones keep scrolling, with the walker keeping pace.
   $('.how').classList.add('is-live');
-  // On the way in, the veil lifts off the scene's top edge and the camera and panel rise into place.
+  ScrollTrigger.addEventListener('refreshInit', trail.build);
+  // On the way in, the veil lifts off the section's top edge and the heading and stops rise into place.
   const arrive = { trigger: '.how', start: 'top 90%', end: 'top top', scrub: true };
-  // The veil holds while the scene's top edge is still on screen, and lifts only as the section pins.
+  // The veil holds while the section's top edge is still on screen, and lifts only as it settles into place.
   gsap.fromTo('.how-veil', { opacity: 1 }, { opacity: 0, ease: 'none', scrollTrigger: { ...arrive, start: 'top 12%' } });
-  gsap.from('.how-scenes', { scale: 1.08, ease: 'none', scrollTrigger: arrive });
-  gsap.from('.how-frame, .how-copy', { y: 70, opacity: 0, ease: 'power1.out', stagger: 0.1, scrollTrigger: { ...arrive, start: 'top 60%', end: 'top 5%' } });
+  gsap.from('.how-field', { scale: 1.08, ease: 'none', scrollTrigger: arrive });
+  gsap.from('.how-head', { y: 60, opacity: 0, ease: 'power1.out', scrollTrigger: { ...arrive, start: 'top 70%', end: 'top 10%' } });
+  gsap.from('.stop', { y: 90, ease: 'power1.out', stagger: 0.08, scrollTrigger: { ...arrive, start: 'top 60%', end: 'top 5%' } });
   const mm = gsap.matchMedia();
-  mm.add('(min-width: 961px)', () => howTimeline('+=240%'));
-  mm.add('(max-width: 960px)', () => howTimeline('+=180%'));
-  function howTimeline(end) {
-    const tl = gsap.timeline({
-      defaults: { ease: 'power2.out' },
-      scrollTrigger: {
-        trigger: '.how',
-        pin: '.how-pin',
-        start: 'top top',
-        end,
-        scrub: 0.6,
-        onUpdate: (self) => setStep(self.progress < 0.36 ? 0 : self.progress < 0.7 ? 1 : 2),
-      },
-    });
-    tl.to('.scene-img', { '--zoom': 1.06, duration: 1 })
-      .to('.shutter i', { scale: 0.82, duration: 0.15 }, 0.85)
-      .to('.shutter i', { scale: 1, duration: 0.2 }, 1)
-      .fromTo('.flash', { opacity: 0 }, { opacity: 0.9, duration: 0.08 }, 0.95)
-      .to('.flash', { opacity: 0, duration: 0.35 }, 1.03)
-      .to('.frame-find img', { opacity: 1, scale: 1, duration: 0.4 }, 1)
-      .to('.strip-line b', { scaleX: 1, duration: 0.5 }, 1.2)
-      .to('.frame-find', { borderColor: 'rgba(249,253,214,.3)', boxShadow: '0 0 0 rgba(0,0,0,0)', duration: 0.3 }, 1.4)
-      .to('.frame-drop', { borderStyle: 'solid', borderColor: '#e1ec97', boxShadow: '0 0 18px rgba(225,236,151,.35)', duration: 0.3 }, 1.4)
-      .to('.scene-find', { opacity: 0, duration: 0.5 }, 1.5)
-      .to('.scene-drop', { opacity: 1, duration: 0.5 }, 1.5)
-      .to('.drop-art', { opacity: 1, duration: 0.5 }, 1.5)
-      .fromTo('.vf-bag', { yPercent: -160, opacity: 0 }, { yPercent: 70, opacity: 1, duration: 0.9, ease: 'power2.in' }, 1.8)
-      .to('.vf-bag', { opacity: 0, scale: 0.6, duration: 0.2 }, 2.6)
-      .to('.shutter i', { scale: 0.82, duration: 0.15 }, 2.7)
-      .to('.shutter i', { scale: 1, duration: 0.2 }, 2.85)
-      .fromTo('.flash', { opacity: 0 }, { opacity: 0.9, duration: 0.08 }, 2.8)
-      .to('.flash', { opacity: 0, duration: 0.35 }, 2.88)
-      .to('.frame-drop .drop-thumb', { opacity: 1, scale: 1, duration: 0.4 }, 2.85)
-      .to('.scene-dim', { opacity: 1, duration: 0.5 }, 3.1)
-      .to('.drop-art', { opacity: 0.3, duration: 0.5 }, 3.1)
-      .to('.reticle-drop', { opacity: 0, duration: 0.3 }, 3.1)
-      .to('.receipt-card', { opacity: 1, '--cy': '0px', '--cs': 1, duration: 0.7, ease: 'back.out(1.6)' }, 3.2)
-      .fromTo('.coin-big', { rotateY: -540, scale: 0.4 }, { rotateY: 0, scale: 1, duration: 1.1, ease: 'power3.out' }, 3.3)
-      .to({}, { duration: 0.6 });
-    return () => setStep(0);
-  }
+  mm.add('(min-width: 961px)', () => {
+    const walk = { f: 0 };
+    const go = () => trail.walkTo(walk.f);
+    gsap
+      .timeline({
+        defaults: { ease: 'power1.inOut', onUpdate: go },
+        scrollTrigger: { trigger: '.how', pin: '.how-pin', start: 'top top', end: '+=220%', scrub: 0.6, invalidateOnRefresh: true },
+      })
+      .fromTo(walk, { f: () => trail.at[0] * 0.45 }, { f: () => trail.at[0], duration: 1 })
+      .to({}, { duration: 1.1 })
+      .to(walk, { f: () => trail.at[1], duration: 1.2 })
+      .to({}, { duration: 1.1 })
+      .to(walk, { f: () => trail.at[2], duration: 1.2 })
+      .to({}, { duration: 1.3 });
+    go();
+  });
+  mm.add('(max-width: 960px)', () => {
+    ScrollTrigger.create({ trigger: '.trail', start: 'top bottom', end: 'bottom top', onUpdate: trail.follow, onRefresh: trail.follow });
+    trail.follow();
+  });
 
   // Rewards: the leaders draw, the balance line sweeps, the receipt prints.
   gsap.from('.leader', { scaleX: 0, duration: 1.1, ease, stagger: 0.12, scrollTrigger: { trigger: '.menu', start: 'top 75%' } });

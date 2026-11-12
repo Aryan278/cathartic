@@ -13,9 +13,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700;800&family=Martian+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=2026-11-12" />
+    <link rel="stylesheet" href="styles.css?v=2026-11-12b" />
     <script>document.documentElement.classList.add('js');</script>
-    <script src="config.js?v=2026-11-12"></script>
+    <script src="config.js?v=2026-11-12b"></script>
   </head>
   <body>
     <!-- Atmosphere: dappled light drifting over the page, grain on top, a glow that follows the pointer. -->
@@ -91,58 +91,41 @@
         </div>
       </div>
 
-      <!-- 2 · HOW IT WORKS — pinned; the whole screen becomes the app's camera and scrolling plays the two-photo chain -->
+      <!-- 2 · HOW IT WORKS — a trail through the canopy: three glass stops, and scrolling walks it (pinned on desktop) -->
       <section class="how" id="how">
         <div class="how-pin">
-          <div class="how-scenes" aria-hidden="true">
-            <div class="scene scene-find">
-              <img class="scene-bg" src="assets/img/pile-blur.webp" alt="" />
-              <div class="scene-img">
-                <img src="assets/img/pile.webp" alt="" />
-                <i class="reticle reticle-find"><span>Loose litter · in reach</span></i>
-              </div>
-            </div>
-            <div class="scene scene-drop"></div>
-            <div class="scene-dim"></div>
+          <div class="how-field" aria-hidden="true">
+            <div class="canopy-glows"><i></i><i></i><i></i></div>
+            <div class="canopy-layer canopy-far"><div class="canopy-sway"><i class="leaf" style="--lx: 7%; --ly: 1.5%; --s: 0.95; --r: 159deg; --f: -1"><b class="sp-twig2"></b></i><i class="leaf" style="--lx: 31%; --ly: 1.5%; --s: 0.6; --r: 157deg; --f: -1"><b class="sp-neem1"></b></i><i class="leaf" style="--lx: 69%; --ly: 1.5%; --s: 0.62; --r: 200deg"><b class="sp-twig3"></b></i><i class="leaf" style="--lx: 93%; --ly: 1.5%; --s: 0.95; --r: 207deg"><b class="sp-fork2"></b></i><i class="leaf" style="--lx: -1%; --ly: 34%; --s: 0.85; --r: 100deg"><b class="sp-fork1"></b></i><i class="leaf" style="--lx: -1%; --ly: 68%; --s: 0.8; --r: 66deg"><b class="sp-twig1"></b></i><i class="leaf" style="--lx: 101%; --ly: 30%; --s: 0.85; --r: 250deg; --f: -1"><b class="sp-neem2"></b></i><i class="leaf" style="--lx: 101%; --ly: 64%; --s: 0.8; --r: 291deg; --f: -1"><b class="sp-mango1"></b></i></div></div>
+            <div class="canopy-layer canopy-near"><div class="canopy-sway"><i class="leaf" style="--lx: 15%; --ly: 1.5%; --s: 0.8; --r: 155deg; --f: -1"><b class="sp-fork1"></b></i><i class="leaf" style="--lx: 86%; --ly: 1.5%; --s: 0.8; --r: 197deg"><b class="sp-twig1"></b></i><i class="leaf" style="--lx: -1%; --ly: 50%; --s: 0.75; --r: 69deg"><b class="sp-neem2"></b></i><i class="leaf" style="--lx: -1%; --ly: 84%; --s: 0.8; --r: 71deg"><b class="sp-mango2"></b></i><i class="leaf" style="--lx: 101%; --ly: 46%; --s: 0.75; --r: 258deg; --f: -1"><b class="sp-twig2"></b></i><i class="leaf" style="--lx: 101%; --ly: 82%; --s: 0.8; --r: 292deg; --f: -1"><b class="sp-fork2"></b></i></div></div>
             <div class="how-veil"></div>
-            <div class="flash"></div>
           </div>
-
-          <div class="how-frame" aria-hidden="true">
-            <i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i>
-            <div class="strip">
-              <div class="frame frame-find"><span>FIND</span><img src="assets/img/pile.webp" alt="" /></div>
-              <i class="strip-line"><b></b></i>
-              <div class="frame frame-drop"><span>DROP</span><div class="drop-thumb"></div></div>
-            </div>
-            <p class="how-count">Step <b>1</b> / 3</p>
-            <div class="drop-art">
-              <svg viewBox="0 0 200 200">
-                <rect x="56" y="70" width="88" height="96" rx="12" fill="#2a4224" stroke="#9bb444" stroke-width="3" />
-                <rect x="48" y="58" width="104" height="16" rx="6" fill="#314926" stroke="#9bb444" stroke-width="3" />
-                <path d="M88 108 q12 -14 24 0 q-12 14 -24 0z" fill="#b2c74b" />
-                <text x="100" y="150" text-anchor="middle" font-family="Martian Mono" font-size="8.5" fill="#e1ec97" letter-spacing="1.2">DROP POINT</text>
-              </svg>
-              <img class="vf-bag" src="assets/img/eco-bag@2x.webp" alt="" />
-              <i class="reticle reticle-drop"><span>Your society's drop point</span></i>
-            </div>
-            <div class="receipt-card">
-              <p class="mono-label">Verified · Sector 45</p>
-              <div class="coin coin-big"><span>+30</span></div>
-              <p class="receipt-line">Two photos, one bag. Nice work.</p>
-            </div>
-            <div class="shutter"><i></i></div>
-          </div>
-
-          <div class="how-copy">
+          <header class="how-head">
             <p class="eyebrow">How it works</p>
             <h2 class="display h2">Two photos make a bag.</h2>
-            <ol class="steps">
-              <li class="step is-on" data-step="0"><span class="step-n">01</span><div><h3>Find it</h3><p>Spot loose litter anywhere — your lane, the park, the road outside. Snap it where it lies.</p></div></li>
-              <li class="step" data-step="1"><span class="step-n">02</span><div><h3>Drop it</h3><p>Carry it to your society's registered drop point and snap it going in.</p></div></li>
-              <li class="step" data-step="2"><span class="step-n">03</span><div><h3>Earn it</h3><p>The pair is checked — place, time, no repeats — and 30 coins are minted to you.</p></div></li>
+            <p class="lede">Three stops between noticing it and spending it.</p>
+          </header>
+          <p class="how-count" aria-hidden="true">Step <b>1</b> / 3</p>
+          <div class="trail">
+            <svg class="trail-path" aria-hidden="true"><path class="trail-ahead" /><path class="trail-glow" /><path class="trail-walked" /></svg>
+            <i class="trail-walker" aria-hidden="true"></i>
+            <ol class="stops">
+              <li class="stop">
+                <div class="stop-shot" aria-hidden="true"><div class="stop-ph stop-find"><div class="stop-pile"><img src="assets/img/pile.webp" alt="" /><i class="reticle"><span>Loose litter · in reach</span></i></div></div><span class="stop-br"><i></i><i></i><i></i><i></i></span></div>
+                <div class="stop-hd"><span class="stop-n">01</span><h3>Find it</h3><span class="stop-ok" aria-hidden="true">✓</span></div>
+                <p>Spot loose litter anywhere — your lane, the park, the road outside. Snap it where it lies.</p>
+              </li>
+              <li class="stop">
+                <div class="stop-shot" aria-hidden="true"><div class="stop-ph stop-drop"><svg viewBox="0 0 200 200"><rect x="56" y="70" width="88" height="96" rx="12" fill="#2a4224" stroke="#9bb444" stroke-width="3" /><rect x="48" y="58" width="104" height="16" rx="6" fill="#314926" stroke="#9bb444" stroke-width="3" /><path d="M88 108 q12 -14 24 0 q-12 14 -24 0z" fill="#b2c74b" /><text x="100" y="150" text-anchor="middle" font-family="Martian Mono" font-size="8.5" fill="#e1ec97" letter-spacing="1.2">DROP POINT</text></svg><img class="stop-bag" src="assets/img/eco-bag@2x.webp" alt="" /></div><span class="stop-br"><i></i><i></i><i></i><i></i></span></div>
+                <div class="stop-hd"><span class="stop-n">02</span><h3>Drop it</h3><span class="stop-ok" aria-hidden="true">✓</span></div>
+                <p>Carry it to your society's registered drop point and snap it going in.</p>
+              </li>
+              <li class="stop">
+                <div class="stop-shot" aria-hidden="true"><div class="stop-ph stop-earn"><div class="coin"><span>+30</span></div><p class="mono-label">Verified · Sector 45</p></div><span class="stop-br"><i></i><i></i><i></i><i></i></span></div>
+                <div class="stop-hd"><span class="stop-n">03</span><h3>Earn it</h3><span class="stop-ok" aria-hidden="true">✓</span></div>
+                <p>The pair is checked — place, time, no repeats — and 30 coins are minted to you.</p>
+              </li>
             </ol>
-            <div class="how-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
           </div>
         </div>
       </section>
@@ -325,6 +308,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="main.js?v=2026-11-12"></script>
+    <script src="main.js?v=2026-11-12b"></script>
   </body>
 </html>

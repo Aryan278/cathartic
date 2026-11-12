@@ -18,6 +18,8 @@ from `main`, root). The owner is Aryan.
 - The hero canopy's leaves are boughs in `assets/img/canopy/`, drawn by `tools/canopy.py` (edit it, then run
   `python3 tools/canopy.py`). They grow in from the page edges like real branches: bare wood only where it is
   thick, foliage from the edge out, never loose floating sprigs. No peepal leaves or shimmering sunflecks (both read wrong).
+- How it works is a trail through the canopy: three glass stops, and the scroll walks a glowing path through them
+  (pinned on desktop; on phones the walker keeps pace with the reader). main.js draws the path from where the stops sit.
 - `assets/shots/` are real app screenshots (demo data); `assets/img/` holds the app's field
   backgrounds, eco-bag, grain texture and report photos.
 
