@@ -13,9 +13,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700;800&family=Martian+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=2026-11-12e" />
+    <link rel="stylesheet" href="styles.css?v=2026-11-12f" />
     <script>document.documentElement.classList.add('js');</script>
-    <script src="config.js?v=2026-11-12e"></script>
+    <script src="config.js?v=2026-11-12f"></script>
   </head>
   <body>
     <!-- Atmosphere: dappled light drifting over the page, grain on top, a glow that follows the pointer. -->
@@ -91,7 +91,7 @@
         </div>
       </div>
 
-      <!-- 2 · HOW IT WORKS — a trail through the canopy: it draws itself in, then scrolling walks it stop to stop (pinned on desktop) -->
+      <!-- 2 · HOW IT WORKS — the steps orbit a phone that shows the Collect screen; held on screen while the scroll turns it -->
       <section class="how" id="how">
         <div class="how-pin">
           <div class="how-field" aria-hidden="true">
@@ -103,28 +103,57 @@
             <div>
               <p class="eyebrow">How it works</p>
               <h2 class="display h2">Two photos make a bag.</h2>
-              <p class="lede">Three stops between noticing it and spending it.</p>
+              <p class="lede">Three steps between noticing it and spending it.</p>
             </div>
             <p class="how-count" aria-hidden="true">Step <b>1</b> / 3</p>
           </header>
-          <div class="trail">
-            <svg class="trail-path" aria-hidden="true"><mask id="trail-drawn" maskUnits="userSpaceOnUse"><path class="trail-reveal" /></mask><path class="trail-ahead" mask="url(#trail-drawn)" /><path class="trail-glow" /><path class="trail-walked" /></svg>
-            <i class="trail-walker" aria-hidden="true"></i>
-            <ol class="stops">
-              <li class="stop">
-                <div class="stop-shot" aria-hidden="true"><div class="stop-ph stop-find"><div class="stop-pile"><img src="assets/img/pile.webp" alt="" /><i class="reticle"><span>Loose litter · in reach</span></i></div></div><span class="stop-br"><i></i><i></i><i></i><i></i></span></div>
-                <div class="stop-hd"><span class="stop-n">01</span><h3>Find it</h3><span class="stop-ok" aria-hidden="true">✓</span></div>
+          <!-- The phone shows the Collect screen; the steps are glass panels that orbit it as the scroll goes on (main.js). -->
+          <div class="how-stage">
+            <i class="how-halo" aria-hidden="true"></i>
+            <div class="phone how-phone" data-step="0" aria-hidden="true">
+              <div class="scr">
+                <div class="scr-view scr-find">
+                  <img class="scr-photo" src="assets/img/pile.webp" alt="" loading="lazy" />
+                  <i class="scr-reticle"><span>Loose litter · in reach</span></i>
+                  <p class="scr-k">Photo 1 of 2 · where it lies</p>
+                  <i class="scr-shutter"></i>
+                </div>
+                <div class="scr-view scr-drop">
+                  <div class="scr-bin"><svg viewBox="0 0 200 200"><ellipse cx="100" cy="168" rx="60" ry="7" fill="#0b0e0a" opacity="0.7" /><rect x="56" y="70" width="88" height="96" rx="12" fill="#2a4224" stroke="#9bb444" stroke-width="3" /><rect x="48" y="58" width="104" height="16" rx="6" fill="#314926" stroke="#9bb444" stroke-width="3" /><path d="M88 108 q12 -14 24 0 q-12 14 -24 0z" fill="#b2c74b" /><text x="100" y="150" text-anchor="middle" font-family="Martian Mono" font-size="8.5" fill="#e1ec97" letter-spacing="1.2">DROP POINT</text></svg><img class="scr-bag" src="assets/img/eco-bag@2x.webp" alt="" loading="lazy" /><p class="scr-geo">Sector 45 · drop point</p></div>
+                  <p class="scr-k">Photo 2 of 2 · going in</p>
+                  <i class="scr-shutter"></i>
+                </div>
+                <div class="scr-view scr-earn">
+                  <div class="scr-mint"><div class="coin"><span>+30</span></div><i class="scr-spark" style="--a: 0deg"></i><i class="scr-spark" style="--a: 45deg"></i><i class="scr-spark" style="--a: 90deg"></i><i class="scr-spark" style="--a: 135deg"></i><i class="scr-spark" style="--a: 180deg"></i><i class="scr-spark" style="--a: 225deg"></i><i class="scr-spark" style="--a: 270deg"></i><i class="scr-spark" style="--a: 315deg"></i></div>
+                  <p class="scr-v">Verified</p>
+                  <ul class="scr-checks"><li>Place</li><li>Time</li><li>No repeats</li></ul>
+                  <p class="scr-bal"><span>Balance</span><b data-from="1,210">1,240</b>coins</p>
+                </div>
+                <div class="scr-top"><i class="scr-x"></i><span class="scr-st">Find</span><i class="scr-ln"></i><span class="scr-st">Drop</span></div>
+              </div>
+            </div>
+            <div class="how-wire" aria-hidden="true"><i></i></div>
+            <ol class="how-steps">
+              <li class="hstep">
+                <span class="hstep-br" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <div class="hstep-top"><span class="hstep-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg></span><span class="hstep-n">01</span><span class="hstep-ok" aria-hidden="true">✓</span></div>
+                <h3>Find it</h3>
                 <p>Spot loose litter anywhere — your lane, the park, the road outside. Snap it where it lies.</p>
+                <p class="hstep-chip">Photo 1 · where it lies</p>
               </li>
-              <li class="stop">
-                <div class="stop-shot" aria-hidden="true"><div class="stop-ph stop-drop"><svg viewBox="0 0 200 200"><rect x="56" y="70" width="88" height="96" rx="12" fill="#2a4224" stroke="#9bb444" stroke-width="3" /><rect x="48" y="58" width="104" height="16" rx="6" fill="#314926" stroke="#9bb444" stroke-width="3" /><path d="M88 108 q12 -14 24 0 q-12 14 -24 0z" fill="#b2c74b" /><text x="100" y="150" text-anchor="middle" font-family="Martian Mono" font-size="8.5" fill="#e1ec97" letter-spacing="1.2">DROP POINT</text></svg><img class="stop-bag" src="assets/img/eco-bag@2x.webp" alt="" /></div><span class="stop-br"><i></i><i></i><i></i><i></i></span></div>
-                <div class="stop-hd"><span class="stop-n">02</span><h3>Drop it</h3><span class="stop-ok" aria-hidden="true">✓</span></div>
+              <li class="hstep">
+                <span class="hstep-br" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <div class="hstep-top"><span class="hstep-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.5 9h13l-1.3 11H6.8z" /><path d="M4 9h16M9.5 9V6h5v3" /></svg></span><span class="hstep-n">02</span><span class="hstep-ok" aria-hidden="true">✓</span></div>
+                <h3>Drop it</h3>
                 <p>Carry it to your society's registered drop point and snap it going in.</p>
+                <p class="hstep-chip">Photo 2 · going in</p>
               </li>
-              <li class="stop">
-                <div class="stop-shot" aria-hidden="true"><div class="stop-ph stop-earn"><div class="coin"><span>+30</span></div><p class="mono-label">Verified · Sector 45</p><i class="spark" style="--a: 0deg"></i><i class="spark" style="--a: 45deg"></i><i class="spark" style="--a: 90deg"></i><i class="spark" style="--a: 135deg"></i><i class="spark" style="--a: 180deg"></i><i class="spark" style="--a: 225deg"></i><i class="spark" style="--a: 270deg"></i><i class="spark" style="--a: 315deg"></i></div><span class="stop-br"><i></i><i></i><i></i><i></i></span></div>
-                <div class="stop-hd"><span class="stop-n">03</span><h3>Earn it</h3><span class="stop-ok" aria-hidden="true">✓</span></div>
+              <li class="hstep">
+                <span class="hstep-br" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <div class="hstep-top"><span class="hstep-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /><path d="M12 8.5v7M8.5 12h7" /></svg></span><span class="hstep-n">03</span><span class="hstep-ok" aria-hidden="true">✓</span></div>
+                <h3>Earn it</h3>
                 <p>The pair is checked — place, time, no repeats — and 30 coins are minted to you.</p>
+                <p class="hstep-chip">+30 coins</p>
               </li>
             </ol>
           </div>
@@ -309,6 +338,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="main.js?v=2026-11-12e"></script>
+    <script src="main.js?v=2026-11-12f"></script>
   </body>
 </html>

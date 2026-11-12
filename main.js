@@ -152,114 +152,98 @@
     });
   }
 
-  /* ── How it works: the trail through the canopy ─────────────────────────────── */
-  // The trail is drawn through the middle of each stop, from off one edge of the page to off the other, from where
-  // the stops actually sit, so it fits any screen. show(d) draws it in up to a fraction d of its length, each stop
-  // growing in as the line reaches it; walkTo(f) lights it up to f, moves the walker there and marks the stops.
-  const trail = (() => {
-    const box = $('.trail');
-    const svg = $('.trail-path', box);
-    const ahead = $('.trail-ahead', svg);
-    const reveal = $('.trail-reveal', svg);
-    const mask = $('mask', svg);
-    const lit = $$('.trail-glow, .trail-walked', svg);
-    const walker = $('.trail-walker', box);
-    const stops = $$('.stop', box);
+  /* ── How it works: the steps orbit the phone ──────────────────────────────────── */
+  // The phone shows the Collect screen and the steps are glass panels round it. As p runs from 0 to 2, each panel
+  // moves on along a loop of keyframes (passing the phone's top or foot behind it), so the next step comes round to
+  // the front, where it faces you, and the screen steps through the flow with it. Phones: the panels swing past
+  // under the phone like a carousel. e (0 → 1) fans them out from behind the phone as the section arrives.
+  const orbit = (() => {
+    const stage = $('.how-stage');
+    const phone = $('.how-phone', stage);
+    const wire = $('.how-wire', stage);
+    const cards = $$('.hstep', stage);
     const count = $('.how-count b');
-    const phone = window.matchMedia('(max-width: 960px)');
-    let len = 1;
-    let samples = [[0, 0]];
-    let at = [0.2, 0.5, 0.8];
-    let f = 0;
-    let drawn = 1;
-    let finished = false;
-    // How close (as a share of the trail) the walker must be to a stop to be at it: on phones, within its height.
-    let near = 0.02;
-    const paint = () => {
-      const lead = Math.min(f, drawn);
-      lit.forEach((p) => (p.style.strokeDashoffset = len * (1 - lead)));
-      walker.style.opacity = drawn >= f ? 1 : 0;
+    const bal = $('.scr-bal b', stage);
+    const total = bal.textContent;
+    const num = (t) => +t.replace(/\D/g, '');
+    let K = [], size = [], ph = {}, H = 0, small = false, p = 0, e = 1, step = -1, lit = -1, tally;
+    // A smooth loop through the six keyframes in K, two to a step (Catmull-Rom, so it never pauses at one).
+    const along = (s) => {
+      const u = s * 2, i = Math.floor(u), t = u - i, k = (n) => K[(n + 6) % 6];
+      const [a, b, c, d] = [k(i - 1), k(i), k(i + 1), k(i + 2)];
+      return b.map((_, f) => b[f] + 0.5 * t * (c[f] - a[f] + t * (2 * a[f] - 5 * b[f] + 4 * c[f] - d[f] + t * (3 * (b[f] - c[f]) + d[f] - a[f]))));
     };
-    const show = (d) => {
-      drawn = d;
-      reveal.style.strokeDashoffset = len * (1 - d);
-      // The mask is only needed while the trail draws in; once drawn it would cost a repaint every frame.
-      if (d < 1) ahead.setAttribute('mask', 'url(#trail-drawn)');
-      else ahead.removeAttribute('mask');
-      stops.forEach((s, i) => s.classList.toggle('is-shown', d >= at[i] - 0.04));
-      paint();
+    // All measuring happens here (on load and resize), never while drawing.
+    const layout = () => {
+      small = innerWidth <= 960;
+      const W = stage.clientWidth;
+      H = stage.clientHeight;
+      ph = { x: phone.offsetLeft + phone.offsetWidth / 2, y: phone.offsetTop + phone.offsetHeight / 2, w: phone.offsetWidth, h: phone.offsetHeight };
+      size = cards.map((c) => [c.offsetWidth, c.offsetHeight]);
+      if (small) return;
+      const cw = size[0][0];
+      const X = Math.min(ph.w / 2 + Math.max(48, Math.min(W * 0.05, 100)) + cw / 2, W / 2 - cw / 2);
+      // [x, y, turn, scale, opacity] from the phone's centre: at the front, on its right; past its top corner, half
+      // behind it; back left, high; round the far left; back left, low; past its foot, half behind it.
+      K = [[X, 0, -6, 1, 1], [0.4 * X, -0.28 * H, 4, 0.66, 0.55], [-X, -0.25 * H, 24, 0.7, 0.62], [-1.1 * X, 0, 30, 0.62, 0.42], [-X, 0.25 * H, 24, 0.7, 0.72], [0.4 * X, 0.28 * H, -4, 0.66, 0.6]];
+      const len = X - cw / 2 - ph.w / 2 + 8;
+      wire.style.cssText = `left: ${ph.x + ph.w / 2 - 4}px; top: ${ph.y}px; width: ${len}px; --run: ${len - 14}px`;
     };
-    const walkTo = (to) => {
-      f = to;
-      const pt = ahead.getPointAtLength(len * f);
-      walker.style.transform = `translate(${pt.x}px, ${pt.y}px)`;
-      paint();
-      let reached = 1;
-      stops.forEach((s, i) => {
-        s.classList.toggle('is-on', Math.abs(f - at[i]) < near);
-        s.classList.toggle('is-done', f > at[i] + near);
-        if (f >= at[i] - near) reached = i + 1;
+    const draw = () => {
+      const k = 1 - (1 - e) ** 3;
+      cards.forEach((c, i) => {
+        const [w, h] = size[i];
+        let v, back;
+        if (small) {
+          const r = Math.max(-1.6, Math.min(1.6, i - p)), a = Math.abs(r);
+          const y = Math.min(ph.h * 0.34 + h / 2, H - ph.y - h / 2 - 4);
+          v = [r * w * 0.84, y, -r * 40, 1 - Math.min(a, 1) * 0.18, Math.max(0, 1 - a * 0.7)];
+          back = a > 0.5;
+        } else {
+          const s = (((p - i) % 3) + 3) % 3;
+          v = along(s);
+          back = s > 0.12 && s < 2.88;
+        }
+        const [x, y, ry, sc, op] = v;
+        c.style.transform = `translate3d(${ph.x + x * k - w / 2}px, ${ph.y + y * k - h / 2}px, 0) rotateY(${ry}deg) scale(${sc * (0.5 + 0.5 * k)})`;
+        c.style.opacity = op * k;
+        c.classList.toggle('is-back', back || k < 0.97);
       });
-      if (+count.textContent !== reached) {
-        count.textContent = reached;
-        count.classList.remove('roll');
-        void count.offsetWidth; // restart the roll
-        count.classList.add('roll');
+      phone.style.transform = `translate3d(0, ${(1 - k) * 60}px, 0)`;
+      phone.style.opacity = 0.3 + 0.7 * k;
+      const now = Math.max(0, Math.min(2, Math.round(p)));
+      if (now !== step) {
+        if (step >= 0 && count) {
+          count.textContent = now + 1;
+          count.classList.remove('roll');
+          void count.offsetWidth; // restart the roll
+          count.classList.add('roll');
+        }
+        step = now;
+        phone.dataset.step = now;
+        cards.forEach((c, i) => c.classList.toggle('is-done', i < now));
+        // The balance counts up as the coins land.
+        tally?.kill();
+        bal.textContent = bal.dataset.from;
+        if (now === 2) {
+          const o = { v: num(bal.dataset.from) };
+          tally = window.gsap.to(o, { v: num(total), duration: 1.2, delay: 0.55, ease: 'power2.out', onUpdate: () => (bal.textContent = Math.round(o.v).toLocaleString('en-IN')) });
+        }
+      }
+      const on = k > 0.97 && Math.abs(p - now) < 0.08 ? now : -1;
+      if (on !== lit) {
+        lit = on;
+        cards.forEach((c, i) => c.classList.toggle('is-on', i === on));
+        wire.classList.toggle('is-on', on >= 0);
       }
     };
-    const build = () => {
-      const w = box.offsetWidth;
-      const h = box.offsetHeight;
-      const list = stops[0].offsetParent;
-      const c = stops.map((s) => [list.offsetLeft + s.offsetLeft + s.offsetWidth / 2, list.offsetTop + s.offsetTop + s.offsetHeight / 2]);
-      // Desktop: in from the left edge below the first stop, out at the right above the last. Phones: in from the
-      // right, out at the left.
-      const pts = phone.matches
-        ? [[w + 30, c[0][1] - 90], ...c, [-30, c[2][1] + 110]]
-        : [[-30, c[0][1] + 120], ...c, [w + 30, c[2][1] - 110]];
-      // A Catmull-Rom curve through the points, as cubic Béziers.
-      let d = `M${pts[0][0]} ${pts[0][1]}`;
-      for (let i = 0; i < pts.length - 1; i++) {
-        const [p0, p1, p2, p3] = [pts[i - 1] || pts[i], pts[i], pts[i + 1], pts[i + 2] || pts[i + 1]];
-        d += ` C${p1[0] + (p2[0] - p0[0]) / 6} ${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6} ${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]} ${p2[1]}`;
-      }
-      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-      Object.entries({ x: -300, y: -300, width: w + 600, height: h + 600 }).forEach(([k, v]) => mask.setAttribute(k, v));
-      [ahead, reveal, ...lit].forEach((p) => p.setAttribute('d', d));
-      len = ahead.getTotalLength();
-      [reveal, ...lit].forEach((p) => (p.style.strokeDasharray = `${len} ${len}`));
-      near = phone.matches ? (stops[0].offsetHeight * 0.55) / len : 0.02;
-      samples = Array.from({ length: 401 }, (_, i) => {
-        const pt = ahead.getPointAtLength((len * i) / 400);
-        return [pt.x, pt.y];
-      });
-      // Where along the trail each stop sits.
-      at = c.map(([x, y]) => {
-        let best = 0;
-        samples.forEach(([sx, sy], i) => (sx - x) ** 2 + (sy - y) ** 2 < (samples[best][0] - x) ** 2 + (samples[best][1] - y) ** 2 && (best = i));
-        return best / 400;
-      });
-      show(drawn);
-      walkTo(finished ? at[2] : f);
-    };
-    // Phones: the walker keeps pace with the reader, 55% of the way down the screen.
-    const follow = () => {
-      const y = innerHeight * 0.55 - box.getBoundingClientRect().top;
-      let i = 0;
-      samples.forEach(([, sy], j) => sy <= y && (i = j));
-      walkTo(i / 400);
-    };
-    const finish = () => ((finished = true), show(1), walkTo(at[2]));
-    build();
-    return { build, show, walkTo, follow, finish, get at() { return at; } };
+    return { layout, set: (q) => ((p = q), draw()), enter: (q) => ((e = q), draw()), redraw: () => (layout(), draw()) };
   })();
-  document.fonts?.ready.then(() => (trail.build(), window.ScrollTrigger?.refresh()));
+
+  document.fonts?.ready.then(() => window.ScrollTrigger?.refresh());
 
   /* ── The finished state, for "reduce motion" or no GSAP ─────────────────────── */
   const settle = () => {
-    // How it works rests at its last stop, the whole trail walked.
-    trail.finish();
-    addEventListener('resize', trail.build);
     $$('.ms').forEach((m) => m.classList.add('on'));
     $('.ms-track b').style.transform = 'none';
   };
@@ -382,42 +366,29 @@
   gsap.to('.hero-field .canopy-near', { yPercent: -14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   gsap.to('.hero-field .canopy-far', { yPercent: -5, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
-  // How it works: on the way in the trail draws itself from the left and each stop grows in as it arrives; then the
-  // scroll walks it, stop to stop. Desktop pins the section while it plays; phones keep scrolling, with the walker
-  // keeping pace.
+  // How it works: the heading rises in and the panels fan out from behind the phone as the section arrives; then,
+  // held on screen, the scroll turns the orbit a step at a time, resting at each, and the boughs drift past.
   $('.how').classList.add('is-live');
-  ScrollTrigger.addEventListener('refreshInit', trail.build);
-  const arrive = { trigger: '.how', start: 'top 90%', end: 'top top', scrub: true };
-  gsap.from('.how-head', { y: 60, opacity: 0, ease: 'power1.out', scrollTrigger: { ...arrive, start: 'top 70%', end: 'top 10%' } });
-  // The stops and the trail rise together, so the line always runs through the stops.
-  gsap.from('.trail', { y: 50, ease: 'power1.out', scrollTrigger: { ...arrive, start: 'top 70%', end: 'top 5%' } });
-  const mm = gsap.matchMedia();
-  mm.add('(min-width: 961px)', () => {
-    const draw = (s) => trail.show(s.progress);
-    ScrollTrigger.create({ trigger: '.how', start: 'top 80%', end: 'top 8%', onUpdate: draw, onRefresh: draw });
-    // As the walk goes on, the boughs drift past, the near ones faster: walking on through the trees.
-    const far = gsap.quickSetter('.how-field .canopy-far', 'x', 'px');
-    const nearby = gsap.quickSetter('.how-field .canopy-near', 'x', 'px');
-    const walk = { f: 0 };
-    const go = () => (trail.walkTo(walk.f), far(-walk.f * 20), nearby(-walk.f * 40));
-    gsap
-      .timeline({
-        defaults: { ease: 'power1.inOut', onUpdate: go },
-        scrollTrigger: { trigger: '.how', pin: '.how-pin', start: 'top top', end: '+=220%', scrub: 0.6, invalidateOnRefresh: true },
-      })
-      .fromTo(walk, { f: () => trail.at[0] * 0.45 }, { f: () => trail.at[0], duration: 1 })
-      .to({}, { duration: 1.1 })
-      .to(walk, { f: () => trail.at[1], duration: 1.2 })
-      .to({}, { duration: 1.1 })
-      .to(walk, { f: () => trail.at[2], duration: 1.2 })
-      .to({}, { duration: 1.3 });
-    go();
-  });
-  mm.add('(max-width: 960px)', () => {
-    trail.show(1);
-    ScrollTrigger.create({ trigger: '.trail', start: 'top bottom', end: 'bottom top', onUpdate: trail.follow, onRefresh: trail.follow });
-    trail.follow();
-  });
+  orbit.layout();
+  ScrollTrigger.addEventListener('refresh', orbit.redraw);
+  gsap.from('.how-head', { y: 60, opacity: 0, ease: 'power1.out', scrollTrigger: { trigger: '.how', start: 'top 70%', end: 'top 10%', scrub: true } });
+  const come = { e: 0 };
+  gsap.to(come, { e: 1, ease: 'none', onUpdate: () => orbit.enter(come.e), scrollTrigger: { trigger: '.how', start: 'top 75%', end: 'top 5%', scrub: 0.6 } });
+  const far = gsap.quickSetter('.how-field .canopy-far', 'x', 'px');
+  const nearby = gsap.quickSetter('.how-field .canopy-near', 'x', 'px');
+  const turn = { p: 0 };
+  gsap
+    .timeline({
+      defaults: { ease: 'power2.inOut' },
+      onUpdate: () => (orbit.set(turn.p), far(-turn.p * 14), nearby(-turn.p * 30)),
+      scrollTrigger: { trigger: '.how', start: 'top top', end: 'bottom bottom', scrub: 0.7 },
+    })
+    .to({}, { duration: 0.6 })
+    .to(turn, { p: 1, duration: 1 })
+    .to({}, { duration: 0.9 })
+    .to(turn, { p: 2, duration: 1 })
+    .to({}, { duration: 0.7 });
+  orbit.enter(0);
 
   // Rewards: the leaders draw, the balance line sweeps, the receipt prints.
   gsap.from('.leader', { scaleX: 0, duration: 1.1, ease, stagger: 0.12, scrollTrigger: { trigger: '.menu', start: 'top 75%' } });
