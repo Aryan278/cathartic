@@ -387,9 +387,6 @@
   $('.how').classList.add('is-live');
   ScrollTrigger.addEventListener('refreshInit', trail.build);
   const arrive = { trigger: '.how', start: 'top 90%', end: 'top top', scrub: true };
-  // The veil holds while the section's top edge is still on screen, and lifts only as it settles into place.
-  gsap.fromTo('.how-veil', { opacity: 1 }, { opacity: 0, ease: 'none', scrollTrigger: { ...arrive, start: 'top 12%' } });
-  gsap.from('.how-field', { scale: 1.08, ease: 'none', scrollTrigger: arrive });
   gsap.from('.how-head', { y: 60, opacity: 0, ease: 'power1.out', scrollTrigger: { ...arrive, start: 'top 70%', end: 'top 10%' } });
   // The stops and the trail rise together, so the line always runs through the stops.
   gsap.from('.trail', { y: 50, ease: 'power1.out', scrollTrigger: { ...arrive, start: 'top 70%', end: 'top 5%' } });

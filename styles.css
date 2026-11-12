@@ -256,22 +256,26 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 /* ── How it works: a trail through the canopy ───────────────────────────────── */
-/* Tucked under the marquee, so the marquee floats over the section's darkened top edge. */
+/* No panel of its own: the page's dark field and drifting light run straight through, so there's no edge to
+   meet. Tucked a little under the marquee. */
 .how { padding: 0; width: 100%; margin: -96px 0 0; }
 /* Desktop: one screen, pinned while the scroll walks the trail from stop to stop (main.js); the heading on top,
    the trail filling the rest. */
-.how-pin { position: relative; height: 100svh; min-height: 620px; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; padding: clamp(104px, 14vh, 140px) 0 clamp(32px, 6vh, 64px); background: radial-gradient(120% 90% at 50% 0%, var(--deep), #141a12 60%, var(--shade)); }
-/* The hero's canopy carries on overhead: boughs from the edges and drifting light, a little dimmer. As the walk
-   goes on, the boughs drift past (main.js), the near ones faster. */
-.how-field { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.how-field::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 24%; background: linear-gradient(transparent, var(--shade)); }
+.how-pin { position: relative; height: 100svh; min-height: 620px; display: flex; flex-direction: column; padding: clamp(104px, 14vh, 140px) 0 clamp(32px, 6vh, 64px); }
+/* The canopy carries on from the hero as boughs growing in from the side edges of the page, and a soft green
+   glow behind the trail that fades to nothing, so nothing here has an edge. The boughs are not clipped top or
+   bottom (the page clips them at its sides). As the walk goes on they drift past (main.js), the near ones faster. */
+.how-field { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+/* Light falls in at the sides, where the boughs grow in, so their shadows read; and softly behind the trail. */
+.how-glow { position: absolute; left: 0; right: 0; top: -15%; bottom: -15%; background:
+  radial-gradient(38vmax 46vh at 3% 46%, rgba(90, 115, 47, 0.36), rgba(90, 115, 47, 0.13) 55%, rgba(90, 115, 47, 0)),
+  radial-gradient(38vmax 46vh at 97% 50%, rgba(90, 115, 47, 0.34), rgba(90, 115, 47, 0.13) 55%, rgba(90, 115, 47, 0)),
+  radial-gradient(58vw 40vh at 50% 60%, rgba(90, 115, 47, 0.26), rgba(90, 115, 47, 0.1) 55%, rgba(90, 115, 47, 0)); }
 .how-field .canopy-layer { will-change: transform; }
-.how-field .canopy-far { opacity: 0.3; }
-.how-field .canopy-near { opacity: 0.44; }
+.how-field .canopy-far { opacity: 0.45; }
+.how-field .canopy-near { opacity: 0.62; }
 /* Here the eye is on the walk, so the boughs hold still and only the light drifts. */
 .how-field .canopy-sway { animation: none; }
-/* Blends the section's top edge into the page above; main.js lifts it as the section settles into place. */
-.how-veil { position: absolute; inset: 0; z-index: 2; background: linear-gradient(180deg, var(--shade) 0%, var(--shade) 12%, rgba(16, 17, 16, 0.7) 26%, transparent 55%); }
 .how-head { position: relative; z-index: 3; flex: none; margin-left: var(--col-x); width: var(--col); display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
 .how-head .eyebrow { margin-bottom: 14px; }
 .how .h2 { font-size: clamp(36px, 4.2vw, 60px); max-width: none; text-wrap: balance; }
@@ -514,7 +518,10 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
   /* Phones: no pinning; the trail runs down the page through stops on alternate sides, and the walker keeps
      pace with the reader (main.js). */
   .how-pin { height: auto; min-height: 0; display: block; padding: 136px 16px calc(96px + env(safe-area-inset-bottom)); }
-  .how-veil { background: linear-gradient(180deg, var(--shade) 0, var(--shade) 70px, rgba(16, 17, 16, 0.7) 150px, transparent 320px); }
+  .how-glow { background:
+    radial-gradient(80vw 22% at 0% 34%, rgba(90, 115, 47, 0.36), rgba(90, 115, 47, 0.13) 55%, rgba(90, 115, 47, 0)),
+    radial-gradient(80vw 22% at 100% 64%, rgba(90, 115, 47, 0.34), rgba(90, 115, 47, 0.13) 55%, rgba(90, 115, 47, 0)),
+    radial-gradient(90vw 30% at 50% 52%, rgba(90, 115, 47, 0.22), rgba(90, 115, 47, 0.08) 55%, rgba(90, 115, 47, 0)); }
   .how-head { display: block; margin: 0; width: auto; }
   .how .h2 { font-size: clamp(30px, 8vw, 44px); }
   .how-head .lede { font-size: 15px; }
@@ -566,8 +573,7 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 
 /* Big layers that scroll animations move or fade get their own compositing layer, so scrolling moves them
    instead of repainting them every frame. */
-.hero-field, .hero-stage, .how-field, .how-head, .stop { will-change: transform; }
-.how-veil { will-change: opacity; }
+.hero-field, .hero-stage, .how-head, .stop { will-change: transform; }
 
 /* Off-screen sections rest their CSS animations (main.js). */
 .is-off, .is-off * { animation-play-state: paused !important; }
