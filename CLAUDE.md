@@ -36,3 +36,5 @@ from `main`, root). The owner is Aryan.
   Animate transform/opacity; keep it smooth on mid-range phones.
 - No horizontal scroll at 390px; check phone and desktop widths.
 - Commit with clear messages and push to `main`; Pages redeploys in about a minute.
+- Bump the `?v=` stamp on `styles.css`, `config.js` and `main.js` in `index.html` with every change to them, or
+  browsers keep the old copy against the new page.
