@@ -242,6 +242,15 @@
 
   document.fonts?.ready.then(() => window.ScrollTrigger?.refresh());
 
+  /* ── Rewards: tap a pass to flip it to its code (one at a time) ───────────────── */
+  const passes = $$('.pass');
+  const flip = (p, on) => (p.classList.toggle('is-flipped', on), p.setAttribute('aria-pressed', on));
+  passes.forEach((p) => p.addEventListener('click', () => {
+    const on = !p.classList.contains('is-flipped');
+    passes.forEach((o) => o !== p && flip(o, false));
+    flip(p, on);
+  }));
+
   /* ── The finished state, for "reduce motion" or no GSAP ─────────────────────── */
   const settle = () => {
     $$('.ms').forEach((m) => m.classList.add('on'));
@@ -308,11 +317,13 @@
   // Boughs bend away from the cursor as it brushes through them, pivoting at their base on the page edge, and
   // spring back once it has passed.
   if (fine) {
-    const field = $('.hero-field');
-    const leaves = $$('.hero-field .leaf').map((el) => {
+    // The hero's boughs along the top edge, and the page canopy's along the sides (fixed, so they're there all the way down).
+    const fields = $$('.hero-field, .sky');
+    const leaves = $$('.hero-field .leaf, .sky .leaf').map((el) => {
       const near = !!el.closest('.canopy-near');
       const ease = { duration: near ? 0.9 : 1.2, ease: 'power3' };
-      return { el, near, layer: el.closest('.canopy-layer'), qx: gsap.quickTo(el, 'x', ease), qy: gsap.quickTo(el, 'y', ease), qr: gsap.quickTo(el, 'rotation', ease) };
+      const field = el.closest('.hero-field, .sky');
+      return { el, near, field, hero: field.classList.contains('hero-field'), layer: el.closest('.canopy-layer'), k: 0, qx: gsap.quickTo(el, 'x', ease), qy: gsap.quickTo(el, 'y', ease), qr: gsap.quickTo(el, 'rotation', ease) };
     });
     // Each bough's base, direction and the middle of its leaves, measured once (and again on resize).
     const rest = () =>
@@ -331,16 +342,20 @@
     let ticking = false;
     const brush = () => {
       ticking = false;
-      if (!heroOn) return;
-      const f = field.getBoundingClientRect();
-      const x = px - f.left;
-      const y = py - f.top;
+      const at = new Map(fields.map((f) => [f, f.getBoundingClientRect()]));
       leaves.forEach((l) => {
+        if (l.hero && !heroOn) return;
+        const f = at.get(l.field);
+        const x = px - f.left;
+        const y = py - f.top;
         const vx = x - l.mx;
         const vy = y - (l.my + gsap.getProperty(l.layer, 'y'));
         const d = Math.hypot(vx, vy) || 1;
         const reach = l.near ? 320 : 250;
         const k = d < reach ? (1 - d / reach) ** 2 : 0;
+        // Out of reach and already at rest: nothing to do.
+        if (k === 0 && l.k === 0) return;
+        l.k = k;
         if (k > 0 && !l.lifted) {
           clearTimeout(l.drop);
           l.el.classList.add('is-pushed');
@@ -362,25 +377,26 @@
     document.documentElement.addEventListener('pointerleave', () => ((px = py = -1e4), queue()));
     addEventListener('scroll', () => scrollY < innerHeight * 1.2 && queue(), { passive: true });
   }
+  // The page canopy drifts a little as you go down the page, the near boughs more than the far ones.
+  gsap.to('.sky .canopy-near', { y: -70, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: true } });
+  gsap.to('.sky .canopy-far', { y: -30, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: true } });
   // The near leaves pass faster than the far ones, for depth.
   gsap.to('.hero-field .canopy-near', { yPercent: -14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   gsap.to('.hero-field .canopy-far', { yPercent: -5, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
   // How it works: the heading rises in and the panels fan out from behind the phone as the section arrives; then,
-  // held on screen, the scroll turns the orbit a step at a time, resting at each, and the boughs drift past.
+  // held on screen, the scroll turns the orbit a step at a time, resting at each.
   $('.how').classList.add('is-live');
   orbit.layout();
   ScrollTrigger.addEventListener('refresh', orbit.redraw);
   gsap.from('.how-head', { y: 60, opacity: 0, ease: 'power1.out', scrollTrigger: { trigger: '.how', start: 'top 70%', end: 'top 10%', scrub: true } });
   const come = { e: 0 };
   gsap.to(come, { e: 1, ease: 'none', onUpdate: () => orbit.enter(come.e), scrollTrigger: { trigger: '.how', start: 'top 75%', end: 'top 5%', scrub: 0.6 } });
-  const far = gsap.quickSetter('.how-field .canopy-far', 'x', 'px');
-  const nearby = gsap.quickSetter('.how-field .canopy-near', 'x', 'px');
   const turn = { p: 0 };
   gsap
     .timeline({
       defaults: { ease: 'power2.inOut' },
-      onUpdate: () => (orbit.set(turn.p), far(-turn.p * 14), nearby(-turn.p * 30)),
+      onUpdate: () => orbit.set(turn.p),
       scrollTrigger: { trigger: '.how', start: 'top top', end: 'bottom bottom', scrub: 0.7 },
     })
     .to({}, { duration: 0.6 })
@@ -390,13 +406,20 @@
     .to({}, { duration: 0.7 });
   orbit.enter(0);
 
-  // Rewards: the leaders draw, the balance line sweeps, the receipt prints.
-  gsap.from('.leader', { scaleX: 0, duration: 1.1, ease, stagger: 0.12, scrollTrigger: { trigger: '.menu', start: 'top 75%' } });
-  gsap.fromTo('.menu-balance', { '--bal': 0 }, { '--bal': 1, duration: 1.2, ease, delay: 0.5, scrollTrigger: { trigger: '.menu', start: 'top 75%' } });
-  gsap
-    .timeline({ scrollTrigger: { trigger: '.rewards-stage', start: 'top 65%' } })
-    .fromTo('.receipt-paper', { clipPath: 'inset(0 0 100% 0)', y: -40 }, { clipPath: 'inset(0 0 0% 0)', y: 0, duration: 1.6, ease: 'steps(14)' })
-    .from('.receipt-code', { letterSpacing: '0.5em', opacity: 0, duration: 0.6, ease }, '-=0.3');
+
+  // Rewards: the passes deal in along the line, it lights up to your balance and the marker rises; then one pass
+  // turns over by itself, to show what tapping does (unless one has been tapped already).
+  const rewards = $('.rewards');
+  rewards.classList.add('is-live');
+  ScrollTrigger.create({
+    trigger: '.rw-row',
+    start: 'top 80%',
+    once: true,
+    onEnter: () => {
+      rewards.classList.add('is-in');
+      gsap.delayedCall(2.2, () => passes.some((p) => p.classList.contains('is-flipped')) || flip($('.pass[data-demo]'), true));
+    },
+  });
 
   // Ranks: the three stubs fan out of a stack (as wide as the screen allows); the streak track fills.
   const fan = innerWidth < 561 ? 112 : innerWidth < 961 ? 170 : 205;

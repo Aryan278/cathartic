@@ -45,21 +45,12 @@ a { color: inherit; }
 ::selection { background: var(--signal); color: var(--ink); }
 
 /* ── Atmosphere ──────────────────────────────────────────────────────────────── */
-.light { position: fixed; inset: -20vmax; z-index: 0; pointer-events: none; opacity: 0.5; }
-/* Covered by the hero's canopy, so it isn't drawn while the hero is on screen (main.js), and fades back after. */
-.light { transition: opacity 0.6s; }
-.hero-in .light { opacity: 0; visibility: hidden; transition: opacity 0.6s, visibility 0s 0.6s; }
-.light i { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(178, 199, 75, 0.5), rgba(178, 199, 75, 0.12) 38%, rgba(178, 199, 75, 0) 68%); animation: drift 26s var(--ease-out) infinite alternate; }
-.light i:nth-child(1) { width: 46vmax; height: 46vmax; left: 8%; top: 4%; }
-.light i:nth-child(2) { width: 34vmax; height: 34vmax; right: 6%; top: 22%; animation-duration: 31s; animation-delay: -8s; background: radial-gradient(circle, rgba(225, 236, 151, 0.4), transparent 65%); }
-.light i:nth-child(3) { width: 40vmax; height: 40vmax; left: 30%; bottom: 0; animation-duration: 37s; animation-delay: -15s; background: radial-gradient(circle, rgba(103, 129, 51, 0.6), transparent 65%); }
-.light i:nth-child(4) { width: 22vmax; height: 22vmax; right: 24%; bottom: 18%; animation-duration: 23s; animation-delay: -4s; }
-.light i:nth-child(5) { width: 18vmax; height: 18vmax; left: 12%; bottom: 30%; animation-duration: 29s; animation-delay: -20s; background: radial-gradient(circle, rgba(249, 253, 214, 0.3), transparent 65%); }
-@keyframes drift {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(6vmax, -4vmax, 0) scale(1.15); }
-  100% { transform: translate3d(-5vmax, 5vmax, 0) scale(0.9); }
-}
+/* One canopy over the whole page, fixed behind everything: the light from above, the canopy photo faintly, soft glows
+   drifting through it and boughs growing in from the side edges. Sections have no backgrounds of their own, so it
+   runs unbroken from the hero to the footer. */
+.sky { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: radial-gradient(120% 90% at 50% 0%, var(--deep), #141a12 60%, #0c0e0c); }
+.sky .canopy-photo { opacity: 0.2; }
+.sky .canopy-layer { will-change: transform; }
 .glow { position: fixed; left: 0; top: 0; width: 520px; height: 520px; margin: -260px 0 0 -260px; z-index: 1; pointer-events: none; border-radius: 50%; background: radial-gradient(circle, rgba(225, 236, 151, 0.09), transparent 60%); transform: translate3d(var(--gx, -999px), var(--gy, -999px), 0); transition: opacity 0.4s; }
 .grain { position: fixed; inset: 0; z-index: 60; pointer-events: none; background: url(assets/img/grain-alpha.png) repeat; background-size: 150px; opacity: 0.05; }
 .progress { position: fixed; left: 0; top: 0; right: 0; height: 2px; z-index: 70; }
@@ -112,7 +103,7 @@ h1.display { font-size: clamp(54px, 9.2vw, 138px); }
 @media (hover: hover) { .btn-coin:hover .coin-chip { transform: rotateY(360deg) scale(1.12); } }
 
 /* ── Glass ───────────────────────────────────────────────────────────────────── */
-.glass, .card, .menu, .streak, .cta-card, .stub, .film-frame {
+.glass, .streak, .cta-card, .stub, .film-frame {
   background: linear-gradient(135deg, rgba(var(--iv), 0.16), rgba(var(--iv), 0.05) 48%, rgba(var(--iv), 0.09));
   border: 1px solid rgba(var(--iv), 0.22);
   box-shadow: inset 0 1px 0 rgba(var(--iv), 0.45), 0 30px 80px rgba(0, 0, 0, 0.35);
@@ -165,10 +156,8 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 
 /* ── Hero ────────────────────────────────────────────────────────────────────── */
 .hero { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; padding: clamp(112px, 15vh, 150px) 0 clamp(48px, 6vw, 80px); }
-/* Dappled canopy: sunlight through leaves. The field fades out at its foot into the page. */
-.hero-field { position: absolute; z-index: -1; top: -40px; bottom: 0; left: calc(50% - 50vw - var(--rail) / 2); width: 100vw; overflow: hidden; background: radial-gradient(120% 90% at 50% 0%, var(--deep), #141a12 60%, #0c0e0c); }
-/* The field's foot fades into the page colour (cheaper than a mask over moving layers). */
-.canopy-foot { position: absolute; left: 0; right: 0; bottom: 0; height: 30%; z-index: 1; background: linear-gradient(transparent, var(--shade)); }
+/* The hero adds the boughs along the top edge of the page canopy; they pass as you scroll. */
+.hero-field { position: absolute; z-index: -1; top: -40px; bottom: 0; left: calc(50% - 50vw - var(--rail) / 2); width: 100vw; overflow: hidden; }
 .canopy-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.26; }
 /* Moving light: big soft glows drift on slow loops, like light through leaves that move. Transform and opacity only. */
 .canopy-glows i { position: absolute; aspect-ratio: 1; translate: -50% -50%; will-change: transform, opacity; }
@@ -264,20 +253,6 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .how-pin { position: relative; display: flex; flex-direction: column; padding: clamp(104px, 14vh, 140px) 0 clamp(48px, 8vh, 96px); }
 .how.is-live { height: 330svh; }
 .how.is-live .how-pin { position: sticky; top: 0; height: 100svh; min-height: 580px; padding-bottom: clamp(20px, 4vh, 44px); }
-/* The canopy carries on from the hero as boughs growing in from the side edges of the page, and a soft green
-   glow behind the stage that fades to nothing, so nothing here has an edge. The boughs are not clipped top or
-   bottom (the page clips them at its sides). As the walk goes on they drift past (main.js), the near ones faster. */
-.how-field { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-/* Light falls in at the sides, where the boughs grow in, so their shadows read; and softly behind the stage. */
-.how-glow { position: absolute; left: 0; right: 0; top: -15%; bottom: -15%; background:
-  radial-gradient(38vmax 46vh at 3% 46%, rgba(90, 115, 47, 0.36), rgba(90, 115, 47, 0.13) 55%, rgba(90, 115, 47, 0)),
-  radial-gradient(38vmax 46vh at 97% 50%, rgba(90, 115, 47, 0.34), rgba(90, 115, 47, 0.13) 55%, rgba(90, 115, 47, 0)),
-  radial-gradient(58vw 40vh at 50% 60%, rgba(90, 115, 47, 0.26), rgba(90, 115, 47, 0.1) 55%, rgba(90, 115, 47, 0)); }
-.how-field .canopy-layer { will-change: transform; }
-.how-field .canopy-far { opacity: 0.45; }
-.how-field .canopy-near { opacity: 0.62; }
-/* Here the eye is on the walk, so the boughs hold still and only the light drifts. */
-.how-field .canopy-sway { animation: none; }
 .how-head { position: relative; z-index: 3; flex: none; margin-left: var(--col-x); width: var(--col); display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
 .how-head .eyebrow { margin-bottom: 14px; }
 .how .h2 { font-size: clamp(36px, 4.2vw, 60px); max-width: none; text-wrap: balance; }
@@ -419,41 +394,101 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .coin-cta span { font-size: 24px; }
 @keyframes coinspin { 0%, 70% { transform: rotateY(0); } 85% { transform: rotateY(180deg); } 100% { transform: rotateY(360deg); } }
 
-/* ── Collect vs Report ───────────────────────────────────────────────────────── */
-.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.card { position: relative; overflow: hidden; padding: clamp(26px, 3vw, 40px); border-radius: 30px; min-height: 420px; transform-style: preserve-3d; }
-.card h3 { margin: 0; font: 700 clamp(26px, 2.6vw, 34px)/1.1 var(--display); max-width: 16ch; }
-.card p { color: rgba(var(--iv), 0.72); max-width: 42ch; }
-.card-icon { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; margin-bottom: 26px; color: var(--ink); background: var(--bright); box-shadow: 0 10px 26px rgba(178, 199, 75, 0.3); }
-.card-icon svg { width: 26px; height: 26px; }
-.card-report .card-icon { background: rgba(var(--iv), 0.12); color: var(--bright); box-shadow: inset 0 0 0 1px rgba(var(--iv), 0.24); }
+/* Tick lists (For RWAs). */
 .ticks { list-style: none; padding: 0; margin: 22px 0 0; display: grid; gap: 10px; }
 .ticks li { position: relative; padding-left: 30px; color: rgba(var(--iv), 0.85); font-size: 15px; }
 .ticks li::before { content: ''; position: absolute; left: 0; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: rgba(178, 199, 75, 0.2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%23e1ec97' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat; border: 1px solid rgba(178, 199, 75, 0.45); }
 .ticks.big li { font-size: 17px; padding-left: 34px; }
-.safety { position: relative; z-index: 1; margin-top: 20px; padding: 14px 16px; border-radius: 16px; font-size: 14px; color: #eab887; background: rgba(214, 132, 74, 0.14); border: 1px solid rgba(214, 132, 74, 0.4); max-width: 34ch; }
-.card-report p { max-width: 30ch; }
-.card-peek { position: absolute; right: -60px; bottom: -230px; width: 210px; border-radius: 28px; transform: rotate(-8deg); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5); opacity: 0.9; transition: transform 0.7s var(--ease-out); }
-.card-report:hover .card-peek { transform: rotate(-4deg) translateY(-30px); }
 
-/* ── Rewards ─────────────────────────────────────────────────────────────────── */
-.rewards { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 48px; align-items: center; }
-.rewards-stage { position: relative; display: flex; align-items: flex-start; gap: 28px; }
-.menu { flex: 1; padding: 30px; border-radius: 30px; max-width: 420px; }
-.menu-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
-.menu-list li { display: flex; align-items: baseline; gap: 10px; font-size: 16px; }
-.menu-list b { font: 700 18px/1 var(--display); color: var(--bright); }
-.leader { flex: 1; height: 0; border-bottom: 2px dotted rgba(var(--iv), 0.35); transform-origin: 0 50%; }
-.menu-balance { position: relative; margin: 4px 0; padding: 10px 0; }
-.menu-balance::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: var(--signal); box-shadow: 0 0 14px rgba(178, 199, 75, 0.8); transform-origin: 0 50%; transform: scaleX(var(--bal, 1)); }
-.menu-balance span { position: relative; padding-right: 12px; background: #1b2118; font: 600 11px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--signal); }
-.menu-locked { opacity: 0.4; }
-.receipt { position: relative; flex: none; margin-top: 90px; width: 236px; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.5)); }
-.receipt-paper { --zig: 10px; padding: 26px 22px 30px; color: var(--ink); background: #f9fdd6; text-align: center; transform: rotate(4deg); -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--zig) 100%, conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--zig) 100%; -webkit-mask-composite: source-in; mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--zig) 100% intersect, conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--zig) 100%; }
-.receipt-item { margin: 0; font: 500 13px/1.4 var(--mono); }
-.receipt-code { margin: 14px 0 6px; font: 700 34px/1 var(--mono); letter-spacing: 0.06em; white-space: nowrap; }
-.receipt-small { margin: 0; font-size: 12px; color: rgba(21, 24, 20, 0.6); }
-.receipt-bars { height: 46px; margin-top: 18px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 7px, transparent 7px 9px, var(--ink) 9px 10px, transparent 10px 13px); }
+/* ── Two ways to help: a field guide ───────────────────────────────────────────── */
+/* Two rows with the heading split across them: each half sits beside its photo, pinned in glass like a field note,
+   with a marker ring drawn round what matters and an arrow back to the words. Row two mirrors row one. */
+.fg-head { margin: 0 0 clamp(18px, 2.4vw, 28px); }
+.fg-row { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); align-items: center; gap: clamp(40px, 6vw, 96px); }
+.fg-row + .fg-row { margin-top: clamp(64px, 9vw, 128px); }
+.fg-row.r { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); }
+.fg-row.r .fg-text { order: 2; }
+.fg-k { margin: 0; font: 600 11px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--bright); }
+.fg-row.r .fg-k { color: #eab887; }
+.fg-title { margin: 16px 0 0; font-size: clamp(42px, 5.4vw, 82px); }
+.fg-text > p:not([class]) { margin: 22px 0 0; max-width: 44ch; font-size: clamp(16px, 1.3vw, 18px); line-height: 1.6; color: rgba(var(--iv), 0.72); }
+.fg-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0; padding: 0; list-style: none; }
+.fg-chips li { padding: 9px 13px; border-radius: 999px; font: 600 10.5px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--bright); background: rgba(178, 199, 75, 0.1); border: 1px solid rgba(178, 199, 75, 0.3); }
+.fg-safe { margin: 24px 0 0; max-width: 44ch; padding: 14px 16px; border-radius: 16px; font-size: 14.5px; color: #eab887; background: rgba(214, 132, 74, 0.12); border: 1px solid rgba(214, 132, 74, 0.4); }
+/* The print: the photo in a glass frame with a caption strip, tilted a little and taped on. */
+.fg-print { position: relative; margin: 0; padding: 10px 10px 0; border-radius: 28px; rotate: 1.5deg; }
+.fg-row.r .fg-print { rotate: -1.5deg; }
+.fg-photo { position: relative; aspect-ratio: 25 / 18; overflow: hidden; border-radius: 19px; background: #0e110d; }
+.fg-photo img { width: 100%; height: 100%; object-fit: cover; }
+.fg-print figcaption { display: flex; justify-content: space-between; gap: 12px; padding: 15px 10px 16px; font: 600 10.5px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: rgba(var(--iv), 0.6); }
+.fg-print figcaption b { font-weight: 600; color: var(--bright); }
+.fg-row.r .fg-print figcaption b { color: #eab887; }
+.fg-tape { position: absolute; z-index: 2; left: 50%; top: -12px; width: 92px; height: 24px; margin-left: -46px; rotate: -4deg; background: rgba(225, 236, 151, 0.22); border: 1px solid rgba(225, 236, 151, 0.16); }
+/* The marker: a ring round the loose litter (or the drain) and an arrow out towards the words. It draws itself as
+   the print arrives (.in, from the page's reveals). */
+.fg-mark { position: absolute; z-index: 1; left: 10px; top: 10px; width: calc(100% - 20px); height: auto; aspect-ratio: 25 / 18; overflow: visible; pointer-events: none; }
+.fg-mark path { fill: none; stroke: var(--bright); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 5px rgba(225, 236, 151, 0.6)); }
+.fg-row.r .fg-mark path { stroke: var(--ember); filter: drop-shadow(0 0 5px rgba(214, 132, 74, 0.6)); }
+.js .fg-print.reveal .fg-mark path { stroke-dasharray: 1 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s var(--ease-out) calc(var(--d, 0s) + 0.55s); }
+.js .fg-print.reveal .fg-mark .fg-arrow { transition-duration: 0.6s; transition-delay: calc(var(--d, 0s) + 1.5s); }
+.js .fg-print.reveal .fg-mark .fg-head-r { transition-duration: 0.35s; transition-delay: calc(var(--d, 0s) + 1.95s); }
+.js .fg-print.reveal.in .fg-mark path { stroke-dashoffset: 0; }
+
+/* ── Rewards: a row of passes ──────────────────────────────────────────────────── */
+/* The partner cafés' rewards as passes, cheapest first, on one line with your balance: everything before the "You"
+   marker is yours today. Each pass flips to its code when tapped (main.js); the one past the line shows how far off it is. */
+.rw-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr); gap: 24px 64px; align-items: end; margin-bottom: clamp(40px, 5vw, 64px); }
+.rw-head .h2 { max-width: 14ch; }
+.rw-head .lede { margin: 0 0 6px; }
+.rw-row { position: relative; display: flex; align-items: stretch; gap: 16px; margin: 0; padding: 14px 0 70px; list-style: none; }
+.rw-item { position: relative; flex: 1 1 0; min-width: 0; }
+/* The line under the row: lit up to your balance, dashed past it, with a node under each pass. */
+.rw-item::after { content: ''; position: absolute; left: 0; right: -16px; bottom: -36px; height: 2px; border-radius: 2px; background: var(--signal); box-shadow: 0 0 12px rgba(178, 199, 75, 0.7); transform-origin: 0 50%; }
+.rw-item.is-last::after { right: -26px; }
+.rw-item.is-locked::after, .rw-you::after { background: repeating-linear-gradient(90deg, rgba(var(--iv), 0.3) 0 6px, transparent 6px 12px); box-shadow: none; }
+.rw-item.is-locked::after { right: 0; }
+.rw-node { position: absolute; left: 50%; bottom: -41px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 0 4px rgba(178, 199, 75, 0.2), 0 0 12px var(--signal); }
+.is-locked .rw-node { background: var(--shade); box-shadow: inset 0 0 0 2px rgba(var(--iv), 0.35); }
+/* Your balance: a lit post through the row, with its tag on the line. */
+.rw-you { position: relative; flex: none; width: 2px; margin: 0 10px; }
+.rw-you::before { content: ''; position: absolute; left: 0; top: -14px; bottom: -36px; width: 2px; border-radius: 2px; background: linear-gradient(var(--bright), var(--signal)); box-shadow: 0 0 14px var(--signal); }
+.rw-you::after { content: ''; position: absolute; left: 2px; width: 26px; bottom: -36px; height: 2px; }
+.rw-you span { position: absolute; left: 50%; bottom: -68px; translate: -50% 0; white-space: nowrap; padding: 7px 11px; border-radius: 999px; font: 600 10.5px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); background: var(--bright); box-shadow: 0 0 22px rgba(225, 236, 151, 0.4); }
+/* A pass: a card with a front and a back, flipped in 3D; the tear line is cut into both sides. */
+.pass { position: relative; display: block; width: 100%; height: clamp(250px, 20vw, 292px); padding: 0; border: 0; border-radius: 22px; background: none; color: var(--ivory); font: inherit; text-align: left; perspective: 900px; -webkit-tap-highlight-color: transparent; }
+.pass::before { content: ''; position: absolute; left: 10%; right: 10%; bottom: -18px; height: 36px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.5), transparent); }
+.pass:focus-visible { outline: 2px solid var(--bright); outline-offset: 5px; }
+.pass-in { position: absolute; inset: 0; display: block; transform-style: preserve-3d; transition: transform 0.8s var(--ease-out); }
+.pass.is-flipped .pass-in { transform: rotateY(180deg); }
+@media (hover: hover) {
+  .pass:hover .pass-in { transform: translateY(-8px); }
+  .pass.is-flipped:hover .pass-in { transform: translateY(-8px) rotateY(180deg); }
+}
+.pass-face { --tear: 74%; position: absolute; inset: 0; display: block; border-radius: 22px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: linear-gradient(105deg, rgba(var(--iv), 0) 28%, rgba(var(--iv), 0.12) 45%, rgba(var(--iv), 0) 60%), linear-gradient(165deg, var(--c1), var(--c2));
+  box-shadow: inset 0 0 0 1px rgba(var(--iv), 0.16), inset 0 1px 0 rgba(var(--iv), 0.36);
+  -webkit-mask: radial-gradient(circle at 0 var(--tear), transparent 9px, #000 9.5px) 0 0 / 51% 100% no-repeat, radial-gradient(circle at 100% var(--tear), transparent 9px, #000 9.5px) 100% 0 / 51% 100% no-repeat;
+  mask: radial-gradient(circle at 0 var(--tear), transparent 9px, #000 9.5px) 0 0 / 51% 100% no-repeat, radial-gradient(circle at 100% var(--tear), transparent 9px, #000 9.5px) 100% 0 / 51% 100% no-repeat; }
+.pass-back { transform: rotateY(180deg); background: linear-gradient(105deg, rgba(var(--iv), 0) 28%, rgba(var(--iv), 0.1) 45%, rgba(var(--iv), 0) 60%), linear-gradient(165deg, var(--c2), #10140e); }
+.pass-cafe { position: absolute; left: 18px; right: 18px; top: 18px; font: 600 10px/1.35 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: rgba(var(--iv), 0.75); }
+.pass-main { position: absolute; left: 18px; right: 18px; bottom: calc(100% - var(--tear) + 16px); display: grid; justify-items: start; gap: 12px; }
+.pass-name { font: 700 clamp(19px, 1.6vw, 23px)/1.1 var(--display); letter-spacing: -0.01em; }
+.pass-price { display: inline-flex; align-items: center; gap: 7px; padding: 6px 11px 6px 6px; border-radius: 999px; background: rgba(16, 17, 16, 0.38); font: 600 12px/1 var(--mono); color: var(--bright); }
+.pass-price::before { content: ''; width: 17px; height: 17px; border-radius: 50%; background: radial-gradient(circle at 34% 28%, #f6fbc8, var(--bright) 30%, var(--signal) 62%, var(--sage)); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.3); }
+.pass-tear { position: absolute; left: 14px; right: 14px; top: var(--tear); border-top: 2px dashed rgba(16, 17, 16, 0.45); }
+.pass-tap { position: absolute; left: 18px; right: 18px; bottom: 17px; font: 600 9.5px/1.3 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: rgba(var(--iv), 0.62); }
+.pass-code { position: absolute; left: 18px; right: 18px; top: 56px; font: 700 clamp(22px, 1.9vw, 28px)/1 var(--mono); letter-spacing: 0.05em; white-space: nowrap; color: var(--ivory); }
+.pass-code small { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(var(--iv), 0.6); }
+.pass-bars { position: absolute; left: 18px; right: 18px; top: 102px; height: 46px; border-radius: 3px; background: repeating-linear-gradient(90deg, rgba(var(--iv), 0.88) 0 2px, transparent 2px 4px, rgba(var(--iv), 0.88) 4px 7px, transparent 7px 9px, rgba(var(--iv), 0.88) 9px 10px, transparent 10px 13px); }
+.pass-meter { position: absolute; left: 18px; right: 18px; top: 108px; height: 8px; border-radius: 4px; background: rgba(var(--iv), 0.12); }
+.pass-meter b { display: block; width: 69%; height: 100%; border-radius: 4px; background: var(--signal); box-shadow: 0 0 10px rgba(178, 199, 75, 0.6); }
+.rw-item.is-locked .pass { opacity: 0.62; }
+/* Arriving (main.js): the passes deal in along the line, the line lights up to your balance, the marker rises. */
+.rewards.is-live .rw-item { opacity: 0; transform: translate3d(-28px, 26px, 0) rotate(-3deg); transition: opacity 0.7s var(--ease-out), transform 0.9s var(--ease-out); transition-delay: calc(var(--i) * 0.09s); }
+.rewards.is-live .rw-item::after { transform: scaleX(0); transition: transform 0.45s ease-out calc(0.55s + var(--i) * 0.14s); }
+.rewards.is-live .rw-you { opacity: 0; transform: translateY(14px); transition: opacity 0.5s var(--ease-out) 1.15s, transform 0.7s var(--ease-spring) 1.15s; }
+.rewards.is-in .rw-item, .rewards.is-in .rw-you { opacity: 1; transform: none; }
+.rewards.is-in .rw-item::after { transform: none; }
 
 /* ── Ranks ───────────────────────────────────────────────────────────────────── */
 .ranks-stage { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; }
@@ -548,7 +583,19 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
   .rail a.is-on .rail-ic { color: var(--signal); }
   .rail a.is-on::before { content: ''; position: absolute; top: -1px; left: 50%; width: 28px; height: 3px; margin-left: -14px; border-radius: 0 0 3px 3px; background: var(--signal); box-shadow: 0 0 12px var(--signal); }
   .foot { padding-bottom: calc(50px + 64px + env(safe-area-inset-bottom)); }
-  .rewards, .ranks-stage, .rwa, .duo { grid-template-columns: 1fr; }
+  .ranks-stage, .rwa { grid-template-columns: 1fr; }
+  .fg-row, .fg-row.r { grid-template-columns: 1fr; gap: 26px; }
+  .fg-row.r .fg-text { order: 0; }
+  .fg-title { font-size: clamp(40px, 11vw, 60px); }
+  .fg-print { rotate: 0.8deg; }
+  .fg-row.r .fg-print { rotate: -0.8deg; }
+  .fg-mark .fg-arrow { display: none; }
+  .rw-head { grid-template-columns: 1fr; }
+  /* The row becomes a strip you swipe, bleeding to the screen edges, each pass snapping to the middle. */
+  .rw-scroll { margin: 0 calc(var(--gutter) * -1); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); scrollbar-width: none; }
+  .rw-scroll::-webkit-scrollbar { display: none; }
+  .rw-row { width: max-content; padding: 14px var(--gutter) 74px; }
+  .rw-item { flex: none; width: 200px; scroll-snap-align: center; }
   .hp-report, .hp-stamps, .hpanel figcaption { display: none; }
   .hp-rewards, .hp-ranks { z-index: 4; --py: 0.17; --pw: 0.5; }
   .hp-rewards { --px: -0.95; }
@@ -556,10 +603,6 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
   /* Phones: the phone on top and the steps under it, swinging past like a carousel as the scroll goes on (main.js),
      the one in front laid over the foot of the phone. */
   .how-pin { padding: 136px 16px 56px; }
-  .how-glow { background:
-    radial-gradient(80vw 22% at 0% 34%, rgba(90, 115, 47, 0.36), rgba(90, 115, 47, 0.13) 55%, rgba(90, 115, 47, 0)),
-    radial-gradient(80vw 22% at 100% 64%, rgba(90, 115, 47, 0.34), rgba(90, 115, 47, 0.13) 55%, rgba(90, 115, 47, 0)),
-    radial-gradient(90vw 30% at 50% 52%, rgba(90, 115, 47, 0.22), rgba(90, 115, 47, 0.08) 55%, rgba(90, 115, 47, 0)); }
   .how-head { display: block; margin: 0; width: auto; }
   .how .h2 { font-size: clamp(30px, 8vw, 44px); }
   .how-head .lede { font-size: 15px; }
@@ -577,8 +620,6 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
   .how.is-live .how-stage { margin-top: 16px; justify-content: flex-start; }
   .how.is-live .how-phone { height: min(72%, 480px); }
   .how.is-live .hstep { width: min(320px, calc(100vw - 32px)); }
-  .rewards-stage { flex-direction: column; align-items: stretch; }
-  .receipt { margin: -30px 0 0 auto; }
   .stubs { height: 340px; }
   .rwa-stage { min-height: 520px; }
   .numbers { grid-template-columns: repeat(2, 1fr); }
@@ -590,17 +631,12 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
   .leaf b { height: calc(var(--s) * 46vw); }
   .hp-rewards { --px: -0.5; --py: 0.3; }
   .hp-ranks { --px: 0.5; --py: 0.3; }
-  .card { min-height: 0; }
-  .card-peek { display: none; }
-  .menu { padding: 22px; }
-  .receipt { width: 210px; }
   .stubs { height: 300px; }
   .stub { width: 140px; height: 212px; margin: -106px 0 0 -70px; padding: 14px; border-radius: 20px; }
   .stub::after { left: 14px; right: 14px; }
   .stub-rank { font-size: 40px; }
   .stub b { font-size: 15px; }
   .stub em { font-size: 10px; }
-  .receipt-code { font-size: 26px; }
   .plan { width: 100%; position: relative; top: 0; transform: none; }
   .rwa-stage { min-height: 0; gap: 24px; }
   .phone-admin { margin: 0 auto; }

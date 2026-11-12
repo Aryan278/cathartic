@@ -15,7 +15,9 @@ from `main`, root). The owner is Aryan.
 - Navigation: name and "Get early access" float in the top corners (`.top`); the sections live in
   `.rail`, a left icon rail on desktop that opens into a panel on hover/focus, and a bottom tab bar
   at ≤960px that tucks away while scrolling down. `--rail` in `styles.css` keeps the page column clear of it.
-- The hero canopy's leaves are boughs in `assets/img/canopy/`, drawn by `tools/canopy.py` (edit it, then run
+- One canopy runs behind the whole page (`.sky`, fixed): the light from above, the canopy photo faintly, drifting glows
+  and boughs from the side edges. Sections have no backgrounds of their own, so the page reads as one; the hero adds
+  only the boughs along its top edge. The leaves are boughs in `assets/img/canopy/`, drawn by `tools/canopy.py` (edit it, then run
   `python3 tools/canopy.py`). They grow in from the page edges like real branches: bare wood only where it is
   thick, foliage from the edge out, never loose floating sprigs. No peepal leaves or shimmering sunflecks (both read wrong).
 - How it works is a spatial orbit: a phone in the middle shows the Collect screen (built in HTML, sized in `cqw`)
@@ -23,6 +25,9 @@ from `main`, root). The owner is Aryan.
   focus brackets and a lit wire, and the screen steps through Find → Drop → Earn with it. The section is tall and its
   inner `.how-pin` is sticky (no GSAP pin); on phones the panels swing past under the phone like a carousel. main.js
   (`orbit`) measures once per refresh and only writes transform/opacity while scrolling.
+- Two ways to help is a field guide: the heading split across two rows ("Pick it up —" / "or point it out."), each
+  half beside its photo in a glass print with a marker ring and an arrow back to the words. Rewards is a row of passes
+  on one line with your balance (the "You" marker); a pass flips to its code when tapped.
 - Cursors (fine pointers only): a classic arrow with an Ivory rim, and a pointing hand on anything clickable. SVG
   sources in `assets/cursors/`, with 1x/2x PNGs rendered from them (the CSS uses `image-set`).
 - `assets/shots/` are real app screenshots (demo data); `assets/img/` holds the app's field
