@@ -23,6 +23,8 @@ from `main`, root). The owner is Aryan.
   focus brackets and a lit wire, and the screen steps through Find → Drop → Earn with it. The section is tall and its
   inner `.how-pin` is sticky (no GSAP pin); on phones the panels swing past under the phone like a carousel. main.js
   (`orbit`) measures once per refresh and only writes transform/opacity while scrolling.
+- Cursors (fine pointers only): a classic arrow with an Ivory rim, and a pointing hand on anything clickable. SVG
+  sources in `assets/cursors/`, with 1x/2x PNGs rendered from them (the CSS uses `image-set`).
 - `assets/shots/` are real app screenshots (demo data); `assets/img/` holds the app's field
   backgrounds, eco-bag, grain texture and report photos.
 

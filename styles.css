@@ -618,6 +618,13 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
    instead of repainting them every frame. */
 .hero-field, .hero-stage, .how-head { will-change: transform; }
 
+/* Cursors (mouse and trackpad only): a classic arrow with an Ivory rim everywhere, and the pointing hand on anything
+   you can click. Drawn as SVG in assets/cursors/, with 1x and 2x PNGs rendered from them. */
+@media (pointer: fine) {
+  html { cursor: url(assets/cursors/arrow.png) 6 4, auto; cursor: -webkit-image-set(url(assets/cursors/arrow.png) 1x, url(assets/cursors/arrow@2x.png) 2x) 6 4, auto; cursor: image-set(url(assets/cursors/arrow.png) 1x, url(assets/cursors/arrow@2x.png) 2x) 6 4, auto; }
+  a, button, .btn, [role='button'], label, summary, select, .film-play { cursor: url(assets/cursors/hand.png) 14 4, pointer; cursor: -webkit-image-set(url(assets/cursors/hand.png) 1x, url(assets/cursors/hand@2x.png) 2x) 14 4, pointer; cursor: image-set(url(assets/cursors/hand.png) 1x, url(assets/cursors/hand@2x.png) 2x) 14 4, pointer; }
+}
+
 /* Off-screen sections rest their CSS animations (main.js). */
 .is-off, .is-off * { animation-play-state: paused !important; }
 
