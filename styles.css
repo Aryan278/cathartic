@@ -109,6 +109,18 @@ h1.display { font-size: clamp(54px, 9.2vw, 138px); }
   box-shadow: inset 0 1px 0 rgba(var(--iv), 0.45), 0 30px 80px rgba(0, 0, 0, 0.35);
 }
 
+/* ── Top bar: How it works' progress ────────────────────────────────────────────── */
+/* While How it works holds the screen, its name and progress sit in the middle of the top bar (main.js), filling
+   the gap between the name and the button. */
+.top-step { position: absolute; left: 50%; top: 50%; display: flex; align-items: center; gap: 14px; height: 44px; margin: 0; padding: 0 18px; border-radius: 999px; translate: -50% -50%; white-space: nowrap; font: 600 10.5px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: rgba(var(--iv), 0.7); background: rgba(16, 17, 16, 0.62); border: 1px solid rgba(var(--iv), 0.16); box-shadow: inset 0 1px 0 rgba(var(--iv), 0.18); pointer-events: none !important; opacity: 0; transform: translateY(-12px); transition: opacity 0.4s var(--ease-out), transform 0.5s var(--ease-out); }
+.how-on .top-step { opacity: 1; transform: none; }
+.top-bars { display: flex; gap: 4px; }
+.top-bars b { width: 18px; height: 3px; border-radius: 2px; background: rgba(var(--iv), 0.2); transition: background-color 0.4s, box-shadow 0.4s; }
+.top-step[data-step='0'] .top-bars b:nth-child(1), .top-step[data-step='1'] .top-bars b:nth-child(-n + 2), .top-step[data-step='2'] .top-bars b { background: var(--signal); box-shadow: 0 0 8px rgba(178, 199, 75, 0.6); }
+.top-n { color: rgba(var(--iv), 0.5); }
+.top-n b { display: inline-block; font-weight: 600; color: var(--bright); }
+.top-n b.roll { animation: count-roll 0.45s var(--ease-out); }
+
 /* ── Top corners ─────────────────────────────────────────────────────────────── */
 .top { position: fixed; z-index: 50; top: 16px; left: var(--edge, var(--gutter)); right: var(--edge, var(--gutter)); display: flex; align-items: center; justify-content: space-between; gap: 12px; pointer-events: none; }
 .top > * { pointer-events: auto; }
@@ -252,15 +264,14 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
    screen (sticky) while the scroll turns the orbit. */
 .how-pin { position: relative; display: flex; flex-direction: column; padding: clamp(104px, 14vh, 140px) 0 clamp(48px, 8vh, 96px); }
 .how.is-live { height: 330svh; }
-.how.is-live .how-pin { position: sticky; top: 0; height: 100svh; min-height: 580px; padding-bottom: clamp(20px, 4vh, 44px); }
+.how.is-live .how-pin { position: sticky; top: 0; height: 100svh; min-height: 580px; padding-top: clamp(86px, 11vh, 112px); padding-bottom: clamp(20px, 4vh, 44px); }
+/* Held on screen (desktop), the section's name and progress live in the top bar instead (.top-step), so the
+   heading can sit right under it. */
+@media (min-width: 961px) { .how.is-live .how-head .eyebrow { display: none; } }
 .how-head { position: relative; z-index: 3; flex: none; margin-left: var(--col-x); width: var(--col); display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
 .how-head .eyebrow { margin-bottom: 14px; }
 .how .h2 { font-size: clamp(36px, 4.2vw, 60px); max-width: none; text-wrap: balance; }
-.how-head .lede { margin-top: 14px; font-size: 17px; }
-.how-count { display: none; margin: 0 0 6px; font: 600 11px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--bright); white-space: nowrap; }
-.js .how-count { display: block; }
-.how-count b { display: inline-block; font-weight: 600; }
-.how-count b.roll { animation: count-roll 0.45s var(--ease-out); }
+.how-head .lede { flex: none; max-width: 27ch; margin: 0 0 8px; font-size: 17px; }
 @keyframes count-roll { from { transform: translateY(80%); opacity: 0; } }
 
 /* The stage: the phone in the middle, showing the Collect screen, and the three steps as glass panels. Without JS
@@ -381,7 +392,6 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .hstep-br i:nth-child(3) { left: 0; bottom: 0; border-right: 0; border-top: 0; border-radius: 0 0 0 9px; }
 .hstep-br i:nth-child(4) { right: 0; bottom: 0; border-left: 0; border-top: 0; border-radius: 0 0 9px 0; }
 @media (min-width: 961px) and (max-height: 760px) {
-  .how-head .lede { display: none; }
   .hstep p { font-size: 13.5px; }
   .hstep .hstep-chip { margin-top: 10px; }
 }
@@ -402,13 +412,15 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 
 /* ── Two ways to help: a field guide ───────────────────────────────────────────── */
 /* Two rows with the heading split across them: each half sits beside its photo, pinned in glass like a field note,
-   with a marker ring drawn round what matters and an arrow back to the words. Row two mirrors row one. */
-.fg-head { margin: 0 0 clamp(18px, 2.4vw, 28px); }
+   with a marker ring drawn round what matters and an arrow back to the words. Row two mirrors row one. Each row's
+   label carries the section's name ("Two ways to help / 01 · Collect"), so nothing floats above the spread. */
 .fg-row { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); align-items: center; gap: clamp(40px, 6vw, 96px); }
 .fg-row + .fg-row { margin-top: clamp(64px, 9vw, 128px); }
 .fg-row.r { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); }
 .fg-row.r .fg-text { order: 2; }
-.fg-k { margin: 0; font: 600 11px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--bright); }
+.fg-k { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0; font: 600 11px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--bright); }
+.fg-k .fg-sec { color: rgba(var(--iv), 0.5); }
+.fg-k .fg-sec::after { content: '/'; margin-left: 12px; color: rgba(var(--iv), 0.28); }
 .fg-row.r .fg-k { color: #eab887; }
 .fg-title { margin: 16px 0 0; font-size: clamp(42px, 5.4vw, 82px); }
 .fg-text > p:not([class]) { margin: 22px 0 0; max-width: 44ch; font-size: clamp(16px, 1.3vw, 18px); line-height: 1.6; color: rgba(var(--iv), 0.72); }
@@ -435,25 +447,22 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .js .fg-print.reveal.in .fg-mark path { stroke-dashoffset: 0; }
 
 /* ── Rewards: a row of passes ──────────────────────────────────────────────────── */
-/* The partner cafés' rewards as passes, cheapest first, on one line with your balance: everything before the "You"
-   marker is yours today. Each pass flips to its code when tapped (main.js); the one past the line shows how far off it is. */
+/* The partner cafés' rewards as passes, cheapest first, in two groups: what your balance covers today, and the next
+   one up. Each pass flips to its code when tapped (main.js); the one you can't afford yet shows how far off it is. */
 .rw-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr); gap: 24px 64px; align-items: end; margin-bottom: clamp(40px, 5vw, 64px); }
 .rw-head .h2 { max-width: 14ch; }
-.rw-head .lede { margin: 0 0 6px; }
-.rw-row { position: relative; display: flex; align-items: stretch; gap: 16px; margin: 0; padding: 14px 0 70px; list-style: none; }
-.rw-item { position: relative; flex: 1 1 0; min-width: 0; }
-/* The line under the row: lit up to your balance, dashed past it, with a node under each pass. */
-.rw-item::after { content: ''; position: absolute; left: 0; right: -16px; bottom: -36px; height: 2px; border-radius: 2px; background: var(--signal); box-shadow: 0 0 12px rgba(178, 199, 75, 0.7); transform-origin: 0 50%; }
-.rw-item.is-last::after { right: -26px; }
-.rw-item.is-locked::after, .rw-you::after { background: repeating-linear-gradient(90deg, rgba(var(--iv), 0.3) 0 6px, transparent 6px 12px); box-shadow: none; }
-.rw-item.is-locked::after { right: 0; }
-.rw-node { position: absolute; left: 50%; bottom: -41px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 0 4px rgba(178, 199, 75, 0.2), 0 0 12px var(--signal); }
-.is-locked .rw-node { background: var(--shade); box-shadow: inset 0 0 0 2px rgba(var(--iv), 0.35); }
-/* Your balance: a lit post through the row, with its tag on the line. */
-.rw-you { position: relative; flex: none; width: 2px; margin: 0 10px; }
-.rw-you::before { content: ''; position: absolute; left: 0; top: -14px; bottom: -36px; width: 2px; border-radius: 2px; background: linear-gradient(var(--bright), var(--signal)); box-shadow: 0 0 14px var(--signal); }
-.rw-you::after { content: ''; position: absolute; left: 2px; width: 26px; bottom: -36px; height: 2px; }
-.rw-you span { position: absolute; left: 50%; bottom: -68px; translate: -50% 0; white-space: nowrap; padding: 7px 11px; border-radius: 999px; font: 600 10.5px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); background: var(--bright); box-shadow: 0 0 22px rgba(225, 236, 151, 0.4); }
+.rw-head .lede { max-width: 34ch; margin: 0 0 8px; }
+/* Two groups on one row, each with a label over it: what your balance covers today, and the next one up (dimmed).
+   The lists step aside (display: contents) so every pass sits on the same grid; a spacer column parts the groups. */
+.rw-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) 12px minmax(0, 1fr); gap: 16px; padding: 4px 0 24px; }
+.rw-list { display: contents; }
+.rw-label { grid-row: 1; grid-column: 1 / 5; display: flex; align-items: center; gap: 10px; margin: 0 0 4px; font: 600 10.5px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: rgba(var(--iv), 0.6); }
+.rw-label.is-next { grid-column: 6; }
+.rw-label b { font-weight: 600; color: var(--bright); }
+.rw-label.is-next b { color: rgba(var(--iv), 0.78); }
+.rw-coin { flex: none; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 34% 28%, #f6fbc8, var(--bright) 30%, var(--signal) 62%, var(--sage)); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(178, 199, 75, 0.45); }
+.rw-item { position: relative; grid-row: 2; min-width: 0; list-style: none; }
+.rw-list.is-next .rw-item { grid-column: 6; }
 /* A pass: a card with a front and a back, flipped in 3D; the tear line is cut into both sides. */
 .pass { position: relative; display: block; width: 100%; height: clamp(250px, 20vw, 292px); padding: 0; border: 0; border-radius: 22px; background: none; color: var(--ivory); font: inherit; text-align: left; perspective: 900px; -webkit-tap-highlight-color: transparent; }
 .pass::before { content: ''; position: absolute; left: 10%; right: 10%; bottom: -18px; height: 36px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.5), transparent); }
@@ -483,12 +492,10 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .pass-meter { position: absolute; left: 18px; right: 18px; top: 108px; height: 8px; border-radius: 4px; background: rgba(var(--iv), 0.12); }
 .pass-meter b { display: block; width: 69%; height: 100%; border-radius: 4px; background: var(--signal); box-shadow: 0 0 10px rgba(178, 199, 75, 0.6); }
 .rw-item.is-locked .pass { opacity: 0.62; }
-/* Arriving (main.js): the passes deal in along the line, the line lights up to your balance, the marker rises. */
-.rewards.is-live .rw-item { opacity: 0; transform: translate3d(-28px, 26px, 0) rotate(-3deg); transition: opacity 0.7s var(--ease-out), transform 0.9s var(--ease-out); transition-delay: calc(var(--i) * 0.09s); }
-.rewards.is-live .rw-item::after { transform: scaleX(0); transition: transform 0.45s ease-out calc(0.55s + var(--i) * 0.14s); }
-.rewards.is-live .rw-you { opacity: 0; transform: translateY(14px); transition: opacity 0.5s var(--ease-out) 1.15s, transform 0.7s var(--ease-spring) 1.15s; }
-.rewards.is-in .rw-item, .rewards.is-in .rw-you { opacity: 1; transform: none; }
-.rewards.is-in .rw-item::after { transform: none; }
+/* Arriving (main.js): the labels rise and the passes deal in, one after another. */
+.rewards.is-live .rw-item, .rewards.is-live .rw-label { opacity: 0; transform: translate3d(-28px, 26px, 0) rotate(-3deg); transition: opacity 0.7s var(--ease-out), transform 0.9s var(--ease-out); transition-delay: calc(var(--i) * 0.09s); }
+.rewards.is-live .rw-label { transform: translate3d(0, 10px, 0); }
+.rewards.is-in .rw-item, .rewards.is-in .rw-label { opacity: 1; transform: none; }
 
 /* ── Ranks ───────────────────────────────────────────────────────────────────── */
 .ranks-stage { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; }
@@ -594,8 +601,8 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
   /* The row becomes a strip you swipe, bleeding to the screen edges, each pass snapping to the middle. */
   .rw-scroll { margin: 0 calc(var(--gutter) * -1); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); scrollbar-width: none; }
   .rw-scroll::-webkit-scrollbar { display: none; }
-  .rw-row { width: max-content; padding: 14px var(--gutter) 74px; }
-  .rw-item { flex: none; width: 200px; scroll-snap-align: center; }
+  .rw-row { width: max-content; grid-template-columns: repeat(4, 200px) 4px 200px; padding: 4px var(--gutter) 26px; }
+  .rw-item { scroll-snap-align: center; }
   .hp-report, .hp-stamps, .hpanel figcaption { display: none; }
   .hp-rewards, .hp-ranks { z-index: 4; --py: 0.17; --pw: 0.5; }
   .hp-rewards { --px: -0.95; }
@@ -606,7 +613,8 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
   .how-head { display: block; margin: 0; width: auto; }
   .how .h2 { font-size: clamp(30px, 8vw, 44px); }
   .how-head .lede { font-size: 15px; }
-  .how-count, .js .how-count { display: none; }
+  .how-head .lede { max-width: none; margin: 14px 0 0; }
+  .top-step { display: none; }
   .how-stage { width: auto; margin: 28px 0 0; flex-direction: column; }
   .how-steps { flex-direction: column; align-items: center; }
   .hstep { width: min(320px, 100%); padding: 14px 16px 16px; border-radius: 20px; }

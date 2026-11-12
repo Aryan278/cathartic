@@ -27,7 +27,8 @@ from `main`, root). The owner is Aryan.
   (`orbit`) measures once per refresh and only writes transform/opacity while scrolling.
 - Two ways to help is a field guide: the heading split across two rows ("Pick it up —" / "or point it out."), each
   half beside its photo in a glass print with a marker ring and an arrow back to the words. Rewards is a row of passes
-  on one line with your balance (the "You" marker); a pass flips to its code when tapped.
+  in two labelled groups (yours today / next); a pass flips to its code when tapped. While How it works holds the
+  screen, its name and progress sit in the middle of the top bar (`.top-step`).
 - Cursors (fine pointers only): a classic arrow with an Ivory rim, and a pointing hand on anything clickable. SVG
   sources in `assets/cursors/`, with 1x/2x PNGs rendered from them (the CSS uses `image-set`).
 - `assets/shots/` are real app screenshots (demo data); `assets/img/` holds the app's field

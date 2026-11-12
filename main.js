@@ -162,7 +162,8 @@
     const phone = $('.how-phone', stage);
     const wire = $('.how-wire', stage);
     const cards = $$('.hstep', stage);
-    const count = $('.how-count b');
+    const island = $('.top-step');
+    const count = $('.top-n b', island);
     const bal = $('.scr-bal b', stage);
     const total = bal.textContent;
     const num = (t) => +t.replace(/\D/g, '');
@@ -221,6 +222,7 @@
         }
         step = now;
         phone.dataset.step = now;
+        island.dataset.step = now;
         cards.forEach((c, i) => c.classList.toggle('is-done', i < now));
         // The balance counts up as the coins land.
         tally?.kill();
@@ -405,6 +407,8 @@
     .to(turn, { p: 2, duration: 1 })
     .to({}, { duration: 0.7 });
   orbit.enter(0);
+  // While the section holds the screen, its name and progress show in the middle of the top bar.
+  ScrollTrigger.create({ trigger: '.how', start: 'top 30%', end: 'bottom 70%', toggleClass: { targets: document.documentElement, className: 'how-on' } });
 
 
   // Rewards: the passes deal in along the line, it lights up to your balance and the marker rises; then one pass

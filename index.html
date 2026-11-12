@@ -13,9 +13,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700;800&family=Martian+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=2026-11-13a" />
+    <link rel="stylesheet" href="styles.css?v=2026-11-13b" />
     <script>document.documentElement.classList.add('js');</script>
-    <script src="config.js?v=2026-11-13a"></script>
+    <script src="config.js?v=2026-11-13b"></script>
   </head>
   <body>
     <!-- One canopy over the whole page, fixed behind every section: light drifting through it and boughs growing in
@@ -36,6 +36,7 @@
         <span class="brand-mark" aria-hidden="true"></span>
         <span data-app-name>Cathartic</span>
       </a>
+      <p class="top-step" aria-hidden="true" data-step="0"><span>How it works</span><i class="top-bars"><b></b><b></b><b></b></i><span class="top-n"><b>1</b> / 3</span></p>
       <a class="btn btn-small btn-coin magnetic" data-contact href="#">Get early access<span class="coin-chip" aria-hidden="true"><b>+40</b></span></a>
     </header>
 
@@ -101,9 +102,8 @@
             <div>
               <p class="eyebrow">How it works</p>
               <h2 class="display h2">Two photos make a bag.</h2>
-              <p class="lede">Three steps between noticing it and spending it.</p>
             </div>
-            <p class="how-count" aria-hidden="true">Step <b>1</b> / 3</p>
+            <p class="lede">Three steps between noticing it and spending it.</p>
           </header>
           <!-- The phone shows the Collect screen; the steps are glass panels that orbit it as the scroll goes on (main.js). -->
           <div class="how-stage">
@@ -161,10 +161,9 @@
       <!-- 3 · COLLECT vs REPORT — a field guide: the heading split across two photos, each half beside its photo with
            what to do; a marker ring is drawn round what matters, with an arrow back to the words. -->
       <section class="split-section fg">
-        <h2 class="eyebrow fg-head reveal">Two ways to help</h2>
         <div class="fg-row">
           <div class="fg-text reveal">
-            <p class="fg-k">01 · Collect</p>
+            <h2 class="fg-k"><span class="fg-sec">Two ways to help</span><span>01 · Collect</span></h2>
             <h3 class="display fg-title">Pick it up —</h3>
             <p>Loose, light, in reach: wrappers, bottles, cups. Pick it up by hand, take two photos, drop it at your society's point, and coins land in your balance.</p>
             <ul class="fg-chips"><li>30 coins a bag</li><li>Mystery 2×, sometimes</li><li>Builds your streak</li></ul>
@@ -178,7 +177,7 @@
         </div>
         <div class="fg-row r">
           <div class="fg-text reveal">
-            <p class="fg-k">02 · Report</p>
+            <p class="fg-k"><span class="fg-sec">Two ways to help</span><span>02 · Report</span></p>
             <h3 class="display fg-title">or point it out.</h3>
             <p>Too big to carry? A dumping pile or a blocked drain gets a photo, not your hands. Each report becomes a case your RWA, then the municipality, can act on.</p>
             <p class="fg-safe"><b>Hands off.</b> Never reach into drains or sludge — just photograph it.</p>
@@ -192,52 +191,52 @@
         </div>
       </section>
 
-      <!-- 4 · REWARDS — the partner cafés' rewards as passes on one line with your balance: everything before the "You"
-           marker is yours today. Tap a pass to flip it to its code (main.js). -->
+      <!-- 4 · REWARDS — the partner cafés' rewards as passes in two groups: what your balance covers today, and the next
+           one up. Tap a pass to flip it to its code (main.js). -->
       <section class="rewards" id="rewards">
         <div class="rw-head">
           <div class="reveal"><p class="eyebrow">Rewards</p><h2 class="display h2">Coins you can actually spend.</h2></div>
-          <p class="lede reveal">A menu of passes from partner cafés, cheapest first. Your balance draws a line through it: everything before the line is yours today. Tap a pass to flip it to its code.</p>
+          <p class="lede reveal">Rewards from partner cafés, cheapest first. Tap a pass to flip it to its code for the counter.</p>
         </div>
         <div class="rw-scroll">
-          <ol class="rw-row">
+          <div class="rw-row">
+            <p class="rw-label" style="--i: 0"><i class="rw-coin" aria-hidden="true"></i>Yours today <b>1,240 coins</b></p>
+            <p class="rw-label is-next" style="--i: 4">Next <b>560 to go</b></p>
+            <ol class="rw-list" role="list">
             <li class="rw-item" style="--i: 0; --c1: var(--sage); --c2: var(--deep)">
               <button class="pass" type="button" aria-pressed="false"><span class="pass-in">
                 <span class="pass-face pass-front"><span class="pass-cafe">Partner café</span><span class="pass-main"><span class="pass-name">Filter coffee</span><span class="pass-price">300</span></span><span class="pass-tear"></span><span class="pass-tap">Tap for your code</span></span>
                 <span class="pass-face pass-back"><span class="pass-cafe">Your code · Filter coffee</span><span class="pass-code">P2X-9TA</span><span class="pass-bars"></span><span class="pass-tear"></span><span class="pass-tap">Show at the counter · 15 min</span></span>
               </span></button>
-              <i class="rw-node" aria-hidden="true"></i>
             </li>
             <li class="rw-item" style="--i: 1; --c1: var(--fern); --c2: var(--bark)">
               <button class="pass" type="button" aria-pressed="false"><span class="pass-in">
                 <span class="pass-face pass-front"><span class="pass-cafe">Partner café</span><span class="pass-main"><span class="pass-name">Masala chai &amp; bun</span><span class="pass-price">420</span></span><span class="pass-tear"></span><span class="pass-tap">Tap for your code</span></span>
                 <span class="pass-face pass-back"><span class="pass-cafe">Your code · Masala chai &amp; bun</span><span class="pass-code">H4N-7QE</span><span class="pass-bars"></span><span class="pass-tear"></span><span class="pass-tap">Show at the counter · 15 min</span></span>
               </span></button>
-              <i class="rw-node" aria-hidden="true"></i>
             </li>
             <li class="rw-item" style="--i: 2; --c1: var(--khaki); --c2: var(--moss)">
               <button class="pass" type="button" aria-pressed="false" data-demo><span class="pass-in">
                 <span class="pass-face pass-front"><span class="pass-cafe">Partner café</span><span class="pass-main"><span class="pass-name">Cold coffee</span><span class="pass-price">650</span></span><span class="pass-tear"></span><span class="pass-tap">Tap for your code</span></span>
                 <span class="pass-face pass-back"><span class="pass-cafe">Your code · Cold coffee</span><span class="pass-code">K7Q-4M2</span><span class="pass-bars"></span><span class="pass-tear"></span><span class="pass-tap">Show at the counter · 15 min</span></span>
               </span></button>
-              <i class="rw-node" aria-hidden="true"></i>
             </li>
-            <li class="rw-item is-last" style="--i: 3; --c1: var(--moss); --c2: var(--bark)">
+            <li class="rw-item" style="--i: 3; --c1: var(--moss); --c2: var(--bark)">
               <button class="pass" type="button" aria-pressed="false"><span class="pass-in">
                 <span class="pass-face pass-front"><span class="pass-cafe">Partner café</span><span class="pass-main"><span class="pass-name">Paneer wrap</span><span class="pass-price">900</span></span><span class="pass-tear"></span><span class="pass-tap">Tap for your code</span></span>
                 <span class="pass-face pass-back"><span class="pass-cafe">Your code · Paneer wrap</span><span class="pass-code">W8D-3LS</span><span class="pass-bars"></span><span class="pass-tear"></span><span class="pass-tap">Show at the counter · 15 min</span></span>
               </span></button>
-              <i class="rw-node" aria-hidden="true"></i>
             </li>
-            <li class="rw-you" style="--i: 4"><span>You · 1,240</span></li>
-            <li class="rw-item is-locked" style="--i: 5; --c1: var(--bark); --c2: #141a12">
+            </ol>
+            <ol class="rw-list is-next" role="list">
+            <li class="rw-item" style="--i: 4; --c1: var(--bark); --c2: #141a12">
               <button class="pass" type="button" aria-pressed="false"><span class="pass-in">
                 <span class="pass-face pass-front"><span class="pass-cafe">Partner café</span><span class="pass-main"><span class="pass-name">Lunch for two</span><span class="pass-price">1,800</span></span><span class="pass-tear"></span><span class="pass-tap">560 to go</span></span>
                 <span class="pass-face pass-back"><span class="pass-cafe">Lunch for two · 1,800</span><span class="pass-code">560 <small>to go</small></span><span class="pass-meter"><b></b></span><span class="pass-tear"></span><span class="pass-tap">About 19 more bags</span></span>
               </span></button>
-              <i class="rw-node" aria-hidden="true"></i>
             </li>
-          </ol>
+            </ol>
+          </div>
         </div>
       </section>
 
@@ -359,6 +358,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="main.js?v=2026-11-13a"></script>
+    <script src="main.js?v=2026-11-13b"></script>
   </body>
 </html>
