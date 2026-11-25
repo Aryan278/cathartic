@@ -39,6 +39,9 @@ from `main`, root). The owner is Aryan.
   Moss `#314926`, Fern `#5a732f`, Sage `#678133`, Khaki `#9bb444`, Signal `#b2c74b` (accent),
   Bright `#e1ec97`, Ivory `#f9fdd6` (every "white" — text, glass, rims). Ember `#c98a3a` for warnings
   only. No new hues.
+- Section names over headlines: sentence case in the display face, in Signal, with the section's rail icon
+  (`.eyebrow`). No tiny tracked all-caps titles (Aryan finds them generic); small mono labels belong only inside
+  app-like UI (passes, the phone screen, captions).
 - Glass = Ivory at low alpha with a diagonal sheen and a bright top rim; grain overlay; drifting
   light blobs. Primary button = Ivory pill with dark ink.
 - Copy rules: **Collect** is loose surface litter only, by hand. **Report** is hands-off — never
