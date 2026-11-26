@@ -46,7 +46,7 @@ from `main`, root). The owner is Aryan.
 - The footer is columns, with the canopy's boughs growing up from the ground under it. The invitation asks for the
   society's email and puts it in the body of the email it opens.
 - Cursors (fine pointers only): a classic black arrow with a white rim, and a white pointing hand with a black outline
-  like macOS. Both are the owner's own SVGs (arrow.svg, hand.svg); hotspots 16 14 and 12 8. SVG
+  like macOS. Both are the owner's own SVGs (arrow.svg, hand.svg); framed tighter (viewBox) to draw about 35% larger; hotspots 2 2 and 7 2. SVG
   sources in `assets/cursors/`, with 1x/2x PNGs rendered from them (the CSS uses `image-set`). Bump the `?v=` on
   their URLs in `styles.css` when you redraw them, or browsers keep showing the old ones.
 - `assets/shots/` are real app screenshots (demo data); `assets/img/` holds the app's field

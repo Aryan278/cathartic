@@ -895,9 +895,9 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
 /* Cursors (mouse and trackpad only): a classic black arrow with a white rim everywhere, and a white pointing hand on
    anything you can click. Bump the ?v= on their URLs when the drawings change, or browsers keep the old ones. Drawn as SVG in assets/cursors/, with 1x and 2x PNGs rendered from them. */
 @media (pointer: fine) {
-  html { cursor: url(assets/cursors/arrow.png?v=5) 16 14, auto; cursor: -webkit-image-set(url(assets/cursors/arrow.png?v=5) 1x, url(assets/cursors/arrow@2x.png?v=5) 2x) 16 14, auto; cursor: image-set(url(assets/cursors/arrow.png?v=5) 1x, url(assets/cursors/arrow@2x.png?v=5) 2x) 16 14, auto; }
+  html { cursor: url(assets/cursors/arrow.png?v=6) 2 2, auto; cursor: -webkit-image-set(url(assets/cursors/arrow.png?v=6) 1x, url(assets/cursors/arrow@2x.png?v=6) 2x) 2 2, auto; cursor: image-set(url(assets/cursors/arrow.png?v=6) 1x, url(assets/cursors/arrow@2x.png?v=6) 2x) 2 2, auto; }
   input[type='text'], input[type='email'] { cursor: text; }
-  a, button, .btn, [role='button'], summary, select, .film-play { cursor: url(assets/cursors/hand.png?v=5) 12 8, pointer; cursor: -webkit-image-set(url(assets/cursors/hand.png?v=5) 1x, url(assets/cursors/hand@2x.png?v=5) 2x) 12 8, pointer; cursor: image-set(url(assets/cursors/hand.png?v=5) 1x, url(assets/cursors/hand@2x.png?v=5) 2x) 12 8, pointer; }
+  a, button, .btn, [role='button'], summary, select, .film-play { cursor: url(assets/cursors/hand.png?v=6) 7 2, pointer; cursor: -webkit-image-set(url(assets/cursors/hand.png?v=6) 1x, url(assets/cursors/hand@2x.png?v=6) 2x) 7 2, pointer; cursor: image-set(url(assets/cursors/hand.png?v=6) 1x, url(assets/cursors/hand@2x.png?v=6) 2x) 7 2, pointer; }
 }
 
 /* Lower-end machines (.lite, set in the page head from their cores and memory): the canopy holds still, two of its
