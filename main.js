@@ -20,12 +20,27 @@
   const film = $('.film');
   if (SITE.video && film) {
     film.classList.add('has-video');
+    const frame = $('.film-frame');
+    const isFile = /\.(mp4|webm|mov)(\?|$)/i.test(SITE.video);
+    // A file starts downloading quietly once the film is a screen or two away, so pressing play doesn't start from
+    // nothing; the same element then plays in place.
+    let video;
+    const fetchFilm = () => {
+      if (video) return video;
+      video = Object.assign(document.createElement('video'), { src: SITE.video, poster: SITE.poster || '', preload: 'auto', controls: true, playsInline: true });
+      return video;
+    };
+    if (isFile && 'IntersectionObserver' in window) {
+      const near = new IntersectionObserver((e) => e.some((x) => x.isIntersecting) && (near.disconnect(), fetchFilm().load()), { rootMargin: '150% 0px' });
+      near.observe(film);
+    }
     $('.film-play').addEventListener('click', () => {
-      const frame = $('.film-frame');
-      const isFile = /\.(mp4|webm|mov)(\?|$)/i.test(SITE.video);
-      frame.innerHTML = isFile
-        ? `<video src="${SITE.video}" poster="${SITE.poster || ''}" controls autoplay playsinline></video>`
-        : `<iframe src="${SITE.video}${SITE.video.includes('?') ? '&' : '?'}autoplay=1" title="${name} film" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+      if (!isFile) {
+        frame.innerHTML = `<iframe src="${SITE.video}${SITE.video.includes('?') ? '&' : '?'}autoplay=1" title="${name} film" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+        return;
+      }
+      frame.replaceChildren(fetchFilm());
+      video.play().catch(() => {});
     });
   }
 

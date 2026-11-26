@@ -32,7 +32,8 @@ from `main`, root). The owner is Aryan.
 - The rest: Ranks & streaks is a podium of stubs beside a month of the streak; For RWAs a control room of glass tiles
   whose hotspot plan is a draggable before/after (a range input); Inside the app a bento of icon-card covers (a lit icon, the screen's name and use, one chip from its demo data)
   that opens one into the real screen in a whole phone on hover (main.js tweens the grid tracks with GSAP, since browsers jump between grid templates; phones get a strip). The film a vertical reel cover
-  (`assets/film.mp4`, 720×1280, 25 s, with its opening frame as the poster; it plays in place); the numbers a
+  (`assets/film.mp4`, 720×1280, 25 s, peaks capped at ~1.4 Mbps; it starts downloading a section or two before you reach
+  it and plays in place, with its opening frame as the poster); the numbers a
   split-flap board; the closing call an invitation card whose blank fills the email subject.
 - The logo is the app's poker coin with the 3D eco-bag in a dark moss face (`assets/img/logo.webp`, `logo-64.png` the
   favicon): the top bar's mark, the footer, and the loader's coin.
