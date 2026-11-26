@@ -66,9 +66,7 @@ h1.display { font-size: clamp(54px, 9.2vw, 138px); }
 /* A section's name over its headline: sentence case in the display face, in Signal, with the icon it has in the rail. */
 .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 16px; font: 600 clamp(17px, 1.35vw, 20px)/1.2 var(--display); letter-spacing: -0.005em; color: var(--signal); }
 .eb-ic { flex: none; width: 1.2em; height: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.mono-label { margin: 0 0 14px; font: 600 15px/1.3 var(--text); color: rgba(var(--iv), 0.7); }
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-.mono-label.dark { color: rgba(21, 24, 20, 0.6); }
 .lede { font-size: clamp(16px, 1.4vw, 19px); line-height: 1.6; color: rgba(var(--iv), 0.72); max-width: 46ch; margin: 22px 0 0; }
 .split .line { display: block; overflow: hidden; padding-bottom: 0.06em; }
 .split .word { display: inline-block; }
@@ -166,8 +164,8 @@ h1.display { font-size: clamp(54px, 9.2vw, 138px); }
 }
 
 /* ── Layout ──────────────────────────────────────────────────────────────────── */
-section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12vw, 160px) 0; }
-.section-head { margin-bottom: clamp(36px, 5vw, 64px); }
+section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6vw, 92px) 0; }
+.section-head { margin-bottom: clamp(26px, 3.4vw, 44px); }
 
 /* ── Hero ────────────────────────────────────────────────────────────────────── */
 .hero { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; padding: clamp(112px, 15vh, 150px) 0 clamp(48px, 6vw, 80px); }
@@ -409,18 +407,12 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .coin-ic { display: inline-block; flex: none; width: 1em; height: 1em; border-radius: 50%; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='b' cx='.36' cy='.3' r='.8'%3E%3Cstop offset='0' stop-color='%23eef6b4'/%3E%3Cstop offset='.55' stop-color='%23b2c74b'/%3E%3Cstop offset='1' stop-color='%23869b35'/%3E%3C/radialGradient%3E%3CradialGradient id='f' cx='.38' cy='.3' r='.8'%3E%3Cstop offset='0' stop-color='%23eef6b6'/%3E%3Cstop offset='.6' stop-color='%23c6d862'/%3E%3Cstop offset='1' stop-color='%23a6bb47'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='31' fill='url(%23b)' stroke='%232a4224' stroke-opacity='.55'/%3E%3Ccircle cx='32' cy='32' r='27.3' fill='none' stroke='%23f4f9cf' stroke-opacity='.9' stroke-width='5' stroke-dasharray='1.3 2.273'/%3E%3Ccircle cx='32' cy='32' r='23' fill='url(%23f)' stroke='%232a4224' stroke-opacity='.3'/%3E%3Cg transform='rotate(45 32 32)' fill='none' stroke='%231d2719' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 19.5c6.8 4.8 6.8 20.2 0 25-6.8-4.8-6.8-20.2 0-25z'/%3E%3Cpath d='M32 26.5v13'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat; box-shadow: 0 0 10px rgba(178, 199, 75, 0.4); }
 .coin span { font: 800 26px/1 var(--display); color: var(--deep); letter-spacing: -0.02em; }
 
-/* Tick lists (For RWAs). */
-.ticks { list-style: none; padding: 0; margin: 22px 0 0; display: grid; gap: 10px; }
-.ticks li { position: relative; padding-left: 30px; color: rgba(var(--iv), 0.85); font-size: 15px; }
-.ticks li::before { content: ''; position: absolute; left: 0; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: rgba(178, 199, 75, 0.2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%23e1ec97' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat; border: 1px solid rgba(178, 199, 75, 0.45); }
-.ticks.big li { font-size: 17px; padding-left: 34px; }
-
 /* ── Two ways to help: a field guide ───────────────────────────────────────────── */
 /* Two rows with the heading split across them: each half sits beside its photo, pinned in glass like a field note,
    with a marker ring drawn round what matters and an arrow back to the words. Row two mirrors row one. Each row's
    label names its way (Collect, Report) with its icon, so nothing floats above the spread. */
 .fg-row { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); align-items: center; gap: clamp(40px, 6vw, 96px); }
-.fg-row + .fg-row { margin-top: clamp(64px, 9vw, 128px); }
+.fg-row + .fg-row { margin-top: clamp(44px, 6vw, 84px); }
 .fg-row.r { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); }
 .fg-row.r .fg-text { order: 2; }
 .fg-k { display: inline-flex; align-items: center; gap: 10px; margin: 0; font: 600 clamp(17px, 1.35vw, 20px)/1.2 var(--display); letter-spacing: -0.005em; color: var(--signal); }
@@ -471,7 +463,7 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .bal-next b { display: block; font: 700 15px/1.2 var(--display); color: var(--bright); }
 .bal-ring { flex: none; width: 40px; height: 40px; rotate: -90deg; fill: none; stroke-width: 4; }
 .bal-ring circle { stroke: rgba(var(--iv), 0.12); }
-.bal-ring .on { stroke: var(--signal); stroke-linecap: round; stroke-dasharray: 69.4 100.5; filter: drop-shadow(0 0 4px rgba(178, 199, 75, 0.6)); }
+.bal-ring .on { stroke: var(--signal); stroke-linecap: round; stroke-dasharray: 69.4 100.5; transition: stroke-dasharray 1.4s var(--ease-out) 0.6s; filter: drop-shadow(0 0 4px rgba(178, 199, 75, 0.6)); }
 /* A pass: a card with a front and a back, flipped in 3D; the tear line is cut into both sides. */
 .pass { position: relative; display: block; width: 100%; height: clamp(250px, 20vw, 292px); padding: 0; border: 0; border-radius: 22px; background: none; color: var(--ivory); font: inherit; text-align: left; perspective: 900px; -webkit-tap-highlight-color: transparent; }
 .pass::before { content: ''; position: absolute; left: 10%; right: 10%; bottom: -18px; height: 36px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.5), transparent); }
@@ -504,11 +496,12 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 /* Arriving (main.js): the labels rise and the passes deal in, one after another. */
 .rewards.is-live .rw-item { opacity: 0; transform: translate3d(-28px, 26px, 0) rotate(-3deg); transition: opacity 0.7s var(--ease-out), transform 0.9s var(--ease-out); transition-delay: calc(var(--i) * 0.09s); }
 .rewards.is-in .rw-item { opacity: 1; transform: none; }
+.rewards.is-live:not(.is-in) .bal-ring .on { stroke-dasharray: 0 100.5; }
 
 /* ── Ranks & streaks: the podium and the streak ──────────────────────────────── */
 /* The week's top three as stubs standing on a glass podium (heights by rank), beside your streak as a month of days:
    the run lit, today ringed, the free skip frosted. Both settle in as they arrive (the page's reveals, CSS only). */
-.ranks-stage { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(32px, 5vw, 72px); align-items: end; }
+.ranks-stage { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: clamp(32px, 5vw, 72px); align-items: end; }
 .podium { margin: 0; }
 .podium-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 14px; margin: 0; padding: 0; list-style: none; }
 .step { display: flex; flex-direction: column; align-items: center; grid-row: 1; }
@@ -561,6 +554,17 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .streak-ms li { padding: 8px 13px; border-radius: 999px; font: 600 13px/1 var(--text); color: rgba(var(--iv), 0.6); background: rgba(var(--iv), 0.05); border: 1px solid rgba(var(--iv), 0.14); }
 .streak-ms li.on { color: var(--bright); background: rgba(178, 199, 75, 0.13); border-color: rgba(178, 199, 75, 0.35); }
 .streak-note { margin: 0; color: rgba(var(--iv), 0.7); font-size: 15px; }
+/* Each day says what it was on hover; today keeps a soft pulse; #1's stub catches the light now and then. */
+.d { position: relative; }
+.d[data-tip]::after { content: attr(data-tip); position: absolute; z-index: 3; left: 50%; bottom: calc(100% + 8px); padding: 7px 10px; border-radius: 9px; white-space: nowrap; font: 600 12.5px/1 var(--text); color: var(--ink); background: var(--ivory); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4); opacity: 0; translate: -50% 6px; transition: opacity 0.2s, translate 0.3s var(--ease-out); pointer-events: none; }
+.d[data-tip]:hover::after { opacity: 1; translate: -50% 0; }
+.d[data-tip]:hover { outline: 2px solid rgba(225, 236, 151, 0.7); outline-offset: 2px; }
+.d.today::before { content: ''; position: absolute; inset: -5px; border-radius: 13px; border: 2px solid var(--bright); animation: today 2.4s ease-out infinite; pointer-events: none; }
+@keyframes today { from { transform: scale(0.85); opacity: 0.9; } to { transform: scale(1.3); opacity: 0; } }
+.s1 .stub::before { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.5) 50%, transparent 62%); transform: translateX(-120%); animation: stub-sheen 6s ease-in-out 2s infinite; pointer-events: none; }
+@keyframes stub-sheen { 0%, 72% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+.js .streak.reveal .streak-ms li.on { transform: scale(0.7); opacity: 0; transition: transform 0.6s var(--ease-spring) 0.75s, opacity 0.3s 0.75s; }
+.js .streak.reveal.in .streak-ms li.on { transform: none; opacity: 1; }
 /* The days light up in order as the card arrives. */
 .js .streak.reveal .d:not(.off) { opacity: 0; transform: scale(0.6); transition: opacity 0.4s var(--ease-out), transform 0.5s var(--ease-spring); transition-delay: calc(0.3s + var(--i) * 22ms); }
 .js .streak.reveal.in .d:not(.off) { opacity: 1; transform: none; }
@@ -573,7 +577,10 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .rwa-foot { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 22px; margin-top: clamp(24px, 3vw, 36px); }
 .rwa-foot p { margin: 0; font-size: 15px; color: rgba(var(--iv), 0.62); }
 .rwa-board { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); grid-auto-rows: auto; gap: 18px; }
-.rb { position: relative; margin: 0; padding: 22px; border-radius: 28px; }
+.rb { position: relative; margin: 0; padding: 22px; border-radius: 28px; transition: translate 0.5s var(--ease-out), box-shadow 0.5s; }
+@media (hover: hover) { .rb:hover { translate: 0 -4px; } }
+.pd { transition: transform 0.7s var(--ease-spring), opacity 0.3s; transition-delay: calc(0.9s + var(--k) * 0.18s); }
+.js .rb-hot.reveal:not(.in) .pd { transform: translateY(-36px); opacity: 0; }
 .rb-hot { grid-row: span 2; display: flex; flex-direction: column; }
 .rb-k { display: flex; gap: 12px; margin: 0; font-size: 15px; line-height: 1.5; color: rgba(var(--iv), 0.7); }
 .rb-ic { flex: none; width: 22px; height: 22px; margin-top: 1px; fill: none; stroke: var(--signal); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -591,12 +598,18 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .rb-avs { display: flex; margin-top: 18px; }
 .rb-avs i { display: grid; place-items: center; width: 40px; height: 40px; margin-left: -10px; border-radius: 50%; font: 700 12px/1 var(--display); font-style: normal; color: var(--ivory); box-shadow: 0 0 0 3px #1c2519; }
 .rb-avs i:first-child { margin-left: 0; }
+.rb-avs i { transition: transform 0.45s var(--ease-out), opacity 0.3s, filter 0.3s; }
+@media (hover: hover) {
+  .rb-res:hover .rb-avs i { transform: translateX(calc(var(--k) * 7px)); }
+  .rb-res:has(.rb-act:hover) .rb-avs .out { transform: translate(calc(var(--k) * 7px), -10px); opacity: 0.35; filter: grayscale(1); }
+}
 .rb-act { display: inline-flex; margin-top: 16px; padding: 8px 13px; border-radius: 999px; font: 600 13px/1 var(--text); color: #eab887; background: rgba(214, 132, 74, 0.1); border: 1px solid rgba(214, 132, 74, 0.35); }
 .rb-slots { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-.rb-slots span { padding: 8px 13px; border-radius: 999px; font: 600 13px/1 var(--text); color: rgba(var(--iv), 0.6); background: rgba(var(--iv), 0.05); border: 1px solid rgba(var(--iv), 0.14); }
-.rb-slots .on { color: var(--bright); background: rgba(178, 199, 75, 0.13); border-color: rgba(178, 199, 75, 0.35); }
+.rb-slots button {  padding: 8px 13px; border-radius: 999px; font: 600 13px/1 var(--text); color: rgba(var(--iv), 0.6); background: rgba(var(--iv), 0.05); border: 1px solid rgba(var(--iv), 0.14); ; cursor: pointer; transition: color 0.3s, background-color 0.3s, border-color 0.3s; }
+.rb-slots button.on { color: var(--bright); background: rgba(178, 199, 75, 0.13); border-color: rgba(178, 199, 75, 0.35); }
 .rb-cap { height: 8px; margin-top: 18px; border-radius: 4px; background: rgba(var(--iv), 0.1); }
-.rb-cap b { display: block; width: 62%; height: 100%; border-radius: 4px; background: var(--signal); box-shadow: 0 0 10px rgba(178, 199, 75, 0.5); }
+.rb-cap b { display: block; height: 100%; border-radius: 4px; background: var(--signal); box-shadow: 0 0 10px rgba(178, 199, 75, 0.5); transform-origin: 0 50%; transform: scaleX(var(--cap, 0.62)); transition: transform 0.9s var(--ease-out); }
+.js .rb-pick.reveal:not(.in) .rb-cap b { transform: scaleX(0); }
 
 /* ── Inside the app: a bento of screens ──────────────────────────────────────── */
 /* Six screens cropped into a bento. Hovering (or focusing) one opens it (main.js sets data-open): its row and column
@@ -609,6 +622,8 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .sb[data-open='4'] { grid-template-columns: 0.65fr 1.7fr 0.65fr; grid-template-rows: 1fr 3fr; }
 .sb[data-open='5'] { grid-template-columns: 0.65fr 0.65fr 1.7fr; grid-template-rows: 1fr 3fr; }
 .sb-cell { position: relative; min-width: 0; min-height: 0; margin: 0; overflow: hidden; border-radius: 26px; background: #0d100c; box-shadow: inset 0 0 0 1px rgba(var(--iv), 0.14), 0 24px 50px rgba(0, 0, 0, 0.35); outline: none; }
+.js .sb.reveal .sb-cell { opacity: 0; transform: translateY(18px) scale(0.95); transition: opacity 0.6s var(--ease-out), transform 0.8s var(--ease-out), box-shadow 0.3s; transition-delay: calc(0.1s + var(--k) * 0.07s); }
+.js .sb.reveal.in .sb-cell { opacity: 1; transform: none; }
 .sb-cell:focus-visible { box-shadow: inset 0 0 0 2px var(--bright), 0 24px 50px rgba(0, 0, 0, 0.35); }
 .sb-crop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--crop); transition: opacity 0.5s, transform 0.8s var(--ease-out); }
 .sb-cell.is-open .sb-crop { opacity: 0.12; transform: scale(1.1); }
@@ -616,6 +631,7 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .sb-cell.is-open .sb-open { opacity: 1; transform: none; transition-delay: 0.2s; }
 /* The phone: its screen keeps the shots' exact shape (390 × 844), so each one fits edge to edge. */
 .sb-phone { box-sizing: content-box; position: relative; flex: none; height: calc(100% - 14px); aspect-ratio: 390 / 844; padding: 7px; border-radius: 15% / 7%; background: linear-gradient(160deg, #22281f, #0b0d0b 40%, #161a14); box-shadow: inset 0 0 0 1px rgba(var(--iv), 0.14), 0 30px 60px rgba(0, 0, 0, 0.55); }
+.sb-cell.is-open .sb-phone { transform: perspective(900px) rotateY(calc(var(--tx, 0) * 10deg)) rotateX(calc(var(--ty, 0) * -8deg)); transition: transform 0.3s var(--ease-out); }
 .sb-phone img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 12% / 5.6%; }
 .sb-phone::after { content: ''; position: absolute; left: 50%; top: 3%; width: 30%; aspect-ratio: 86 / 24; translate: -50% 0; border-radius: 999px; background: #050605; }
 .sb-open p { margin: 0; max-width: 24ch; font-size: 16px; line-height: 1.55; color: rgba(var(--iv), 0.72); }
@@ -632,7 +648,17 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 .reel-back { position: absolute; inset: 0; overflow: hidden; border-radius: 28px; rotate: 7deg; translate: 18% 3%; opacity: 0.5; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45); transition: rotate 1s var(--ease-out), translate 1s var(--ease-out); }
 .reel-back img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); }
 .js .film-reel.reveal:not(.in) .reel-back { rotate: 0deg; translate: 0 0; }
-.film-frame { position: relative; z-index: 1; padding: 8px; border-radius: 30px; rotate: -2deg; }
+@media (hover: hover) { .film-reel:hover .reel-back { rotate: 11deg; translate: 26% 2%; } }
+.reel-cover span { transition: transform 0.7s var(--ease-out), opacity 0.4s; transition-delay: 0.5s; }
+.reel-cover span + span { transition-delay: 0.65s; }
+.js .film-reel.reveal:not(.in) .reel-cover span { transform: translateX(-36px); opacity: 0; }
+.reel-bar { position: absolute; z-index: 1; left: 16px; right: 16px; bottom: 8px; height: 3px; border-radius: 2px; background: rgba(var(--iv), 0.2); overflow: hidden; }
+.reel-bar b { display: block; height: 100%; background: var(--ivory); transform-origin: 0 50%; transform: scaleX(0); transition: transform 0.4s var(--ease-out); }
+@media (hover: hover) { .film-frame:hover .reel-bar b { transform: scaleX(1); transition: transform 8s linear; } }
+.film-reel.is-nudge .film-frame { animation: nudge 0.5s var(--ease-out); }
+.film-reel.is-nudge .film-soon { animation: pop 0.5s var(--ease-spring); }
+@keyframes nudge { 25% { translate: -6px 0; } 50% { translate: 5px 0; } 75% { translate: -3px 0; } }
+.film-frame { position: relative; z-index: 1; padding: 8px; border-radius: 30px; rotate: -2deg; transform: perspective(1000px) rotateY(calc(var(--tx, 0) * 12deg)) rotateX(calc(var(--ty, 0) * -10deg)); transition: transform 0.35s var(--ease-out); }
 .film-poster, .film-frame iframe, .film-frame video { position: relative; display: block; width: 100%; aspect-ratio: 9 / 16; overflow: hidden; border: 0; border-radius: 23px; background: #0c0e0c; }
 .film-poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; filter: brightness(0.74) saturate(1.05); transform: scale(1.02); transition: transform 1.4s var(--ease-out); }
 .film-poster::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 12, 9, 0.5), transparent 28%, transparent 56%, rgba(10, 12, 9, 0.78)); pointer-events: none; }
@@ -656,13 +682,14 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
 
 /* ── Numbers: a station board ────────────────────────────────────────────────── */
 /* Split-flap tiles that flick through digits and land on each number as it arrives (main.js). */
-.numbers { padding-top: clamp(40px, 6vw, 80px); padding-bottom: clamp(40px, 6vw, 80px); }
+.numbers { padding-top: clamp(24px, 3vw, 44px); padding-bottom: clamp(24px, 3vw, 44px); }
 .board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); }
 .flaps { display: flex; gap: 6px; margin: 0; perspective: 400px; }
 .flaps span[aria-hidden] { position: relative; display: grid; place-items: center; width: clamp(44px, 4.3vw, 62px); aspect-ratio: 62 / 90; border-radius: 10px; font: 700 clamp(28px, 3.1vw, 44px)/1 var(--mono); color: var(--ivory); background: linear-gradient(180deg, #252e21 50%, #1b2219 50%); box-shadow: inset 0 1px 0 rgba(var(--iv), 0.12), 0 14px 26px rgba(0, 0, 0, 0.4); }
 .flaps span[aria-hidden]::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: rgba(0, 0, 0, 0.55); }
 .flaps span.flip { animation: flap 0.16s ease-out; }
 @keyframes flap { from { transform: rotateX(-75deg); filter: brightness(0.6); } }
+.fl-item { cursor: default; }
 .fl-lab { margin: 16px 0 0; max-width: 22ch; font-size: 15px; line-height: 1.45; color: rgba(var(--iv), 0.66); }
 
 /* ── The closing call: an invitation ─────────────────────────────────────────── */
@@ -670,14 +697,20 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
    (main.js, for a mailto: contact). The seal is the starter coin. */
 .invite { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
 .inv-copy .h2 { max-width: 12ch; }
-.letter { position: relative; padding: clamp(28px, 3vw, 40px); border-radius: 26px; rotate: -1.5deg; }
+.letter-wrap { transition: transform 1s var(--ease-out), opacity 0.6s; }
+.js .letter-wrap.reveal:not(.in) { transform: translate3d(60px, 30px, 0) rotate(5deg); }
+.letter { position: relative; padding: clamp(28px, 3vw, 40px); border-radius: 26px; rotate: -1.5deg; transform: perspective(1200px) rotateY(calc(var(--tx, 0) * 6deg)) rotateX(calc(var(--ty, 0) * -5deg)); transition: transform 0.35s var(--ease-out); }
 .letter-to { display: block; font: 700 clamp(26px, 2.4vw, 34px)/1.1 var(--display); color: var(--ivory); }
 .letter-field { display: block; width: 100%; margin: 10px 0 0; padding: 8px 2px 10px; border: 0; border-bottom: 2px solid rgba(225, 236, 151, 0.45); border-radius: 0; background: none; font: 600 clamp(20px, 1.8vw, 24px)/1.2 var(--text); color: var(--bright); outline: none; transition: border-color 0.3s; }
 .letter-field::placeholder { font-style: italic; color: rgba(var(--iv), 0.35); }
 .letter-field:focus { border-bottom-color: var(--bright); }
 .letter-body { margin: 22px 0 28px; max-width: 40ch; font-size: 16px; line-height: 1.6; color: rgba(var(--iv), 0.72); }
 .letter-seal { position: absolute; right: -24px; top: -28px; width: 84px; height: 84px; margin: 0; rotate: 12deg; }
-.letter-seal span { font-size: 26px; }
+.letter-seal { transition: transform 0.8s var(--ease-spring) 0.7s, opacity 0.3s 0.7s; }
+.js .letter-wrap.reveal:not(.in) .letter-seal { transform: translateY(-50px) scale(1.5); opacity: 0; }
+.letter.is-stamped .letter-seal { animation: stamp 0.55s var(--ease-out); }
+@keyframes stamp { 0% { transform: scale(1); } 35% { transform: scale(1.35) rotate(-18deg); } 60% { transform: scale(0.88); } 100% { transform: none; } }
+.letter.has-name .btn-coin { box-shadow: 0 0 0 6px rgba(225, 236, 151, 0.18), 0 6px 0 #b8bf8f, 0 18px 40px rgba(178, 199, 75, 0.35); }
 
 /* ── Footer ──────────────────────────────────────────────────────────────────── */
 .foot { width: var(--col); margin: 0 0 0 var(--col-x); padding: 30px 0 50px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; font: 500 12px/1.6 var(--mono); letter-spacing: 0.08em; color: rgba(var(--iv), 0.5); border-top: 1px solid rgba(var(--iv), 0.1); }
@@ -702,6 +735,9 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
   .rail a.is-on::before { content: ''; position: absolute; top: -1px; left: 50%; width: 28px; height: 3px; margin-left: -14px; border-radius: 0 0 3px 3px; background: var(--signal); box-shadow: 0 0 12px var(--signal); }
   .foot { padding-bottom: calc(50px + 64px + env(safe-area-inset-bottom)); }
   .ranks-stage, .rwa-board, .film, .invite { grid-template-columns: 1fr; }
+  /* Lighter on phones: the canopy's boughs hold still, two of its glows rest, and the grain goes. */
+  .sky .canopy-sway { animation: none; }
+  .sky .canopy-glows i:nth-child(n + 4), .grain { display: none; }
   .rb-hot { grid-row: auto; }
   .rwa-head { align-items: flex-start; }
   /* Screens: a strip of phones you swipe, each with its line. */
@@ -794,4 +830,6 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(80px, 12
   .js .podium.reveal .stub, .js .podium.reveal .block, .js .streak.reveal .d:not(.off) { opacity: 1; transform: none; }
   .js .film-reel.reveal .reel-back { rotate: 7deg; translate: 18% 3%; }
   .js .fg-print.reveal .fg-mark path { stroke-dashoffset: 0; }
+  .js .rb-hot.reveal .pd, .js .sb.reveal .sb-cell, .js .film-reel.reveal .reel-cover span, .js .letter-wrap.reveal, .js .letter-wrap.reveal .letter-seal, .js .streak.reveal .streak-ms li.on { opacity: 1; transform: none; }
+  .js .rb-pick.reveal .rb-cap b { transform: scaleX(var(--cap, 0.62)); }
 }

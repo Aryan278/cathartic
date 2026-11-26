@@ -47,25 +47,38 @@
   $$('.reveal').forEach((el) => io.observe(el));
 
   /* ── Numbers: the station board flicks over to each number ──────────────────── */
+  // Each tile rolls forward through a few digits and lands on its own, the later tiles a little later. Pointing at a
+  // board (or tapping it) rolls it again.
+  const roll = (board) => {
+    if (board.rolling) return;
+    board.rolling = true;
+    const tiles = $$('span[aria-hidden]', board);
+    tiles.forEach((s, i) => {
+      const end = +(s.dataset.end ??= s.textContent);
+      let k = 5 + i * 2;
+      const tick = () => {
+        s.textContent = (end - k + 100) % 10;
+        s.classList.remove('flip');
+        void s.offsetWidth;
+        s.classList.add('flip');
+        if (k-- > 0) setTimeout(tick, 75);
+        else if (i === tiles.length - 1) board.rolling = false;
+      };
+      tick();
+    });
+  };
   if (!calm) {
+    $$('.fl-item').forEach((it) => {
+      const board = $('.flaps', it);
+      it.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && roll(board));
+      it.addEventListener('click', () => roll(board));
+    });
     const flapIo = new IntersectionObserver(
       (entries) =>
         entries.forEach((e) => {
           if (!e.isIntersecting) return;
           flapIo.unobserve(e.target);
-          // Each tile rolls forward through a few digits and lands on its own, the later tiles a little later.
-          $$('span[aria-hidden]', e.target).forEach((s, i) => {
-            const end = +s.textContent;
-            let k = 5 + i * 2;
-            const tick = () => {
-              s.textContent = (end - k + 100) % 10;
-              s.classList.remove('flip');
-              void s.offsetWidth;
-              s.classList.add('flip');
-              if (k-- > 0) setTimeout(tick, 75);
-            };
-            tick();
-          });
+          roll(e.target);
         }),
       { threshold: 0.6 },
     );
@@ -124,7 +137,7 @@
       }
     }),
   );
-  $$('.hero, .marquee, .how, .rwa, .film, .cta').forEach((el) => seen.observe(el));
+  $$('.hero, .marquee, .how, .ranks, .rwa, .screens, .film, .numbers, .cta').forEach((el) => seen.observe(el));
 
   /* ── Pointer: glow, tilt, magnetic buttons (fine pointers only) ─────────────── */
   if (fine && !calm) {
@@ -143,6 +156,17 @@
       });
       el.addEventListener('pointerleave', () => (el.style.transform = ''));
     });
+    // A few cards lean towards the cursor: they read --tx/--ty (-0.5 to 0.5) and do the rest in CSS.
+    const lean = (el, to = el) => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        to.style.setProperty('--tx', ((e.clientX - r.left) / r.width - 0.5).toFixed(3));
+        to.style.setProperty('--ty', ((e.clientY - r.top) / r.height - 0.5).toFixed(3));
+      });
+      el.addEventListener('pointerleave', () => (to.style.setProperty('--tx', 0), to.style.setProperty('--ty', 0)));
+    };
+    $$('.sb-cell').forEach((c) => lean(c, $('.sb-phone', c)));
+    $$('.film-frame, .letter').forEach((el) => lean(el));
     $$('.magnetic').forEach((el) => {
       el.addEventListener('pointermove', (e) => {
         const r = el.getBoundingClientRect();
@@ -271,6 +295,7 @@
     });
     sb.addEventListener('pointerleave', (e) => e.pointerType === 'mouse' && open(-1));
     sb.addEventListener('focusout', (e) => sb.contains(e.relatedTarget) || open(-1));
+    sb.addEventListener('hint', (e) => open(e.detail));
   }
 
   /* ── The invitation: the society's name rides along in the email's subject ──── */
@@ -284,6 +309,37 @@
     });
     society.addEventListener('keydown', (e) => e.key === 'Enter' && send.click());
   }
+
+  /* ── For RWAs: try the pickup slots; the capacity bar follows ─────────────────── */
+  const cap = $('.rb-cap');
+  $$('.rb-slots button').forEach((btn, i, all) =>
+    btn.addEventListener('click', () => {
+      all.forEach((o) => (o.classList.toggle('on', o === btn), o.setAttribute('aria-pressed', o === btn)));
+      cap.style.setProperty('--cap', btn.dataset.cap);
+    }),
+  );
+
+  /* ── The film: with no film set yet, play nudges the cover ──────────────────── */
+  if (!SITE.video) {
+    const reel = $('.film-reel');
+    $('.film-play')?.addEventListener('click', () => {
+      reel.classList.remove('is-nudge');
+      void reel.offsetWidth;
+      reel.classList.add('is-nudge');
+    });
+  }
+
+  /* ── The invitation: writing a name in stamps the seal ──────────────────────── */
+  const letter = society?.closest('.letter');
+  society?.addEventListener('input', () => {
+    const had = letter.classList.contains('has-name');
+    letter.classList.toggle('has-name', !!society.value.trim());
+    if (!had && society.value.trim()) {
+      letter.classList.remove('is-stamped');
+      void letter.offsetWidth;
+      letter.classList.add('is-stamped');
+    }
+  });
 
   /* ── The finished state, for "reduce motion" or no GSAP ─────────────────────── */
   const settle = () => {};
@@ -450,9 +506,37 @@
     once: true,
     onEnter: () => {
       rewards.classList.add('is-in');
+      const balN = $('.bal-n'), bal = { v: 0 }, coin = balN.firstElementChild;
+      gsap.to(bal, { v: 1240, duration: 1.4, delay: 0.3, ease: 'power2.out', onUpdate: () => balN.replaceChildren(coin, Math.round(bal.v).toLocaleString('en-IN')) });
       gsap.delayedCall(2.2, () => passes.some((p) => p.classList.contains('is-flipped')) || flip($('.pass[data-demo]'), true));
     },
   });
+
+  // Ranks & streaks: the streak counts up as its days light.
+  const streakN = $('.streak-n b');
+  if (streakN) {
+    const n = { v: 0 };
+    ScrollTrigger.create({
+      trigger: '.streak',
+      start: 'top 80%',
+      once: true,
+      onEnter: () => gsap.fromTo(n, { v: 0 }, { v: 12, duration: 1.1, delay: 0.45, ease: 'power1.out', onUpdate: () => (streakN.textContent = Math.round(n.v)) }),
+    });
+  }
+  // Inside the app: once, as the bento lands, Home opens for a moment to show what hovering does (desktop).
+  if (sb && fine) {
+    let touched = false;
+    sb.addEventListener('pointerenter', () => (touched = true), { once: true });
+    ScrollTrigger.create({
+      trigger: sb,
+      start: 'top 60%',
+      once: true,
+      onEnter: () => {
+        gsap.delayedCall(1.2, () => touched || sb.dispatchEvent(new CustomEvent('hint', { detail: 0 })));
+        gsap.delayedCall(3.1, () => touched || sb.dispatchEvent(new CustomEvent('hint', { detail: -1 })));
+      },
+    });
+  }
 
   // For RWAs: the plan's split sweeps across once as it arrives, from mostly "before" to the middle.
   if (ba) {
