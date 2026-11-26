@@ -22,7 +22,6 @@
     film.classList.add('has-video');
     $('.film-play').addEventListener('click', () => {
       const frame = $('.film-frame');
-      $('.film-window').classList.add('is-playing'); // the boughs part
       const isFile = /\.(mp4|webm|mov)(\?|$)/i.test(SITE.video);
       frame.innerHTML = isFile
         ? `<video src="${SITE.video}" controls autoplay playsinline></video>`

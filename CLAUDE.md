@@ -27,8 +27,14 @@ from `main`, root). The owner is Aryan.
   (`orbit`) measures once per refresh and only writes transform/opacity while scrolling.
 - Two ways to help is a field guide: the heading split across two rows ("Pick it up —" / "or point it out."), each
   half beside its photo in a glass print with a marker ring and an arrow back to the words. Rewards is a row of passes
-  in two labelled groups (yours today / next); a pass flips to its code when tapped. While How it works holds the
+  led by your balance as a pass of its own (with how far the next reward is); a pass flips to its code when tapped. While How it works holds the
   screen, its name and progress sit in the middle of the top bar (`.top-step`).
+- The rest: Ranks & streaks is a podium of stubs beside a month of the streak; For RWAs a control room of glass tiles
+  whose hotspot plan is a draggable before/after (a range input); Inside the app a bento of screens that opens one into
+  a whole phone on hover (grid tracks animate; phones get a strip); the film a vertical reel cover; the numbers a
+  split-flap board; the closing call an invitation card whose blank fills the email subject.
+- Coins are the app's coin: a green disc with a ridged, poker-chip edge and a lighter face, with a leaf or a value on
+  it (`.coin`, `.coin-chip`; `.coin-ic` is the small SVG one).
 - Cursors (fine pointers only): a classic arrow with an Ivory rim, and a pointing hand on anything clickable. SVG
   sources in `assets/cursors/`, with 1x/2x PNGs rendered from them (the CSS uses `image-set`).
 - `assets/shots/` are real app screenshots (demo data); `assets/img/` holds the app's field
