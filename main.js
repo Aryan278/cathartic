@@ -36,13 +36,18 @@
   const lite = document.documentElement.classList.contains('lite');
   const loaded = (img) => (img.complete ? Promise.resolve() : new Promise((r) => (img.addEventListener('load', r, { once: true }), img.addEventListener('error', r, { once: true }))));
   const drawings = [...new Set($$('.hero-field .leaf b, .sky .leaf b').map((b) => getComputedStyle(b).backgroundImage.slice(5, -2)).filter(Boolean))];
-  const parts = [document.fonts?.ready, ...$$('.hero img, .sky img').map(loaded), ...drawings.map((src) => loaded(Object.assign(new Image(), { src })))];
-  const curtain = $('.curtain');
+  const root = document.documentElement;
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  // The canopy's drawings, fetched and decoded before the boughs start to grow, so none pops in halfway (a first
+  // visit fetches them while the loader runs); then the canopy has most of a second to grow before the page shows.
+  const decoded = drawings.map((src) => Object.assign(new Image(), { src }).decode().catch(() => {}));
+  const grown = Promise.all(decoded).then(() => (root.classList.remove('hold-canopy'), wait(calm ? 0 : 900)));
+  const parts = [document.fonts?.ready, ...$$('.hero img, .sky img').map(loaded), ...decoded];
+  const curtain = $('.curtain');
   // The curtain's brackets close in as the parts arrive (--p), and lock on once they're all in.
   let got = 0;
   parts.forEach((p) => Promise.resolve(p).then(() => curtain?.style.setProperty('--p', (++got / parts.length).toFixed(2))));
-  const ready = Promise.race([Promise.all(parts), wait(3000)])
+  const ready = Promise.race([Promise.all([...parts, grown]), wait(3200)])
     // A second on screen at least, so the brackets are seen closing in rather than flashing past.
     .then(() => wait(calm ? 0 : 1000 - performance.now()))
     .then(() => {
@@ -61,10 +66,11 @@
       fly.setProperty('--fx', `${(b.left + b.width / 2 - a.left - a.width / 2).toFixed(1)}px`);
       fly.setProperty('--fy', `${(b.top + b.height / 2 - a.top - a.height / 2).toFixed(1)}px`);
       fly.setProperty('--fs', (b.width / a.width).toFixed(3));
-    }
-    document.documentElement.classList.add('is-ready');
-    // Once it has cleared, the curtain goes altogether, so nothing in it keeps ticking behind the page.
-    setTimeout(() => curtain?.remove(), 1400);
+    } else coin?.parentElement.classList.add('is-lost');
+    root.classList.add('is-ready');
+    // As it lands, the mark in the corner takes its place (the same drawing, the same size), and the curtain goes
+    // altogether, so nothing in it keeps ticking behind the page.
+    setTimeout(() => (root.classList.add('has-landed'), curtain?.remove()), calm ? 0 : 960);
     // Then, quietly, fetch the images further down, so they're there before anyone scrolls to them.
     setTimeout(() => $$('img[loading="lazy"]').forEach((img) => (img.loading = 'eager')), 1200);
   });
@@ -99,7 +105,10 @@
       });
       root.classList.add('has-ch');
     };
-    $$('.hero h1, .fg-title, h2.h2').forEach(letters);
+    $$('.hero h1').forEach(letters);
+    // The rest wait until the page has settled in, so splitting them never holds up the loader.
+    const idle = (fn) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 2500 }) : setTimeout(fn, 1200));
+    ready.then(() => idle(() => $$('.fg-title, h2.h2').forEach(letters)));
     if (calm || !hasGsap) $('.hero h1').classList.add('intro-done');
     // The second line's gradient runs across the whole line: each letter carries its own slice of it.
     const lit = $('.hero .lit');
@@ -122,8 +131,8 @@
   ready.then(() => $$('.reveal').forEach((el) => io.observe(el)));
 
   /* ── Numbers: the station board flicks over to each number ──────────────────── */
-  // Each tile rolls forward through a few digits and lands on its own, the later tiles a little later. Pointing at a
-  // board (or tapping it) rolls it again.
+  // Each tile rolls forward through a few digits and lands on its own, the later tiles a little later. Tapping a
+  // board rolls it again.
   const roll = (board) => {
     if (board.rolling) return;
     board.rolling = true;
@@ -145,7 +154,6 @@
   if (!calm) {
     $$('.fl-item').forEach((it) => {
       const board = $('.flaps', it);
-      it.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && roll(board));
       it.addEventListener('click', () => roll(board));
     });
     const flapIo = new IntersectionObserver(
@@ -381,6 +389,47 @@
     sb.addEventListener('hint', (e) => open(e.detail));
   }
 
+  /* ── Get early access: copies our address to the clipboard, and says so ─────── */
+  // The label swaps to "Email copied!" in place for a moment. The invitation's button still opens the email too, with
+  // the society's address in it; the others just copy (and open the email only if copying isn't possible).
+  const addr = /^mailto:/i.test(SITE.contact || '') ? decodeURIComponent(SITE.contact.slice(7).split('?')[0]) : '';
+  if (addr) {
+    const note = Object.assign(document.createElement('p'), { className: 'sr-only' });
+    note.setAttribute('aria-live', 'polite');
+    document.body.append(note);
+    const copy = async () => {
+      try {
+        await navigator.clipboard.writeText(addr);
+        return true;
+      } catch {
+        const f = Object.assign(document.createElement('textarea'), { value: addr, readOnly: true });
+        f.style.cssText = 'position: fixed; top: 0; opacity: 0; pointer-events: none';
+        document.body.append(f);
+        f.select();
+        const ok = document.execCommand('copy');
+        f.remove();
+        return ok;
+      }
+    };
+    $$('[data-contact]').forEach((a) => {
+      const t = [...a.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim());
+      if (t) {
+        const say = Object.assign(document.createElement('span'), { className: 'say' });
+        say.innerHTML = `<span>${t.textContent.trim()}</span><span aria-hidden="true">Email copied!</span>`;
+        t.replaceWith(say);
+      }
+      const invite = !!a.closest('.letter');
+      a.addEventListener('click', async (e) => {
+        if (!invite) e.preventDefault();
+        if (!(await copy())) return invite || (location.href = a.href);
+        a.classList.add('is-copied');
+        note.textContent = `Copied ${addr}`;
+        clearTimeout(a.said);
+        a.said = setTimeout(() => a.classList.remove('is-copied'), 2200);
+      });
+    });
+  }
+
   /* ── The invitation: the society's email rides along in the email we're sent ── */
   const society = $('#society');
   const send = society?.closest('.letter').querySelector('[data-contact]');
@@ -492,7 +541,7 @@
   // (which has no panel to hide it); the boughs inside it carry the depth instead.
   // Boughs bend away from the cursor as it brushes through them, pivoting at their base on the page edge, and
   // spring back once it has passed. (Not on lower-end machines.)
-  if (fine && !lite) {
+  if (fine && !lite) ready.then(() => {
     // The hero's boughs along the top edge, and the page canopy's along the sides (fixed, so they're there all the way down).
     const fields = $$('.hero-field, .sky');
     const leaves = $$('.hero-field .leaf, .sky .leaf').map((el) => {
@@ -552,7 +601,7 @@
     addEventListener('pointermove', (e) => ((px = e.clientX), (py = e.clientY), queue()));
     document.documentElement.addEventListener('pointerleave', () => ((px = py = -1e4), queue()));
     addEventListener('scroll', () => scrollY < innerHeight * 1.2 && queue(), { passive: true });
-  }
+  });
   // The page canopy drifts a little as you go down the page, the near boughs more than the far ones.
   gsap.to('.sky .canopy-near', { y: -70, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: true } });
   gsap.to('.sky .canopy-far', { y: -30, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: true } });

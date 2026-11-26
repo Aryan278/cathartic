@@ -14,15 +14,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700;800&family=Martian+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=2026-11-30b" />
-    <script>document.documentElement.classList.add('js'); if ((navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4) document.documentElement.classList.add('lite');</script>
-    <script src="config.js?v=2026-11-30b"></script>
+    <link rel="stylesheet" href="styles.css?v=2026-12-01a" />
+    <script>
+      (function (h) {
+        h.classList.add('js', 'hold-logo', 'hold-canopy');
+        if ((navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4) h.classList.add('lite');
+        // The loader's pieces wait for their own drawings (main.js lets them go); never longer than this.
+        setTimeout(function () { h.classList.remove('hold-logo', 'hold-canopy'); }, 3500);
+      })(document.documentElement);
+    </script>
+    <script src="config.js?v=2026-12-01a"></script>
   </head>
   <body>
     <!-- Until the page is ready (fonts, the hero's images, the canopy), only the canopy shows, growing in from the edges,
          with focus brackets closing in on the logo as it all comes in; then the logo rises into the name's mark and the
          page fades in. Nothing is seen half-built. -->
-    <div class="curtain" aria-hidden="true"><div class="curtain-sight"><i></i><i></i><i></i><i></i></div><div class="curtain-fly"><img class="curtain-coin" src="assets/img/logo.webp" alt="" width="76" height="76" /></div></div>
+    <div class="curtain" aria-hidden="true"><div class="curtain-sight"><i></i><i></i><i></i><i></i></div><div class="curtain-fly"><img class="curtain-coin" src="assets/img/logo.webp" alt="" width="76" height="76" onload="document.documentElement.classList.remove('hold-logo')" onerror="document.documentElement.classList.remove('hold-logo')" /></div></div>
     <!-- One canopy over the whole page, fixed behind every section: light drifting through it and boughs growing in
          from the side edges (the hero adds the boughs along its top). Grain on top, and a glow that follows the pointer. -->
     <div class="sky" aria-hidden="true">
@@ -315,35 +322,29 @@
           <h2 class="display h2">Made to feel like dappled light.</h2>
         </header>
         <div class="sb reveal" data-open="-1">
-          <figure class="sb-cell" tabindex="0" style="--k: 0; --crop: 50% 16%">
-            <img class="sb-crop" src="assets/shots/home.webp" alt="" loading="lazy" />
+          <figure class="sb-cell" tabindex="0" style="--k: 0">
+            <div class="sb-cover" aria-hidden="true"><span class="sb-mark"><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z" /></svg></span><span class="sb-ic"><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z" /></svg></span><span class="sb-chip">12-day streak</span><p class="sb-name"><b>Home</b>Your streak, your squad and the month's goal.</p></div>
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/home.webp" alt="The Home screen" loading="lazy" /></div><p><b>Home</b>Your streak, your squad and the month's goal, the moment you open it.</p></div>
-            <figcaption>Home</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 1; --crop: 50% 8%">
-            <img class="sb-crop" src="assets/shots/scan.webp" alt="" loading="lazy" />
+          <figure class="sb-cell" tabindex="0" style="--k: 1">
+            <div class="sb-cover" aria-hidden="true"><span class="sb-mark"><svg viewBox="0 0 24 24"><path d="M4 8h3.2l1.8-2.5h6L16.8 8H20v11H4z" /><circle cx="12" cy="13.2" r="3.4" /></svg></span><span class="sb-ic"><svg viewBox="0 0 24 24"><path d="M4 8h3.2l1.8-2.5h6L16.8 8H20v11H4z" /><circle cx="12" cy="13.2" r="3.4" /></svg></span><span class="sb-chip">2 photos</span><p class="sb-name"><b>Collect</b>Two photos make a bag.</p></div>
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/scan.webp" alt="The Collect screen" loading="lazy" /></div><p><b>Collect</b>The camera checks it's loose litter in reach; two photos make a bag.</p></div>
-            <figcaption>Collect</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 2; --crop: 50% 32%">
-            <img class="sb-crop" src="assets/shots/report.webp" alt="" loading="lazy" />
+          <figure class="sb-cell" tabindex="0" style="--k: 2">
+            <div class="sb-cover" aria-hidden="true"><span class="sb-mark"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z" /><circle cx="12" cy="10" r="2.4" /></svg></span><span class="sb-ic"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z" /><circle cx="12" cy="10" r="2.4" /></svg></span><span class="sb-chip">4 open nearby</span><p class="sb-name"><b>Report</b>Open cases on a map. Hands off.</p></div>
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/report.webp" alt="The Report screen" loading="lazy" /></div><p><b>Report</b>Open cases on a map. Point one out without touching it.</p></div>
-            <figcaption>Report</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 3; --crop: 50% 14%">
-            <img class="sb-crop" src="assets/shots/marketplace.webp" alt="" loading="lazy" />
+          <figure class="sb-cell" tabindex="0" style="--k: 3">
+            <div class="sb-cover" aria-hidden="true"><span class="sb-mark"><svg viewBox="0 0 24 24"><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10.5h1.4a2.4 2.4 0 0 1 0 4.8H15.6M8.5 3.5v2.5M11.5 3.5v2.5" /></svg></span><span class="sb-ic"><svg viewBox="0 0 24 24"><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10.5h1.4a2.4 2.4 0 0 1 0 4.8H15.6M8.5 3.5v2.5M11.5 3.5v2.5" /></svg></span><span class="sb-chip">1,240 coins</span><p class="sb-name"><b>Rewards</b>Today's menu from partner cafés.</p></div>
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/marketplace.webp" alt="The Rewards screen" loading="lazy" /></div><p><b>Rewards</b>Today's menu from partner cafés, cheapest first.</p></div>
-            <figcaption>Rewards</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 4; --crop: 50% 12%">
-            <img class="sb-crop" src="assets/shots/leaderboard.webp" alt="" loading="lazy" />
+          <figure class="sb-cell" tabindex="0" style="--k: 4">
+            <div class="sb-cover" aria-hidden="true"><span class="sb-mark"><svg viewBox="0 0 24 24"><path d="M3 20h18M5 20v-6h4v6M10 20V9h4v11M15 20v-4h4v4" /></svg></span><span class="sb-ic"><svg viewBox="0 0 24 24"><path d="M3 20h18M5 20v-6h4v6M10 20V9h4v11M15 20v-4h4v4" /></svg></span><span class="sb-chip">Week 43</span><p class="sb-name"><b>Ranks</b>This week's leaders in your society.</p></div>
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/leaderboard.webp" alt="The Ranks screen" loading="lazy" /></div><p><b>Ranks</b>This week's leaders in your society, and where you stand.</p></div>
-            <figcaption>Ranks</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 5; --crop: 50% 44%">
-            <img class="sb-crop" src="assets/shots/profile.webp" alt="" loading="lazy" />
+          <figure class="sb-cell" tabindex="0" style="--k: 5">
+            <div class="sb-cover" aria-hidden="true"><span class="sb-mark"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" /><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0" /></svg></span><span class="sb-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" /><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0" /></svg></span><span class="sb-chip">Guardian tier</span><p class="sb-name"><b>Profile</b>Your stamps, your bags and every coin.</p></div>
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/profile.webp" alt="The Profile screen" loading="lazy" /></div><p><b>Profile</b>Your stamps, your bags and every coin you've earned.</p></div>
-            <figcaption>Profile</figcaption>
           </figure>
         </div>
       </section>
@@ -423,6 +424,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="main.js?v=2026-11-30b"></script>
+    <script src="main.js?v=2026-12-01a"></script>
   </body>
 </html>

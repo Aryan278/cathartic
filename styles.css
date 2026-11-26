@@ -67,8 +67,15 @@ a { color: inherit; }
 /* Off it goes: up first, then across into the mark, shrinking to its size; the leaf fades on the way. */
 .is-ready .curtain { visibility: hidden; pointer-events: none; transition: visibility 0s 1.15s; }
 .is-ready .curtain-sight { opacity: 0; scale: 1.3; animation: none; transition: opacity 0.35s, scale 0.6s var(--ease-out); }
-.is-ready .curtain-fly { translate: var(--fx, 0px) 0; transform: translateY(var(--fy, -30px)) scale(var(--fs, 0.5)); opacity: 0; transition: translate 0.95s cubic-bezier(0.65, 0, 0.25, 1), transform 0.95s cubic-bezier(0.3, 0, 0.1, 1), opacity 0.2s linear 0.85s; }
+.is-ready .curtain-fly { translate: var(--fx, 0px) 0; transform: translateY(var(--fy, -30px)) scale(var(--fs, 0.5)); transition: translate 0.95s cubic-bezier(0.65, 0, 0.25, 1), transform 0.95s cubic-bezier(0.3, 0, 0.1, 1); }
+.is-ready .curtain-fly.is-lost { opacity: 0; transition: opacity 0.4s; }
 @keyframes curtain-in { from { opacity: 0; scale: 0.55; } }
+/* Each piece waits for its own drawing (classes set in the head, lifted by main.js), so on a first visit nothing pops
+   in halfway through its entrance. */
+.hold-logo .curtain .curtain-coin, .hold-logo .curtain-sight, .hold-logo .curtain-sight::before { animation-play-state: paused; }
+.hold-canopy .leaf b, .hold-canopy .canopy-layer { animation-play-state: paused; }
+/* The name's mark waits for the logo to land on it, then takes its place. */
+.js:not(.has-landed) .brand-mark { opacity: 0; animation: late-show 0.3s ease 6s forwards; }
 @keyframes curtain-fade { from { opacity: 0; } }
 @keyframes curtain-seek { 50% { scale: 0.94; } }
 @keyframes curtain-lock { 0% { scale: 1.05; } 45% { scale: 0.88; } 100% { scale: 1; } }
@@ -466,6 +473,17 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
 .coin, .coin-chip { background: repeating-conic-gradient(from 2deg, rgba(244, 249, 207, 0.9) 0 2.2deg, transparent 2.2deg 7.5deg), radial-gradient(circle at 34% 28%, #e9f3a8, var(--signal) 52%, #869b35); box-shadow: inset 0 0 0 1px rgba(42, 66, 36, 0.45), inset 0 -4px 10px rgba(42, 66, 36, 0.3), 0 8px 22px rgba(0, 0, 0, 0.3); }
 .coin::before, .coin-chip::before { content: ''; position: absolute; inset: 15%; border-radius: 50%; background: radial-gradient(circle at 38% 30%, #eef6b6, #c6d862 58%, #a6bb47); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 0 0 1px rgba(42, 66, 36, 0.28); }
 .coin > *, .coin-chip > * { position: relative; z-index: 1; }
+/* Get early access copies our address and says so: the second label waits in the same cell, so the button keeps its
+   width, and the coin trades its +40 for a tick. */
+.say { display: inline-grid; overflow: hidden; }
+.say > span { grid-area: 1 / 1; text-align: center; transition: transform 0.45s var(--ease-out), opacity 0.25s; }
+.say > span + span { opacity: 0; transform: translateY(100%); }
+.is-copied .say > span:first-child { opacity: 0; transform: translateY(-100%); }
+.is-copied .say > span + span { opacity: 1; transform: none; }
+.btn .coin-chip b { transition: opacity 0.2s, transform 0.3s var(--ease-out); }
+.btn .coin-chip::after { content: ''; position: absolute; z-index: 1; inset: 0; background: center / 46% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d2719' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E"); opacity: 0; transform: scale(0.4); transition: opacity 0.2s, transform 0.4s var(--ease-spring); }
+.is-copied .coin-chip b { opacity: 0; transform: scale(0.5); }
+.is-copied .coin-chip::after { opacity: 1; transform: none; }
 .coin { position: relative; margin: 0 auto; width: 96px; height: 96px; border-radius: 50%; display: grid; place-items: center; transform-style: preserve-3d; }
 .coin-leaf { width: 58%; height: 58%; }
 /* The small one, for labels and prices. */
@@ -686,12 +704,28 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
 .sb[data-open='3'] { grid-template-columns: 1.7fr 0.65fr 0.65fr; grid-template-rows: 1fr 3fr; }
 .sb[data-open='4'] { grid-template-columns: 0.65fr 1.7fr 0.65fr; grid-template-rows: 1fr 3fr; }
 .sb[data-open='5'] { grid-template-columns: 0.65fr 0.65fr 1.7fr; grid-template-rows: 1fr 3fr; }
-.sb-cell { position: relative; min-width: 0; min-height: 0; margin: 0; overflow: hidden; border-radius: 26px; background: #0d100c; box-shadow: inset 0 0 0 1px rgba(var(--iv), 0.14), 0 24px 50px rgba(0, 0, 0, 0.35); outline: none; }
+.sb-cell { position: relative; min-width: 0; min-height: 0; margin: 0; overflow: hidden; container-type: size; border-radius: 26px; background: radial-gradient(70% 60% at 16% 14%, rgba(178, 199, 75, 0.15), transparent 70%), linear-gradient(155deg, rgba(var(--iv), 0.1), rgba(var(--iv), 0.02) 50%, rgba(var(--iv), 0.05)), #111510; box-shadow: inset 0 1px 0 rgba(var(--iv), 0.2), inset 0 0 0 1px rgba(var(--iv), 0.13), 0 24px 50px rgba(0, 0, 0, 0.35); outline: none; }
 .js .sb.reveal .sb-cell { opacity: 0; transform: translateY(18px) scale(0.95); transition: opacity 0.6s var(--ease-out), transform 0.8s var(--ease-out), box-shadow 0.3s; transition-delay: calc(0.1s + var(--k) * 0.07s); }
 .js .sb.reveal.in .sb-cell { opacity: 1; transform: none; }
 .sb-cell:focus-visible { box-shadow: inset 0 0 0 2px var(--bright), 0 24px 50px rgba(0, 0, 0, 0.35); }
-.sb-crop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--crop); transition: opacity 0.5s, transform 0.8s var(--ease-out); }
-.sb-cell.is-open .sb-crop { opacity: 0.12; transform: scale(1.1); }
+/* Each tile's cover: a lit icon, what the screen is for, and one thing it shows (from the app's demo screens). The
+   tile opening fades it away for the real screen. Squeezed small by a neighbour, it keeps only the icon and name. */
+.sb-cover { position: absolute; inset: 0; padding: 22px 24px 24px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; transition: opacity 0.35s, transform 0.6s var(--ease-out); }
+.sb-cell.is-open .sb-cover { opacity: 0; transform: scale(0.97); }
+.sb-cover svg { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.sb-ic { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; color: var(--bright); background: radial-gradient(circle at 35% 30%, #4f6b2c, var(--deep) 60%, var(--bark)); box-shadow: inset 0 1px 0 rgba(var(--iv), 0.22), 0 0 0 1px rgba(178, 199, 75, 0.5), 0 0 30px rgba(178, 199, 75, 0.26); }
+.sb-ic svg { width: 29px; height: 29px; }
+.sb-mark { position: absolute; right: -22px; bottom: -26px; width: 158px; height: 158px; color: rgba(225, 236, 151, 0.07); rotate: -8deg; }
+.sb-mark svg { width: 100%; height: 100%; stroke-width: 1.2; }
+.sb-chip { position: absolute; right: 18px; top: 20px; display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border-radius: 999px; font: 600 10.5px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bright); background: rgba(16, 17, 16, 0.55); border: 1px solid rgba(var(--iv), 0.16); }
+.sb-chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 8px rgba(178, 199, 75, 0.8); }
+.sb-name { position: relative; margin: 0; max-width: 25ch; font-size: 15px; line-height: 1.45; color: rgba(var(--iv), 0.62); }
+.sb-name b { display: block; margin-bottom: 6px; font: 700 clamp(26px, 2.3vw, 34px)/1.05 var(--display); letter-spacing: -0.02em; color: var(--ivory); }
+@container (max-height: 240px) { .sb-name { font-size: 0; } .sb-name b { margin: 0; font-size: 24px; } .sb-chip { display: none; } .sb-ic { width: 46px; height: 46px; } .sb-ic svg { width: 22px; height: 22px; } .sb-cover { padding: 16px 18px 18px; } }
+@container (max-width: 280px) { .sb-name { font-size: 0; } .sb-name b { margin: 0; font-size: 24px; } .sb-chip { display: none; } }
+/* Without the script, hovering still shows the screen, inside the tile. */
+html:not(.js) .sb-cell:is(:hover, :focus) .sb-open { opacity: 1; transform: none; }
+html:not(.js) .sb-cell:is(:hover, :focus) .sb-cover { opacity: 0; }
 .sb-open { position: absolute; inset: 18px 26px; display: flex; align-items: center; gap: clamp(20px, 2.4vw, 34px); opacity: 0; transform: translateY(14px); pointer-events: none; transition: opacity 0.35s, transform 0.6s var(--ease-out); }
 .sb-cell.is-open .sb-open { opacity: 1; transform: none; transition-delay: 0.2s; }
 /* The phone: its screen keeps the shots' exact shape (390 × 844), so each one fits edge to edge. */
@@ -701,8 +735,6 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
 .sb-phone::after { content: ''; position: absolute; left: 50%; top: 3%; width: 30%; aspect-ratio: 86 / 24; translate: -50% 0; border-radius: 999px; background: #050605; }
 .sb-open p { margin: 0; max-width: 24ch; font-size: 16px; line-height: 1.55; color: rgba(var(--iv), 0.72); }
 .sb-open p b { display: block; margin-bottom: 8px; font: 700 clamp(24px, 2.2vw, 32px)/1.1 var(--display); color: var(--ivory); }
-.sb-cell figcaption { position: absolute; left: 14px; bottom: 14px; padding: 8px 12px; border-radius: 999px; font: 600 13px/1 var(--text); background: rgba(16, 17, 16, 0.68); border: 1px solid rgba(var(--iv), 0.16); transition: opacity 0.3s; }
-.sb-cell.is-open figcaption { opacity: 0; }
 
 /* ── Film: a reel ─────────────────────────────────────────────────────────────── */
 /* The film as a reel's cover, the way people will share it: vertical, the tagline set on it in highlighted lines, with
@@ -828,7 +860,7 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
   .sb { display: flex; height: auto; gap: 16px; margin: 0 calc(var(--gutter) * -1); padding: 6px var(--gutter) 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); scrollbar-width: none; }
   .sb::-webkit-scrollbar { display: none; }
   .sb-cell { flex: none; width: min(230px, 62vw); overflow: visible; background: none; box-shadow: none; scroll-snap-align: center; }
-  .sb-crop, .sb-cell figcaption { display: none; }
+  .sb-cover { display: none; }
   .sb-open { position: static; display: block; opacity: 1; transform: none; }
   .sb-phone { width: calc(100% - 14px); height: auto; }
   .sb-open p { margin-top: 16px; font-size: 14px; }
@@ -913,7 +945,7 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .js .reveal { opacity: 1; transform: none; }
   .js .curtain { animation: curtain-lift 0.01s linear 4s forwards !important; }
-  .js:not(.is-ready) :is(.top, .rail, .progress, .hero > :not(.hero-field), main > :not(.hero), .foot) { animation: late-show 0.01s linear 4s forwards !important; }
+  .js:not(.is-ready) :is(.top, .rail, .progress, .hero > :not(.hero-field), main > :not(.hero), .foot), .js:not(.has-landed) .brand-mark { animation: late-show 0.01s linear 4s forwards !important; }
   /* Things that wait for their section to arrive show straight away. */
   .js .podium.reveal .stub, .js .podium.reveal .block, .js .streak.reveal .d:not(.off) { opacity: 1; transform: none; }
   .js .film-reel.reveal .reel-back { rotate: 7deg; translate: 18% 3%; }

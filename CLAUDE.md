@@ -30,8 +30,8 @@ from `main`, root). The owner is Aryan.
   led by your balance as a pass of its own (with how far the next reward is); a pass flips to its code when tapped. While How it works holds the
   screen, its name and progress sit in the middle of the top bar (`.top-step`).
 - The rest: Ranks & streaks is a podium of stubs beside a month of the streak; For RWAs a control room of glass tiles
-  whose hotspot plan is a draggable before/after (a range input); Inside the app a bento of screens that opens one into
-  a whole phone on hover (main.js tweens the grid tracks with GSAP, since browsers jump between grid templates; phones get a strip). The film a vertical reel cover
+  whose hotspot plan is a draggable before/after (a range input); Inside the app a bento of icon-card covers (a lit icon, the screen's name and use, one chip from its demo data)
+  that opens one into the real screen in a whole phone on hover (main.js tweens the grid tracks with GSAP, since browsers jump between grid templates; phones get a strip). The film a vertical reel cover
   (`assets/film.mp4`, 720×1280, 25 s, with its opening frame as the poster; it plays in place); the numbers a
   split-flap board; the closing call an invitation card whose blank fills the email subject.
 - The logo is the app's poker coin with the 3D eco-bag in a dark moss face (`assets/img/logo.webp`, `logo-64.png` the
@@ -41,12 +41,16 @@ from `main`, root). The owner is Aryan.
 - Loading is the page's own canopy growing in: until the fonts, the hero's images and the canopy's drawings are in
   (1 s at least, 3 s at most) only the canopy shows, its boughs unfurling from the edges (`bough-grow`, a transform on
   each `.leaf b`), while focus brackets close in on the logo (`.curtain`, transparent; `--p`). Ready, they lock on, the
-  logo rises into the name's mark in the corner and the page fades in (`show-in`); then the curtain is removed. Lower-end machines (≤4 cores
+  logo rises into the name's mark in the corner (which only shows once it lands, `has-landed`) and the page fades in
+  (`show-in`); then the curtain is removed. The logo and the boughs are held (`hold-logo`, `hold-canopy`, set in the
+  head) until their drawings are decoded, so a first visit is as smooth as a reload; non-urgent setup (most letter
+  splits, the boughs' brush) waits until the page is in. Lower-end machines (≤4 cores
   or ≤4 GB, set in the head as `.lite`) get a still canopy and no cursor-chasing boughs. Smoothness comes first.
 - The hero's title, the field guide's titles and every section heading (`h2.h2`) are split into letters (`.ch`) that
   lift and glow under the cursor, keeping their own colour.
 - The footer is columns, with the canopy's boughs growing up from the ground under it. The invitation asks for the
-  society's email and puts it in the body of the email it opens.
+  society's email and puts it in the body of the email it opens. Every Get early access copies the contact address
+  (`config.js`) and its label swaps to "Email copied!"; only the invitation's also opens the email.
 - Cursors (fine pointers only): a classic black arrow with a white rim, and a white pointing hand with a black outline
   like macOS. Both are the owner's own SVGs (arrow.svg, hand.svg); framed tighter (viewBox) to draw about 35% larger; hotspots 2 2 and 7 2. SVG
   sources in `assets/cursors/`, with 1x/2x PNGs rendered from them (the CSS uses `image-set`). Bump the `?v=` on
