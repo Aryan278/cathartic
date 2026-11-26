@@ -31,7 +31,7 @@ from `main`, root). The owner is Aryan.
   screen, its name and progress sit in the middle of the top bar (`.top-step`).
 - The rest: Ranks & streaks is a podium of stubs beside a month of the streak; For RWAs a control room of glass tiles
   whose hotspot plan is a draggable before/after (a range input); Inside the app a bento of screens that opens one into
-  a whole phone on hover (grid tracks glide; phones get a strip). Nothing inside a tile may depend on the tile's size
+  a whole phone on hover (main.js tweens the grid tracks with GSAP, since browsers jump between grid templates; phones get a strip). Nothing inside a tile may depend on the tile's size
   (crops and the open view are sized in cq units of the bento and pinned to the tile's outer edge), so the glide only
   clips and never re-lays out or redraws; keep it that way; the film a vertical reel cover; the numbers a
   split-flap board; the closing call an invitation card whose blank fills the email subject.

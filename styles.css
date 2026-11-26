@@ -663,7 +663,7 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
    For a smooth glide, nothing inside a tile depends on the tile's size: the bento is a size container, the crops are
    sized to a closed tile and the open view to an open one (in cq units of the bento), each pinned to the tile's outer
    edge. So while the tracks move, nothing inside is laid out or redrawn again; the tiles only uncover more or less. */
-.sb { --sb-gap: 16px; --glide: cubic-bezier(0.45, 0, 0.15, 1); display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: var(--sb-gap); height: clamp(540px, 74vh, 680px); container-type: size; transition: grid-template-columns 0.85s var(--glide), grid-template-rows 0.85s var(--glide); }
+.sb { --sb-gap: 16px; --glide: cubic-bezier(0.45, 0, 0.15, 1); display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: var(--sb-gap); height: clamp(540px, 74vh, 680px); container-type: size; }
 .sb[data-open='0'] { grid-template-columns: 1.7fr 0.65fr 0.65fr; grid-template-rows: 3fr 1fr; }
 .sb[data-open='1'] { grid-template-columns: 0.65fr 1.7fr 0.65fr; grid-template-rows: 3fr 1fr; }
 .sb[data-open='2'] { grid-template-columns: 0.65fr 0.65fr 1.7fr; grid-template-rows: 3fr 1fr; }

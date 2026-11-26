@@ -363,7 +363,16 @@
   const sb = $('.sb');
   if (sb) {
     const sbCells = $$('.sb-cell', sb);
-    const open = (i) => +sb.dataset.open !== i && ((sb.dataset.open = i), sbCells.forEach((c, k) => c.classList.toggle('is-open', k === i)));
+    // The rearranging is tweened here, track by track (browsers jump between grid templates rather than animate them).
+    // Nothing inside a tile depends on its size, so each step is a cheap layout with no redrawing.
+    const fr = { c0: 1, c1: 1, c2: 1, r0: 1, r1: 1 };
+    const lay = () => ((sb.style.gridTemplateColumns = `${fr.c0}fr ${fr.c1}fr ${fr.c2}fr`), (sb.style.gridTemplateRows = `${fr.r0}fr ${fr.r1}fr`));
+    const glide = (i) => {
+      const to = i < 0 ? { c0: 1, c1: 1, c2: 1, r0: 1, r1: 1 } : { c0: i % 3 === 0 ? 1.7 : 0.65, c1: i % 3 === 1 ? 1.7 : 0.65, c2: i % 3 === 2 ? 1.7 : 0.65, r0: i < 3 ? 3 : 1, r1: i < 3 ? 1 : 3 };
+      if (hasGsap && !calm) gsap.to(fr, { ...to, duration: 0.85, ease: 'power3.inOut', overwrite: true, onUpdate: lay });
+      else (Object.assign(fr, to), lay());
+    };
+    const open = (i) => +sb.dataset.open !== i && ((sb.dataset.open = i), glide(i), sbCells.forEach((c, k) => c.classList.toggle('is-open', k === i)));
     // A moment's grace, so a cursor passing over the bento on its way somewhere doesn't set every tile moving.
     let pending;
     const soon = (i, ms) => (clearTimeout(pending), (pending = setTimeout(() => open(i), ms)));
