@@ -48,11 +48,11 @@ a { color: inherit; }
 /* Holds the screen until the page is ready (main.js adds .is-ready), so nothing is seen half-built: the canopy's own
    light with the coin turning in it. If the script never runs, it lifts itself after a few seconds. */
 .curtain { display: none; }
-/* The loader: the coin, and focus brackets closing in on it as the page comes in (their spread is what's still loading,
-   --p from main.js). Ready, they lock on, the coin rises into the name's mark in the corner, and the curtain clears. If
-   the script never runs, the curtain lifts itself after a few seconds. */
+/* The loader is the page's own canopy growing in. While it loads, only the canopy shows (everything on it waits): its
+   boughs unfurl from the edges, and focus brackets close in on the logo in the middle as the page comes in (--p, from
+   main.js). Ready, they lock on, the logo rises into the name's mark in the corner, and the page fades in under it. If
+   the script never runs, it all shows by itself after a few seconds. */
 .js .curtain { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; animation: curtain-lift 0.7s ease 6s forwards; }
-.js .curtain::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 90% at 50% 0%, var(--deep), #141a12 60%, #0c0e0c); transition: opacity 0.75s var(--ease-out) 0.15s; }
 .curtain > * { grid-area: 1 / 1; }
 .curtain-sight { --o: calc((1 - var(--p, 0)) * 30px); position: relative; width: 92px; height: 92px; animation: curtain-fade 0.5s ease 0.15s backwards, curtain-seek 1.8s ease-in-out 0.7s infinite; }
 .curtain-sight::before { content: ''; position: absolute; inset: -45%; border-radius: 50%; background: radial-gradient(closest-side, rgba(178, 199, 75, 0.24), transparent); animation: curtain-glow 2.2s ease-in-out infinite alternate; }
@@ -64,20 +64,38 @@ a { color: inherit; }
 .curtain.is-locked .curtain-sight { animation: curtain-lock 0.45s var(--ease-out); }
 .curtain.is-locked .curtain-sight i { border-color: var(--signal); }
 .curtain .curtain-coin { display: block; width: 76px; height: 76px; border-radius: 50%; margin: 0; animation: curtain-in 0.8s var(--ease-spring) backwards; }
-.curtain-coin .coin-leaf path { stroke-dasharray: 1; animation: curtain-draw 1s var(--ease-out) 0.35s backwards; }
 /* Off it goes: up first, then across into the mark, shrinking to its size; the leaf fades on the way. */
 .is-ready .curtain { visibility: hidden; pointer-events: none; transition: visibility 0s 1.15s; }
-.is-ready .curtain::before { opacity: 0; }
 .is-ready .curtain-sight { opacity: 0; scale: 1.3; animation: none; transition: opacity 0.35s, scale 0.6s var(--ease-out); }
 .is-ready .curtain-fly { translate: var(--fx, 0px) 0; transform: translateY(var(--fy, -30px)) scale(var(--fs, 0.5)); opacity: 0; transition: translate 0.95s cubic-bezier(0.65, 0, 0.25, 1), transform 0.95s cubic-bezier(0.3, 0, 0.1, 1), opacity 0.2s linear 0.85s; }
-.is-ready .curtain-coin .coin-leaf { opacity: 0; transition: opacity 0.35s 0.25s; }
 @keyframes curtain-in { from { opacity: 0; scale: 0.55; } }
-@keyframes curtain-draw { from { stroke-dashoffset: 1; } }
 @keyframes curtain-fade { from { opacity: 0; } }
 @keyframes curtain-seek { 50% { scale: 0.94; } }
 @keyframes curtain-lock { 0% { scale: 1.05; } 45% { scale: 0.88; } 100% { scale: 1; } }
 @keyframes curtain-glow { from { opacity: 0.55; scale: 0.9; } to { opacity: 1; scale: 1.05; } }
 @keyframes curtain-lift { to { opacity: 0; visibility: hidden; } }
+/* Everything on the canopy waits for it, then fades in (by itself after 6 s if the script never runs). */
+.js:not(.is-ready) :is(.top, .rail, .progress, .hero > :not(.hero-field), main > :not(.hero), .foot) { opacity: 0; animation: late-show 0.6s ease 6s forwards; }
+.is-ready :is(.top, .rail, .hero > :not(.hero-field)) { animation: show-in 0.8s var(--ease-out) 0.1s backwards; }
+@keyframes show-in { from { opacity: 0; } }
+@keyframes late-show { to { opacity: 1; } }
+/* The boughs grow in: each unfurls from its base at the page's edge, the far ones first (transform on the drawing, so
+   it never meets the cursor's push on the .leaf). Lower-end machines just fade the canopy in. */
+.js .leaf b { animation: bough-grow 1.5s cubic-bezier(0.2, 0.8, 0.25, 1.04) backwards; animation-delay: calc(var(--g, 0s) + var(--i, 0) * 0.07s); }
+.canopy-far { --g: 0.05s; }
+.canopy-near { --g: 0.2s; }
+.hero-field .canopy-far { --g: 0.12s; }
+.hero-field .canopy-near { --g: 0.28s; }
+.leaf:nth-child(2) { --i: 1; }
+.leaf:nth-child(3) { --i: 2; }
+.leaf:nth-child(4) { --i: 3; }
+.leaf:nth-child(5) { --i: 4; }
+.leaf:nth-child(6) { --i: 5; }
+.leaf:nth-child(7) { --i: 6; }
+.leaf:nth-child(n + 8) { --i: 7; }
+.lite .leaf b { animation: none; }
+.lite.js .canopy-layer { animation: show-in 1.2s ease 0.1s backwards; }
+@keyframes bough-grow { from { transform: scale(0.28) rotate(-16deg); opacity: 0; } 40% { opacity: 1; } }
 
 /* ── Atmosphere ──────────────────────────────────────────────────────────────── */
 /* One canopy over the whole page, fixed behind everything: the light from above, the canopy photo faintly, soft glows
@@ -895,6 +913,7 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .js .reveal { opacity: 1; transform: none; }
   .js .curtain { animation: curtain-lift 0.01s linear 4s forwards !important; }
+  .js:not(.is-ready) :is(.top, .rail, .progress, .hero > :not(.hero-field), main > :not(.hero), .foot) { animation: late-show 0.01s linear 4s forwards !important; }
   /* Things that wait for their section to arrive show straight away. */
   .js .podium.reveal .stub, .js .podium.reveal .block, .js .streak.reveal .d:not(.off) { opacity: 1; transform: none; }
   .js .film-reel.reveal .reel-back { rotate: 7deg; translate: 18% 3%; }

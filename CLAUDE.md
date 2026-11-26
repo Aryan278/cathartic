@@ -38,9 +38,10 @@ from `main`, root). The owner is Aryan.
   favicon): the top bar's mark, the footer, and the loader's coin.
 - Coins are the app's coin: a green disc with a ridged, poker-chip edge and a lighter face, with a leaf or a value on
   it (`.coin`, `.coin-chip`; `.coin-ic` is the small SVG one).
-- Loading: a curtain (`.curtain`) holds the screen until the fonts, the hero's images and the canopy's drawings are in
-  (1 s at least, 3 s at most): focus brackets close in on the logo as they arrive (`--p`), lock on, and it rises
-  into the name's mark in the corner while the hero's intro and the reveals play; then the curtain is removed. Lower-end machines (≤4 cores
+- Loading is the page's own canopy growing in: until the fonts, the hero's images and the canopy's drawings are in
+  (1 s at least, 3 s at most) only the canopy shows, its boughs unfurling from the edges (`bough-grow`, a transform on
+  each `.leaf b`), while focus brackets close in on the logo (`.curtain`, transparent; `--p`). Ready, they lock on, the
+  logo rises into the name's mark in the corner and the page fades in (`show-in`); then the curtain is removed. Lower-end machines (≤4 cores
   or ≤4 GB, set in the head as `.lite`) get a still canopy and no cursor-chasing boughs. Smoothness comes first.
 - The hero's title, the field guide's titles and every section heading (`h2.h2`) are split into letters (`.ch`) that
   lift and glow under the cursor, keeping their own colour.
