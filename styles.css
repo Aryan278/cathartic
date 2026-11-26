@@ -44,6 +44,17 @@ img { display: block; max-width: 100%; }
 a { color: inherit; }
 ::selection { background: var(--signal); color: var(--ink); }
 
+/* ── Curtain ──────────────────────────────────────────────────────────────────── */
+/* Holds the screen until the page is ready (main.js adds .is-ready), so nothing is seen half-built: the canopy's own
+   light with the coin turning in it. If the script never runs, it lifts itself after a few seconds. */
+.curtain { display: none; }
+.js .curtain { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; background: radial-gradient(120% 90% at 50% 0%, var(--deep), #141a12 60%, #0c0e0c); transition: opacity 0.7s var(--ease-out), visibility 0s 0.7s; animation: curtain-lift 0.7s ease 6s forwards; }
+.curtain .curtain-coin { width: 68px; height: 68px; margin: 0; animation: curtain-coin 1.8s var(--ease-out) infinite; }
+.is-ready .curtain { opacity: 0; visibility: hidden; }
+.is-ready .curtain .curtain-coin { animation-play-state: paused; }
+@keyframes curtain-coin { 0% { transform: rotateY(0) scale(1); } 55% { transform: rotateY(360deg) scale(1.06); } 100% { transform: rotateY(360deg) scale(1); } }
+@keyframes curtain-lift { to { opacity: 0; visibility: hidden; } }
+
 /* ── Atmosphere ──────────────────────────────────────────────────────────────── */
 /* One canopy over the whole page, fixed behind everything: the light from above, the canopy photo faintly, soft glows
    drifting through it and boughs growing in from the side edges. Sections have no backgrounds of their own, so it
@@ -70,6 +81,19 @@ h1.display { font-size: clamp(54px, 9.2vw, 138px); }
 .lede { font-size: clamp(16px, 1.4vw, 19px); line-height: 1.6; color: rgba(var(--iv), 0.72); max-width: 46ch; margin: 22px 0 0; }
 .split .line { display: block; overflow: hidden; padding-bottom: 0.06em; }
 .split .word { display: inline-block; }
+/* Letters that lift and light up under the cursor, with a little spring (the hero's title and the field guide's; main.js
+   splits them). The hero's lines stop clipping once its words have risen, so a lifted letter isn't cut off. */
+.w { white-space: nowrap; }
+.ch { display: inline-block; transition: transform 0.35s var(--ease-spring), color 0.25s ease; }
+.has-ch .line { position: relative; }
+.intro-done .line { overflow: visible; }
+.has-ch .lit, .has-ch .lit .word { background: none; }
+.has-ch .lit .ch { color: transparent; background: linear-gradient(100deg, var(--bright), var(--signal) 45%, var(--ivory) 90%) var(--bx, 0px) 0 / var(--lw, 100%) 100% no-repeat; -webkit-background-clip: text; background-clip: text; }
+@media (hover: hover) and (pointer: fine) {
+  .ch:hover { transform: translateY(-0.05em) scale(1.16); color: var(--signal); transition-duration: 0.2s, 0.15s; }
+  .has-ch .lit .ch:hover { color: var(--ivory); background: none; }
+  .fg-row.r .fg-title .ch:hover { color: #eab887; }
+}
 /* "Notice it": the word sits in the app's camera focus brackets. */
 .focus { position: relative; display: inline-block; padding: 0 0.09em; }
 .focus i { position: absolute; width: 0.2em; height: 0.2em; border: 0.035em solid var(--bright); }
@@ -710,12 +734,28 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
 .js .letter-wrap.reveal:not(.in) .letter-seal { transform: translateY(-50px) scale(1.5); opacity: 0; }
 .letter.is-stamped .letter-seal { animation: stamp 0.55s var(--ease-out); }
 @keyframes stamp { 0% { transform: scale(1); } 35% { transform: scale(1.35) rotate(-18deg); } 60% { transform: scale(0.88); } 100% { transform: none; } }
-.letter.has-name .btn-coin { box-shadow: 0 0 0 6px rgba(225, 236, 151, 0.18), 0 6px 0 #b8bf8f, 0 18px 40px rgba(178, 199, 75, 0.35); }
+.letter.has-email .btn-coin { box-shadow: 0 0 0 6px rgba(225, 236, 151, 0.18), 0 6px 0 #b8bf8f, 0 18px 40px rgba(178, 199, 75, 0.35); }
 
 /* ── Footer ──────────────────────────────────────────────────────────────────── */
-.foot { width: var(--col); margin: 0 0 0 var(--col-x); padding: 30px 0 50px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; font: 500 12px/1.6 var(--mono); letter-spacing: 0.08em; color: rgba(var(--iv), 0.5); border-top: 1px solid rgba(var(--iv), 0.1); }
-.foot a { text-decoration: none; }
+/* Columns, with boughs growing up from the ground under them (lit from below, the canopy's own drawings). */
+.foot { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(40px, 5vw, 64px) 0 0; font: 15px/1.55 var(--text); color: rgba(var(--iv), 0.66); }
+.foot a { color: rgba(var(--iv), 0.84); text-decoration: none; transition: color 0.2s; }
 .foot a:hover { color: var(--ivory); }
+.foot-ground { position: absolute; z-index: -1; left: calc(50% - 50vw - var(--rail) / 2); width: 100vw; bottom: 0; height: 135%; overflow: hidden; pointer-events: none; background: radial-gradient(55% 70% at 50% 100%, rgba(178, 199, 75, 0.16), rgba(90, 115, 47, 0.07) 55%, rgba(90, 115, 47, 0) 78%); }
+.foot-ground img { position: absolute; bottom: -14%; width: clamp(230px, 27vw, 390px); opacity: 0.92; filter: brightness(2.3) saturate(1.15); }
+.foot-ground .fg1 { left: -3%; rotate: 18deg; }
+.foot-ground .fg2 { right: -3%; rotate: -18deg; scale: -1 1; }
+.foot-ground .fg3 { left: 21%; bottom: -26%; width: clamp(160px, 17vw, 250px); rotate: 5deg; opacity: 0.6; }
+.foot-ground .fg4 { right: 22%; bottom: -26%; width: clamp(160px, 17vw, 250px); rotate: -6deg; scale: -1 1; opacity: 0.6; }
+.foot-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(0, 1fr)); gap: 32px 40px; }
+.foot-name { display: flex; align-items: center; gap: 10px; margin: 0; font: 800 30px/1 var(--display); letter-spacing: -0.02em; color: var(--ivory); }
+.foot-name .coin-ic { font-size: 30px; }
+.foot-tag { margin: 12px 0 0; max-width: 40ch; }
+.foot-col { display: grid; align-content: start; gap: 10px; }
+.foot-col p { margin: 0 0 4px; font: 700 15px/1.2 var(--display); color: rgba(var(--iv), 0.5); }
+.foot-col span { color: rgba(var(--iv), 0.55); }
+.foot-fine { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: clamp(36px, 5vw, 56px); padding: 18px 0 clamp(96px, 12vw, 170px); border-top: 1px solid rgba(var(--iv), 0.1); font-size: 13.5px; color: rgba(var(--iv), 0.5); }
+.foot-fine a { margin-left: auto; }
 
 /* ── Reveal (IntersectionObserver adds .in; no-JS keeps everything visible) ─────── */
 .js .reveal { opacity: 0; transform: translate3d(0, 28px, 0); transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); transition-delay: var(--d, 0s); }
@@ -733,7 +773,10 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
   .rail a.is-on { color: var(--ivory); }
   .rail a.is-on .rail-ic { color: var(--signal); }
   .rail a.is-on::before { content: ''; position: absolute; top: -1px; left: 50%; width: 28px; height: 3px; margin-left: -14px; border-radius: 0 0 3px 3px; background: var(--signal); box-shadow: 0 0 12px var(--signal); }
-  .foot { padding-bottom: calc(50px + 64px + env(safe-area-inset-bottom)); }
+  .foot-grid { grid-template-columns: 1fr 1fr; }
+  .foot-brand { grid-column: 1 / -1; }
+  .foot-fine { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
+  .foot-fine a { margin-left: 0; }
   .ranks-stage, .rwa-board, .film, .invite { grid-template-columns: 1fr; }
   /* Lighter on phones: the canopy's boughs hold still, two of its glows rest, and the grain goes. */
   .sky .canopy-sway { animation: none; }
@@ -816,9 +859,14 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
    you can click. Drawn as SVG in assets/cursors/, with 1x and 2x PNGs rendered from them. */
 @media (pointer: fine) {
   html { cursor: url(assets/cursors/arrow.png) 6 4, auto; cursor: -webkit-image-set(url(assets/cursors/arrow.png) 1x, url(assets/cursors/arrow@2x.png) 2x) 6 4, auto; cursor: image-set(url(assets/cursors/arrow.png) 1x, url(assets/cursors/arrow@2x.png) 2x) 6 4, auto; }
-  input[type='text'] { cursor: text; }
+  input[type='text'], input[type='email'] { cursor: text; }
   a, button, .btn, [role='button'], summary, select, .film-play { cursor: url(assets/cursors/hand.png) 14 4, pointer; cursor: -webkit-image-set(url(assets/cursors/hand.png) 1x, url(assets/cursors/hand@2x.png) 2x) 14 4, pointer; cursor: image-set(url(assets/cursors/hand.png) 1x, url(assets/cursors/hand@2x.png) 2x) 14 4, pointer; }
 }
+
+/* Lower-end machines (.lite, set in the page head from their cores and memory): the canopy holds still, two of its
+   glows and the grain go, and the small looping touches rest. Everything still works and moves on scroll. */
+.lite .sky .canopy-sway, .lite .canopy-glows i, .lite .how-halo, .lite .film-play::after, .lite .d.today::before, .lite .s1 .stub::before { animation: none; }
+.lite .canopy-glows i:nth-child(n + 4), .lite .grain { display: none; }
 
 /* Off-screen sections rest their CSS animations (main.js). */
 .is-off, .is-off * { animation-play-state: paused !important; }
@@ -826,6 +874,7 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .js .reveal { opacity: 1; transform: none; }
+  .js .curtain { animation: curtain-lift 0.01s linear 4s forwards !important; }
   /* Things that wait for their section to arrive show straight away. */
   .js .podium.reveal .stub, .js .podium.reveal .block, .js .streak.reveal .d:not(.off) { opacity: 1; transform: none; }
   .js .film-reel.reveal .reel-back { rotate: 7deg; translate: 18% 3%; }

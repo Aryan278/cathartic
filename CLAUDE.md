@@ -35,7 +35,14 @@ from `main`, root). The owner is Aryan.
   split-flap board; the closing call an invitation card whose blank fills the email subject.
 - Coins are the app's coin: a green disc with a ridged, poker-chip edge and a lighter face, with a leaf or a value on
   it (`.coin`, `.coin-chip`; `.coin-ic` is the small SVG one).
-- Cursors (fine pointers only): a classic arrow with an Ivory rim, and a pointing hand on anything clickable. SVG
+- Loading: a curtain (`.curtain`, the coin turning) holds the screen until the fonts, the hero's images and the canopy's
+  drawings are in (3 s at most); then it lifts and the hero's intro and the reveals play. Lower-end machines (≤4 cores
+  or ≤4 GB, set in the head as `.lite`) get a still canopy and no cursor-chasing boughs. Smoothness comes first.
+- The hero's title and the field guide's titles are split into letters (`.ch`) that lift and light up under the cursor.
+- The footer is columns, with the canopy's boughs growing up from the ground under it. The invitation asks for the
+  society's email and puts it in the body of the email it opens.
+- Cursors (fine pointers only): a classic black arrow with a white rim, and a white pointing hand with a black outline,
+  like macOS (and the reference site). SVG
   sources in `assets/cursors/`, with 1x/2x PNGs rendered from them (the CSS uses `image-set`).
 - `assets/shots/` are real app screenshots (demo data); `assets/img/` holds the app's field
   backgrounds, eco-bag, grain texture and report photos.

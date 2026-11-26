@@ -29,6 +29,23 @@
     });
   }
 
+  /* ── Ready: the curtain lifts once the page can be seen whole ─────────────────── */
+  // Ready means the fonts, the hero's images and the canopy's drawings are in (or three seconds have passed), so the
+  // first thing anyone sees is the finished page, never one assembling itself. Everything that moves on arrival
+  // (the hero's intro, the reveals) waits for it.
+  const lite = document.documentElement.classList.contains('lite');
+  const loaded = (img) => (img.complete ? Promise.resolve() : new Promise((r) => (img.addEventListener('load', r, { once: true }), img.addEventListener('error', r, { once: true }))));
+  const drawings = [...new Set($$('.hero-field .leaf b, .sky .leaf b').map((b) => getComputedStyle(b).backgroundImage.slice(5, -2)).filter(Boolean))];
+  const ready = Promise.race([
+    Promise.all([document.fonts?.ready, ...$$('.hero img, .sky img').map(loaded), ...drawings.map((src) => loaded(Object.assign(new Image(), { src })))]),
+    new Promise((r) => setTimeout(r, 3000)),
+  ]).then(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+  ready.then(() => {
+    document.documentElement.classList.add('is-ready');
+    // Then, quietly, fetch the images further down, so they're there before anyone scrolls to them.
+    setTimeout(() => $$('img[loading="lazy"]').forEach((img) => (img.loading = 'eager')), 1200);
+  });
+
   /* ── Headline: words to rise ────────────────────────────────────────────────── */
   // Text splits into words; an element inside a line (the focus brackets) rises as one word.
   $$('.split .line').forEach((line) => {
@@ -38,13 +55,48 @@
       .join(' ');
   });
 
+  /* ── Letters that lift when you point at them (the hero's title, the field guide's) ── */
+  if (fine) {
+    const letters = (root) => {
+      root.setAttribute('aria-label', root.textContent.replace(/\s+/g, ' ').trim());
+      const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const texts = [];
+      while (walk.nextNode()) texts.push(walk.currentNode);
+      texts.forEach((t) => {
+        if (!t.textContent.trim()) return;
+        const frag = document.createDocumentFragment();
+        t.textContent.split(/(\s+)/).forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) return frag.append(' ');
+          const w = Object.assign(document.createElement('span'), { className: 'w' });
+          [...part].forEach((ch) => w.append(Object.assign(document.createElement('span'), { className: 'ch', textContent: ch })));
+          frag.append(w);
+        });
+        t.replaceWith(frag);
+      });
+      root.classList.add('has-ch');
+    };
+    $$('.hero h1, .fg-title').forEach(letters);
+    if (calm || !hasGsap) $('.hero h1').classList.add('intro-done');
+    // The second line's gradient runs across the whole line: each letter carries its own slice of it.
+    const lit = $('.hero .lit');
+    const slice = () => {
+      lit.style.setProperty('--lw', `${lit.offsetWidth}px`);
+      $$('.ch', lit).forEach((c) => c.style.setProperty('--bx', `${-c.offsetLeft}px`));
+    };
+    if (lit) {
+      ready.then(slice);
+      addEventListener('resize', slice);
+    }
+  }
+
   /* ── Reveals, staggered within a group ──────────────────────────────────────── */
   $$('section').forEach((sec) => $$('.reveal', sec).forEach((el, i) => el.style.setProperty('--d', `${Math.min(i, 6) * 0.08}s`)));
   const io = new IntersectionObserver(
     (entries) => entries.forEach((e) => e.isIntersecting && (e.target.classList.add('in'), io.unobserve(e.target))),
     { rootMargin: '0px 0px -10% 0px' },
   );
-  $$('.reveal').forEach((el) => io.observe(el));
+  ready.then(() => $$('.reveal').forEach((el) => io.observe(el)));
 
   /* ── Numbers: the station board flicks over to each number ──────────────────── */
   // Each tile rolls forward through a few digits and lands on its own, the later tiles a little later. Pointing at a
@@ -298,14 +350,15 @@
     sb.addEventListener('hint', (e) => open(e.detail));
   }
 
-  /* ── The invitation: the society's name rides along in the email's subject ──── */
+  /* ── The invitation: the society's email rides along in the email we're sent ── */
   const society = $('#society');
   const send = society?.closest('.letter').querySelector('[data-contact]');
+  const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
   if (society && send && /^mailto:/i.test(SITE.contact || '')) {
     const to = SITE.contact.split('?')[0];
     society.addEventListener('input', () => {
       const v = society.value.trim();
-      send.href = `${to}?subject=${encodeURIComponent(v ? `Early access for ${v}` : 'Early access')}`;
+      send.href = `${to}?subject=${encodeURIComponent('Early access')}${isEmail(v) ? `&body=${encodeURIComponent(`Our society's email: ${v}`)}` : ''}`;
     });
     society.addEventListener('keydown', (e) => e.key === 'Enter' && send.click());
   }
@@ -329,12 +382,13 @@
     });
   }
 
-  /* ── The invitation: writing a name in stamps the seal ──────────────────────── */
+  /* ── The invitation: a proper email stamps the seal ─────────────────────────── */
   const letter = society?.closest('.letter');
   society?.addEventListener('input', () => {
-    const had = letter.classList.contains('has-name');
-    letter.classList.toggle('has-name', !!society.value.trim());
-    if (!had && society.value.trim()) {
+    const had = letter.classList.contains('has-email');
+    const ok = isEmail(society.value.trim());
+    letter.classList.toggle('has-email', ok);
+    if (!had && ok) {
       letter.classList.remove('is-stamped');
       void letter.offsetWidth;
       letter.classList.add('is-stamped');
@@ -361,8 +415,8 @@
   });
   const side = panels.map((p) => (parseFloat(getComputedStyle(p).getPropertyValue('--px')) < 0 ? -1 : 1));
   let lean = false;
-  gsap
-    .timeline({ defaults: { ease } })
+  const intro = gsap
+    .timeline({ defaults: { ease }, paused: true })
     .from('.hero .word', { yPercent: 115, rotate: 4, duration: 1.3, stagger: 0.08 }, 0.1)
     .from('.phone-hero', { y: 120, rotate: 10, opacity: 0, duration: 1.6 }, 0.25)
     .from(movers, { x: (i) => home[i].x, y: (i) => home[i].y, z: -160, rotationY: (i) => -side[i] * 50, scale: 0.45, autoAlpha: 0, duration: 1.6, stagger: 0.12 }, 0.85)
@@ -370,14 +424,18 @@
     // The focus brackets close in on "it" and lock, with a small squeeze like a camera finding focus.
     .from('.focus i', { x: (i) => (i % 2 ? 1 : -1) * 18, y: (i) => (i < 2 ? -1 : 1) * 14, opacity: 0, duration: 0.5, ease: 'power3.out', stagger: 0.03 }, 1.05)
     .to('.focus', { scale: 0.94, duration: 0.12, ease: 'power2.out' }, 1.6)
-    .to('.focus', { scale: 1, duration: 0.5, ease: 'back.out(3)' }, 1.72);
+    .to('.focus', { scale: 1, duration: 0.5, ease: 'back.out(3)' }, 1.72)
+    .call(() => $('.hero h1').classList.add('intro-done'), null, 1.5);
+  ready.then(() => intro.play());
   // Hovering the word refocuses it.
   if (fine) $('.focus').addEventListener('pointerenter', () => gsap.fromTo('.focus i', { x: (i) => (i % 2 ? 1 : -1) * 8, y: (i) => (i < 2 ? -1 : 1) * 6 }, { x: 0, y: 0, duration: 0.45, ease: 'back.out(2.5)' }));
-  heroIdle.push(gsap.to('.phone-hero', { y: -14, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.6 }));
-  // Once out, each panel bobs on its own rhythm.
-  panels.forEach((p, i) =>
-    heroIdle.push(gsap.to($('.hpanel-float', p), { y: i % 2 ? 9 : -9, rotationZ: side[i] * (i % 2 ? 1 : -1) * 1.2, duration: 3.1 + i * 0.45, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2.4 + i * 0.25 })),
-  );
+  ready.then(() => {
+    heroIdle.push(gsap.to('.phone-hero', { y: -14, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.6 }));
+    // Once out, each panel bobs on its own rhythm.
+    panels.forEach((p, i) =>
+      heroIdle.push(gsap.to($('.hpanel-float', p), { y: i % 2 ? 9 : -9, rotationZ: side[i] * (i % 2 ? 1 : -1) * 1.2, duration: 3.1 + i * 0.45, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2.4 + i * 0.25 })),
+    );
+  });
   // They lean towards the cursor, the near ones more, like real glass in space.
   if (fine) {
     const q = movers.map((m) => ['rotationY', 'rotationX', 'x', 'y'].map((k) => gsap.quickTo(m, k, { duration: 0.9, ease: 'power3' })));
@@ -402,8 +460,8 @@
   // The hero's field stays put: sliding it down would carry its dark foot past the hero and over How it works
   // (which has no panel to hide it); the boughs inside it carry the depth instead.
   // Boughs bend away from the cursor as it brushes through them, pivoting at their base on the page edge, and
-  // spring back once it has passed.
-  if (fine) {
+  // spring back once it has passed. (Not on lower-end machines.)
+  if (fine && !lite) {
     // The hero's boughs along the top edge, and the page canopy's along the sides (fixed, so they're there all the way down).
     const fields = $$('.hero-field, .sky');
     const leaves = $$('.hero-field .leaf, .sky .leaf').map((el) => {
