@@ -84,15 +84,14 @@ h1.display { font-size: clamp(54px, 9.2vw, 138px); }
 /* Letters that lift and light up under the cursor, with a little spring (the hero's title and the field guide's; main.js
    splits them). The hero's lines stop clipping once its words have risen, so a lifted letter isn't cut off. */
 .w { white-space: nowrap; }
-.ch { display: inline-block; transition: transform 0.35s var(--ease-spring), color 0.25s ease; }
+.ch { display: inline-block; transition: transform 0.35s var(--ease-spring), text-shadow 0.3s ease, filter 0.3s ease; }
 .has-ch .line { position: relative; }
 .intro-done .line { overflow: visible; }
 .has-ch .lit, .has-ch .lit .word { background: none; }
 .has-ch .lit .ch { color: transparent; background: linear-gradient(100deg, var(--bright), var(--signal) 45%, var(--ivory) 90%) var(--bx, 0px) 0 / var(--lw, 100%) 100% no-repeat; -webkit-background-clip: text; background-clip: text; }
 @media (hover: hover) and (pointer: fine) {
-  .ch:hover { transform: translateY(-0.05em) scale(1.16); color: var(--signal); transition-duration: 0.2s, 0.15s; }
-  .has-ch .lit .ch:hover { color: var(--ivory); background: none; }
-  .fg-row.r .fg-title .ch:hover { color: #eab887; }
+  .ch:hover { transform: translateY(-0.05em) scale(1.16); text-shadow: 0 0 0.3em rgba(249, 253, 214, 0.42); transition-duration: 0.2s, 0.15s, 0.15s; }
+  .has-ch .lit .ch:hover { text-shadow: none; filter: brightness(1.12) drop-shadow(0 0 0.16em rgba(225, 236, 151, 0.5)); }
 }
 /* "Notice it": the word sits in the app's camera focus brackets. */
 .focus { position: relative; display: inline-block; padding: 0 0.09em; }
@@ -283,8 +282,8 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
 
 /* ── How it works: the steps orbit the phone ────────────────────────────────── */
 /* No panel of its own: the page's dark field and drifting light run straight through, so there's no edge to
-   meet. Tucked a little under the marquee. */
-.how { padding: 0; width: 100%; margin: -96px 0 0; }
+   meet. */
+.how { padding: 0; width: 100%; margin: 0; }
 /* The heading on top, the stage under it. Live (main.js), the section is a few screens tall and this holds on
    screen (sticky) while the scroll turns the orbit. */
 .how-pin { position: relative; display: flex; flex-direction: column; padding: clamp(104px, 14vh, 140px) 0 clamp(48px, 8vh, 96px); }
@@ -293,10 +292,9 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
 /* Held on screen (desktop), the section's name and progress live in the top bar instead (.top-step), so the
    heading can sit right under it. */
 @media (min-width: 961px) { .how.is-live .how-head .eyebrow { display: none; } }
-.how-head { position: relative; z-index: 3; flex: none; margin-left: var(--col-x); width: var(--col); display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+.how-head { position: relative; z-index: 3; flex: none; margin-left: var(--col-x); width: var(--col); text-align: center; }
 .how-head .eyebrow { margin-bottom: 14px; }
 .how .h2 { font-size: clamp(36px, 4.2vw, 60px); max-width: none; text-wrap: balance; }
-.how-head .lede { flex: none; max-width: 27ch; margin: 0 0 8px; font-size: 17px; }
 @keyframes count-roll { from { transform: translateY(80%); opacity: 0; } }
 
 /* The stage: the phone in the middle, showing the Collect screen, and the three steps as glass panels. Without JS
@@ -706,7 +704,7 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
 
 /* ── Numbers: a station board ────────────────────────────────────────────────── */
 /* Split-flap tiles that flick through digits and land on each number as it arrives (main.js). */
-.numbers { padding-top: clamp(24px, 3vw, 44px); padding-bottom: clamp(24px, 3vw, 44px); }
+.numbers { padding-top: clamp(40px, 5vw, 72px); padding-bottom: clamp(36px, 3.6vw, 52px); }
 .board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); }
 .flaps { display: flex; gap: 6px; margin: 0; perspective: 400px; }
 .flaps span[aria-hidden] { position: relative; display: grid; place-items: center; width: clamp(44px, 4.3vw, 62px); aspect-ratio: 62 / 90; border-radius: 10px; font: 700 clamp(28px, 3.1vw, 44px)/1 var(--mono); color: var(--ivory); background: linear-gradient(180deg, #252e21 50%, #1b2219 50%); box-shadow: inset 0 1px 0 rgba(var(--iv), 0.12), 0 14px 26px rgba(0, 0, 0, 0.4); }
@@ -816,8 +814,6 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
   .how-pin { padding: 136px 16px 56px; }
   .how-head { display: block; margin: 0; width: auto; }
   .how .h2 { font-size: clamp(30px, 8vw, 44px); }
-  .how-head .lede { font-size: 15px; }
-  .how-head .lede { max-width: none; margin: 14px 0 0; }
   .top-step { display: none; }
   .how-stage { width: auto; margin: 28px 0 0; flex-direction: column; }
   .how-steps { flex-direction: column; align-items: center; }
@@ -828,7 +824,6 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
   .hstep p { font-size: 13.5px; }
   .hstep .hstep-chip, .how.is-live .how-wire { display: none; }
   .how.is-live .how-pin { min-height: 0; padding: 88px 16px calc(20px + env(safe-area-inset-bottom)); }
-  .how.is-live .how-head .lede { display: none; }
   .how.is-live .how-stage { margin-top: 16px; justify-content: flex-start; }
   .how.is-live .how-phone { height: min(72%, 480px); }
   .how.is-live .hstep { width: min(320px, calc(100vw - 32px)); }
@@ -855,12 +850,12 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
    instead of repainting them every frame. */
 .hero-field, .hero-stage, .how-head { will-change: transform; }
 
-/* Cursors (mouse and trackpad only): a classic arrow with an Ivory rim everywhere, and the pointing hand on anything
-   you can click. Drawn as SVG in assets/cursors/, with 1x and 2x PNGs rendered from them. */
+/* Cursors (mouse and trackpad only): a classic black arrow with a white rim everywhere, and a white pointing hand on
+   anything you can click. Bump the ?v= on their URLs when the drawings change, or browsers keep the old ones. Drawn as SVG in assets/cursors/, with 1x and 2x PNGs rendered from them. */
 @media (pointer: fine) {
-  html { cursor: url(assets/cursors/arrow.png) 6 4, auto; cursor: -webkit-image-set(url(assets/cursors/arrow.png) 1x, url(assets/cursors/arrow@2x.png) 2x) 6 4, auto; cursor: image-set(url(assets/cursors/arrow.png) 1x, url(assets/cursors/arrow@2x.png) 2x) 6 4, auto; }
+  html { cursor: url(assets/cursors/arrow.png?v=3) 6 4, auto; cursor: -webkit-image-set(url(assets/cursors/arrow.png?v=3) 1x, url(assets/cursors/arrow@2x.png?v=3) 2x) 6 4, auto; cursor: image-set(url(assets/cursors/arrow.png?v=3) 1x, url(assets/cursors/arrow@2x.png?v=3) 2x) 6 4, auto; }
   input[type='text'], input[type='email'] { cursor: text; }
-  a, button, .btn, [role='button'], summary, select, .film-play { cursor: url(assets/cursors/hand.png) 14 4, pointer; cursor: -webkit-image-set(url(assets/cursors/hand.png) 1x, url(assets/cursors/hand@2x.png) 2x) 14 4, pointer; cursor: image-set(url(assets/cursors/hand.png) 1x, url(assets/cursors/hand@2x.png) 2x) 14 4, pointer; }
+  a, button, .btn, [role='button'], summary, select, .film-play { cursor: url(assets/cursors/hand.png?v=3) 14 4, pointer; cursor: -webkit-image-set(url(assets/cursors/hand.png?v=3) 1x, url(assets/cursors/hand@2x.png?v=3) 2x) 14 4, pointer; cursor: image-set(url(assets/cursors/hand.png?v=3) 1x, url(assets/cursors/hand@2x.png?v=3) 2x) 14 4, pointer; }
 }
 
 /* Lower-end machines (.lite, set in the page head from their cores and memory): the canopy holds still, two of its

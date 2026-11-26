@@ -43,7 +43,8 @@ from `main`, root). The owner is Aryan.
   society's email and puts it in the body of the email it opens.
 - Cursors (fine pointers only): a classic black arrow with a white rim, and a white pointing hand with a black outline,
   like macOS (and the reference site). SVG
-  sources in `assets/cursors/`, with 1x/2x PNGs rendered from them (the CSS uses `image-set`).
+  sources in `assets/cursors/`, with 1x/2x PNGs rendered from them (the CSS uses `image-set`). Bump the `?v=` on
+  their URLs in `styles.css` when you redraw them, or browsers keep showing the old ones.
 - `assets/shots/` are real app screenshots (demo data); `assets/img/` holds the app's field
   backgrounds, eco-bag, grain texture and report photos.
 
