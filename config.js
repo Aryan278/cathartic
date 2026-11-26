@@ -11,6 +11,6 @@
 window.SITE = {
   name: 'Cathartic',
   contact: 'mailto:ops@example.org?subject=Early%20access',
-  video: '',
-  poster: 'assets/img/pile.webp',
+  video: 'assets/film.mp4',
+  poster: 'assets/img/film-poster.webp',
 };

@@ -24,7 +24,7 @@
       const frame = $('.film-frame');
       const isFile = /\.(mp4|webm|mov)(\?|$)/i.test(SITE.video);
       frame.innerHTML = isFile
-        ? `<video src="${SITE.video}" controls autoplay playsinline></video>`
+        ? `<video src="${SITE.video}" poster="${SITE.poster || ''}" controls autoplay playsinline></video>`
         : `<iframe src="${SITE.video}${SITE.video.includes('?') ? '&' : '?'}autoplay=1" title="${name} film" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
     });
   }
@@ -364,7 +364,6 @@
   if (sb) {
     const sbCells = $$('.sb-cell', sb);
     // The rearranging is tweened here, track by track (browsers jump between grid templates rather than animate them).
-    // Nothing inside a tile depends on its size, so each step is a cheap layout with no redrawing.
     const fr = { c0: 1, c1: 1, c2: 1, r0: 1, r1: 1 };
     const lay = () => ((sb.style.gridTemplateColumns = `${fr.c0}fr ${fr.c1}fr ${fr.c2}fr`), (sb.style.gridTemplateRows = `${fr.r0}fr ${fr.r1}fr`));
     const glide = (i) => {
@@ -373,14 +372,11 @@
       else (Object.assign(fr, to), lay());
     };
     const open = (i) => +sb.dataset.open !== i && ((sb.dataset.open = i), glide(i), sbCells.forEach((c, k) => c.classList.toggle('is-open', k === i)));
-    // A moment's grace, so a cursor passing over the bento on its way somewhere doesn't set every tile moving.
-    let pending;
-    const soon = (i, ms) => (clearTimeout(pending), (pending = setTimeout(() => open(i), ms)));
     sbCells.forEach((c, i) => {
-      c.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && soon(i, 80));
+      c.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && open(i));
       c.addEventListener('focus', () => open(i));
     });
-    sb.addEventListener('pointerleave', (e) => e.pointerType === 'mouse' && soon(-1, 180));
+    sb.addEventListener('pointerleave', (e) => e.pointerType === 'mouse' && open(-1));
     sb.addEventListener('focusout', (e) => sb.contains(e.relatedTarget) || open(-1));
     sb.addEventListener('hint', (e) => open(e.detail));
   }

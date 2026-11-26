@@ -9,18 +9,19 @@
     <meta property="og:title" content="Notice it. Pick it up." />
     <meta property="og:description" content="Two photos make a bag. Streets get cleaner, and every bag earns you coins." />
     <meta property="og:image" content="assets/shots/home.webp" />
-    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="assets/img/logo-64.png" type="image/png" />
+    <link rel="preload" href="assets/img/logo.webp" as="image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700;800&family=Martian+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=2026-11-29d" />
+    <link rel="stylesheet" href="styles.css?v=2026-11-30a" />
     <script>document.documentElement.classList.add('js'); if ((navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4) document.documentElement.classList.add('lite');</script>
-    <script src="config.js?v=2026-11-29d"></script>
+    <script src="config.js?v=2026-11-30a"></script>
   </head>
   <body>
     <!-- Until the page is ready (fonts, the hero's images, the motion), a curtain holds the screen: focus brackets close in
          on the coin as it all comes in, lock on, and the coin rises into the name's mark. Nothing is seen half-built. -->
-    <div class="curtain" aria-hidden="true"><div class="curtain-sight"><i></i><i></i><i></i><i></i></div><div class="curtain-fly"><div class="coin curtain-coin"><svg class="coin-leaf" viewBox="0 0 64 64" aria-hidden="true"><g transform="rotate(45 32 32)" fill="none" stroke="#1d2719" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M32 19.5c6.8 4.8 6.8 20.2 0 25-6.8-4.8-6.8-20.2 0-25z" /><path pathLength="1" d="M32 26.5v13" /></g></svg></div></div></div>
+    <div class="curtain" aria-hidden="true"><div class="curtain-sight"><i></i><i></i><i></i><i></i></div><div class="curtain-fly"><img class="curtain-coin" src="assets/img/logo.webp" alt="" width="76" height="76" /></div></div>
     <!-- One canopy over the whole page, fixed behind every section: light drifting through it and boughs growing in
          from the side edges (the hero adds the boughs along its top). Grain on top, and a glow that follows the pointer. -->
     <div class="sky" aria-hidden="true">
@@ -313,32 +314,32 @@
           <h2 class="display h2">Made to feel like dappled light.</h2>
         </header>
         <div class="sb reveal" data-open="-1">
-          <figure class="sb-cell" tabindex="0" style="--k: 0; --oy: 9%">
+          <figure class="sb-cell" tabindex="0" style="--k: 0; --crop: 50% 16%">
             <img class="sb-crop" src="assets/shots/home.webp" alt="" loading="lazy" />
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/home.webp" alt="The Home screen" loading="lazy" /></div><p><b>Home</b>Your streak, your squad and the month's goal, the moment you open it.</p></div>
             <figcaption>Home</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 1; --oy: 4.5%">
+          <figure class="sb-cell" tabindex="0" style="--k: 1; --crop: 50% 8%">
             <img class="sb-crop" src="assets/shots/scan.webp" alt="" loading="lazy" />
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/scan.webp" alt="The Collect screen" loading="lazy" /></div><p><b>Collect</b>The camera checks it's loose litter in reach; two photos make a bag.</p></div>
             <figcaption>Collect</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 2; --oy: 18%">
+          <figure class="sb-cell" tabindex="0" style="--k: 2; --crop: 50% 32%">
             <img class="sb-crop" src="assets/shots/report.webp" alt="" loading="lazy" />
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/report.webp" alt="The Report screen" loading="lazy" /></div><p><b>Report</b>Open cases on a map. Point one out without touching it.</p></div>
             <figcaption>Report</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 3; --ob: 49%">
+          <figure class="sb-cell" tabindex="0" style="--k: 3; --crop: 50% 14%">
             <img class="sb-crop" src="assets/shots/marketplace.webp" alt="" loading="lazy" />
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/marketplace.webp" alt="The Rewards screen" loading="lazy" /></div><p><b>Rewards</b>Today's menu from partner cafés, cheapest first.</p></div>
             <figcaption>Rewards</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 4; --ob: 50%">
+          <figure class="sb-cell" tabindex="0" style="--k: 4; --crop: 50% 12%">
             <img class="sb-crop" src="assets/shots/leaderboard.webp" alt="" loading="lazy" />
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/leaderboard.webp" alt="The Ranks screen" loading="lazy" /></div><p><b>Ranks</b>This week's leaders in your society, and where you stand.</p></div>
             <figcaption>Ranks</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 5; --ob: 32%">
+          <figure class="sb-cell" tabindex="0" style="--k: 5; --crop: 50% 44%">
             <img class="sb-crop" src="assets/shots/profile.webp" alt="" loading="lazy" />
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/profile.webp" alt="The Profile screen" loading="lazy" /></div><p><b>Profile</b>Your stamps, your bags and every coin you've earned.</p></div>
             <figcaption>Profile</figcaption>
@@ -350,15 +351,15 @@
       <section class="film" id="film">
         <div class="film-copy reveal">
           <p class="eyebrow"><svg class="eb-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M10 8.5v7l5.5-3.5z" /></svg>The film</p>
-          <h2 class="display h2">Sixty seconds on one street.</h2>
-          <p class="lede">One street, one morning: noticing a wrapper, picking it up, dropping it at the society's point, and the coins that follow.</p>
+          <h2 class="display h2">The whole idea in 25 seconds.</h2>
+          <p class="lede">Noticing it, two photos, a bag that counts, and a city getting cleaner, society by society.</p>
         </div>
         <div class="film-reel reveal">
           <div class="reel-back" aria-hidden="true"><img src="assets/img/drain.webp" alt="" loading="lazy" /></div>
           <div class="film-frame">
             <div class="film-poster">
               <img data-poster src="assets/img/pile.webp" alt="" />
-              <span class="reel-chip" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4" /><path d="M3.5 8.5h17M8 3.5l2.5 5M13.5 3.5l2.5 5M10.5 12.5v5l4.5-2.5z" /></svg>Reel · 1:00</span>
+              <span class="reel-chip" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4" /><path d="M3.5 8.5h17M8 3.5l2.5 5M13.5 3.5l2.5 5M10.5 12.5v5l4.5-2.5z" /></svg>Reel · 0:25</span>
               <span class="reel-mute" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4zM16 9.5l5 5M21 9.5l-5 5" /></svg></span>
               <p class="reel-cover" aria-hidden="true"><span>Notice it.</span><span>Pick it up.</span></p>
               <button class="film-play magnetic" type="button" aria-label="Play the film"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></button>
@@ -409,7 +410,7 @@
       </div>
       <div class="foot-grid">
         <div class="foot-brand">
-          <p class="foot-name"><i class="coin-ic" aria-hidden="true"></i><span data-app-name>Cathartic</span></p>
+          <p class="foot-name"><img class="foot-logo" src="assets/img/logo.webp" alt="" width="40" height="40" loading="lazy" /><span data-app-name>Cathartic</span></p>
           <p class="foot-tag">Notice it. Pick it up. Pick up loose litter, drop it at your society's point, and spend the coins at partner cafés.</p>
         </div>
         <nav class="foot-col" aria-label="The app"><p>The app</p><a href="#how">How it works</a><a href="#rewards">Rewards</a><a href="#film">The film</a></nav>
@@ -421,6 +422,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="main.js?v=2026-11-29d"></script>
+    <script src="main.js?v=2026-11-30a"></script>
   </body>
 </html>
