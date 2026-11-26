@@ -532,11 +532,16 @@
       });
     });
   }
-  // Scrolling away, they drift apart and up at different speeds, while the stage rises.
-  panels.forEach((p, i) =>
-    gsap.to(p, { x: side[i] * (i % 2 ? 140 : 90), y: -(i % 2 ? 200 : 120), ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } }),
-  );
-  gsap.to('.hero-stage', { yPercent: -12, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  // Scrolling away, they drift apart and up at different speeds, while the stage rises. Where the browser can tie an
+  // animation to the scroll itself (CSS, .hero's view timeline), it does, so a fast flick never leaves them a frame
+  // behind the text; elsewhere ScrollTrigger scrubs them.
+  const drift = panels.map((p, i) => [side[i] * (i % 2 ? 140 : 90), -(i % 2 ? 200 : 120)]);
+  if (CSS.supports('animation-timeline: view()')) {
+    panels.forEach((p, i) => (p.style.setProperty('--sx', `${drift[i][0]}px`), p.style.setProperty('--sy', `${drift[i][1]}px`)));
+  } else {
+    panels.forEach((p, i) => gsap.to(p, { x: drift[i][0], y: drift[i][1], ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } }));
+    gsap.to('.hero-stage', { yPercent: -12, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  }
   // The hero's field stays put: sliding it down would carry its dark foot past the hero and over How it works
   // (which has no panel to hide it); the boughs inside it carry the depth instead.
   // Boughs bend away from the cursor as it brushes through them, pivoting at their base on the page edge, and

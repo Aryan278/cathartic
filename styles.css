@@ -308,6 +308,16 @@ section { width: var(--col); margin: 0 0 0 var(--col-x); padding: clamp(48px, 6v
    Layers: .hpanel drifts on scroll, -move fans in and leans to the cursor, -float bobs, -in holds the tilt. */
 .hpanel { position: absolute; z-index: 2; margin: 0; left: calc(50% + var(--px) * var(--ph)); top: calc(var(--py) * var(--ph)); width: calc(var(--pw) * var(--ph)); margin-left: calc(var(--pw) * var(--ph) / -2); perspective: 1000px; }
 .hpanel-move, .hpanel-float { transform-style: preserve-3d; }
+/* Scrolling away, the stage rises and the panels drift apart, tied to the scroll itself where the browser can (main.js
+   scrubs them elsewhere), so a fast flick never leaves them behind the text. */
+@supports (animation-timeline: view()) {
+  .js .hero { view-timeline: --hero block; }
+  .js .hero-stage, .js .hpanel { animation: hero-drift linear both; animation-timeline: --hero; animation-range: exit-crossing 0% exit-crossing 100%; }
+  .js .hero-stage { --sx: 0px; --sy: -12%; }
+  /* The stage also fades in with the page (show-in), so it carries both. */
+  .is-ready .hero > .hero-stage { animation: show-in 0.8s var(--ease-out) 0.1s backwards, hero-drift linear both; animation-timeline: auto, --hero; animation-range: normal, exit-crossing 0% exit-crossing 100%; }
+}
+@keyframes hero-drift { to { translate: var(--sx, 0px) var(--sy, 0px); } }
 .hpanel-in { aspect-ratio: 6 / 5; padding: 8px; border-radius: 24px; overflow: hidden; background: linear-gradient(135deg, rgba(var(--iv), 0.18), rgba(var(--iv), 0.05)); border: 1px solid rgba(var(--iv), 0.25); box-shadow: inset 0 1px 0 rgba(var(--iv), 0.45), 0 30px 70px rgba(0, 0, 0, 0.45); transform: rotateY(var(--ry)) rotateZ(var(--rz)); transition: scale 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out), border-color 0.6s; }
 .hpanel-in img { width: 100%; height: 100%; object-fit: cover; border-radius: 17px; }
 .hpanel figcaption { margin-top: 14px; padding-left: 14px; font: 600 10px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: rgba(var(--iv), 0.65); transform: rotateY(var(--ry)); }

@@ -46,6 +46,9 @@ from `main`, root). The owner is Aryan.
   head) until their drawings are decoded, so a first visit is as smooth as a reload; non-urgent setup (most letter
   splits, the boughs' brush) waits until the page is in. Lower-end machines (≤4 cores
   or ≤4 GB, set in the head as `.lite`) get a still canopy and no cursor-chasing boughs. Smoothness comes first.
+- Scrolling away from the hero, its stage rises and the panels drift apart on a CSS view timeline (`hero-drift`,
+  compositor-driven, so a fast flick never leaves them behind the text); ScrollTrigger scrubs them only where the
+  browser lacks `animation-timeline`.
 - The hero's title, the field guide's titles and every section heading (`h2.h2`) are split into letters (`.ch`) that
   lift and glow under the cursor, keeping their own colour.
 - The footer is columns, with the canopy's boughs growing up from the ground under it. The invitation asks for the
