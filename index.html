@@ -13,9 +13,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700;800&family=Martian+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=2026-11-25a" />
+    <link rel="stylesheet" href="styles.css?v=2026-11-26a" />
     <script>document.documentElement.classList.add('js');</script>
-    <script src="config.js?v=2026-11-25a"></script>
+    <script src="config.js?v=2026-11-26a"></script>
   </head>
   <body>
     <!-- One canopy over the whole page, fixed behind every section: light drifting through it and boughs growing in
@@ -230,7 +230,7 @@
             </li>
             </ol>
             <ol class="rw-list is-next" role="list">
-            <li class="rw-item" style="--i: 4; --c1: var(--bark); --c2: #141a12">
+            <li class="rw-item is-locked" style="--i: 4; --c1: var(--bark); --c2: #141a12">
               <button class="pass" type="button" aria-pressed="false"><span class="pass-in">
                 <span class="pass-face pass-front"><span class="pass-cafe">Partner café</span><span class="pass-main"><span class="pass-name">Lunch for two</span><span class="pass-price">1,800</span></span><span class="pass-tear"></span><span class="pass-tap">560 to go</span></span>
                 <span class="pass-face pass-back"><span class="pass-cafe">Lunch for two · 1,800</span><span class="pass-code">560 <small>to go</small></span><span class="pass-meter"><b></b></span><span class="pass-tear"></span><span class="pass-tap">About 19 more bags</span></span>
@@ -241,112 +241,144 @@
         </div>
       </section>
 
-      <!-- 5 · RANKS & STREAKS -->
+      <!-- 5 · RANKS & STREAKS — the week's top three standing on a podium, beside your streak as a month of days -->
       <section class="ranks">
         <header class="section-head reveal">
           <p class="eyebrow"><svg class="eb-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M5 20v-6h4v6M10 20V8h4v12M15 20v-4h4v4" /></svg>Ranks &amp; streaks</p>
           <h2 class="display h2">Your society, your streak, your stub.</h2>
         </header>
         <div class="ranks-stage">
-          <div class="stubs" aria-label="Top three this week">
-            <div class="stub s2"><span class="stub-rank">02</span><b>Arjun Verma</b><em>15 bags</em></div>
-            <div class="stub s1"><span class="stub-rank">01</span><b>Meera Kapoor</b><em>18 bags</em></div>
-            <div class="stub s3"><span class="stub-rank">03</span><b>Sana Dutta</b><em>12 bags</em></div>
-          </div>
+          <figure class="podium reveal">
+            <ol class="podium-steps">
+              <li class="step s1"><div class="stub"><span class="stub-rank">01</span><b>Meera Kapoor</b><em>18 bags</em></div><i class="block" aria-hidden="true"></i></li>
+              <li class="step s2"><div class="stub"><span class="stub-rank">02</span><b>Arjun Verma</b><em>15 bags</em></div><i class="block" aria-hidden="true"></i></li>
+              <li class="step s3"><div class="stub"><span class="stub-rank">03</span><b>Sana Dutta</b><em>12 bags</em></div><i class="block" aria-hidden="true"></i></li>
+            </ol>
+            <figcaption>This week's top three in your society</figcaption>
+          </figure>
           <div class="streak reveal">
-            <p class="mono-label">Streak milestones</p>
-            <div class="milestones">
-              <div class="ms"><span class="ms-dot"></span><b>7</b><em>days</em></div>
-              <div class="ms"><span class="ms-dot"></span><b>30</b><em>days</em></div>
-              <div class="ms"><span class="ms-dot"></span><b>100</b><em>days</em></div>
-              <i class="ms-track"><b></b></i>
-            </div>
-            <p class="streak-note">Bigger rewards at each milestone — and one free skipped day a month, so a busy Tuesday doesn't break it.</p>
+            <div class="streak-top"><p class="streak-n"><b>12</b>-day streak</p><p class="streak-next">18 days to the 30-day bonus</p></div>
+            <div class="cal" aria-hidden="true"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span><i class="d off" style="--i: 0"></i><i class="d off" style="--i: 1"></i><i class="d" style="--i: 2"></i><i class="d past" style="--i: 3"></i><i class="d past" style="--i: 4"></i><i class="d" style="--i: 5"></i><i class="d past" style="--i: 6"></i><i class="d" style="--i: 7"></i><i class="d past" style="--i: 8"></i><i class="d past" style="--i: 9"></i><i class="d" style="--i: 10"></i><i class="d past" style="--i: 11"></i><i class="d" style="--i: 12"></i><i class="d" style="--i: 13"></i><i class="d on" style="--i: 14"></i><i class="d on" style="--i: 15"></i><i class="d on" style="--i: 16"></i><i class="d on" style="--i: 17"></i><i class="d on" style="--i: 18"></i><i class="d skip" style="--i: 19"></i><i class="d on" style="--i: 20"></i><i class="d on" style="--i: 21"></i><i class="d on" style="--i: 22"></i><i class="d on" style="--i: 23"></i><i class="d on" style="--i: 24"></i><i class="d on today" style="--i: 25"></i><i class="d" style="--i: 26"></i><i class="d" style="--i: 27"></i><i class="d" style="--i: 28"></i><i class="d" style="--i: 29"></i><i class="d" style="--i: 30"></i><i class="d" style="--i: 31"></i><i class="d" style="--i: 32"></i><i class="d" style="--i: 33"></i><i class="d" style="--i: 34"></i></div>
+            <ul class="streak-ms"><li class="on">7 days ✓</li><li>30 days</li><li>100 days</li></ul>
+            <p class="streak-note">Bigger rewards at each milestone, and one free skipped day a month (the frosted one), so a busy Tuesday doesn't break it.</p>
           </div>
         </div>
       </section>
 
-      <!-- 6 · FOR RWAs -->
+      <!-- 6 · FOR RWAs — the committee's control room: the hotspot plan (drag to compare before and after), residents, pickups -->
       <section class="rwa" id="rwa">
-        <div class="rwa-copy reveal">
-          <p class="eyebrow"><svg class="eb-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V8l8-4 8 4v13M9 21v-5h6v5M8 11h.01M12 11h.01M16 11h.01" /></svg>For RWAs</p>
-          <h2 class="display h2">See your society get cleaner.</h2>
-          <ul class="ticks big">
-            <li>A hotspot plan of your society — blocks, heat and pins, never a street map</li>
-            <li>Every resident who joined, and the power to remove an outsider</li>
-            <li>Schedule pickups from your drop point, with slots and capacity</li>
-          </ul>
+        <header class="rwa-head reveal">
+          <div><p class="eyebrow"><svg class="eb-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V8l8-4 8 4v13M9 21v-5h6v5M8 11h.01M12 11h.01M16 11h.01" /></svg>For RWAs</p><h2 class="display h2">See your society get cleaner.</h2></div>
           <a class="btn magnetic" data-contact href="#">Bring it to your society</a>
-        </div>
-        <div class="rwa-stage">
-          <svg class="plan" viewBox="0 0 360 300" aria-label="A schematic society plan with litter hotspots">
-            <g class="plan-roads"><path d="M0 110 H360 M0 220 H360 M120 0 V300 M250 0 V300" /></g>
-            <g class="plan-blocks">
-              <rect x="14" y="14" width="92" height="82" rx="10" /><rect x="134" y="14" width="102" height="82" rx="10" /><rect x="264" y="14" width="82" height="82" rx="10" />
-              <rect x="14" y="124" width="92" height="82" rx="10" /><rect x="134" y="124" width="102" height="82" rx="10" /><rect x="264" y="124" width="82" height="82" rx="10" />
-              <rect x="14" y="234" width="92" height="52" rx="10" /><rect x="134" y="234" width="102" height="52" rx="10" /><rect x="264" y="234" width="82" height="52" rx="10" />
-            </g>
-            <defs><radialGradient id="heat-e"><stop offset="0" stop-color="rgb(214,132,74)" stop-opacity=".45" /><stop offset="1" stop-color="rgb(214,132,74)" stop-opacity="0" /></radialGradient><radialGradient id="heat-s"><stop offset="0" stop-color="rgb(178,199,75)" stop-opacity=".45" /><stop offset="1" stop-color="rgb(178,199,75)" stop-opacity="0" /></radialGradient></defs><g class="heat"><circle cx="190" cy="110" r="38" /><circle cx="70" cy="220" r="30" /><circle cx="300" cy="160" r="24" /></g>
-            <g class="pins">
-              <g class="pin" transform="translate(190 104)"><path d="M0 0c-9-11-13-17-13-23a13 13 0 0 1 26 0c0 6-4 12-13 23z" /><text y="-20">1</text></g>
-              <g class="pin" transform="translate(70 214)"><path d="M0 0c-9-11-13-17-13-23a13 13 0 0 1 26 0c0 6-4 12-13 23z" /><text y="-20">2</text></g>
-              <g class="pin" transform="translate(300 154)"><path d="M0 0c-9-11-13-17-13-23a13 13 0 0 1 26 0c0 6-4 12-13 23z" /><text y="-20">3</text></g>
-            </g>
-          </svg>
-          <div class="phone phone-admin"><img src="assets/shots/admin.webp" alt="The RWA admin overview" loading="lazy" width="390" height="844" /></div>
+        </header>
+        <div class="rwa-board">
+          <figure class="rb rb-hot glass reveal">
+            <figcaption class="rb-k"><svg class="rb-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z" /><circle cx="12" cy="10" r="2.4" /></svg><span><b>Hotspots</b>A plan of your society, with blocks, heat and pins, never a street map. Drag to see it before and after.</span></figcaption>
+            <div class="ba" style="--split: 50%">
+              <div class="ba-pane" aria-hidden="true"><svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="rgba(249,253,214,.1)" stroke-width="14"><path d="M0 110H600M0 220H600M150 0V300M300 0V300M450 0V300" /></g><g fill="rgba(249,253,214,.06)" stroke="rgba(249,253,214,.18)"><rect x="14" y="14" width="122" height="82" rx="10" /><rect x="14" y="124" width="122" height="82" rx="10" /><rect x="14" y="234" width="122" height="52" rx="10" /><rect x="164" y="14" width="122" height="82" rx="10" /><rect x="164" y="124" width="122" height="82" rx="10" /><rect x="164" y="234" width="122" height="52" rx="10" /><rect x="314" y="14" width="122" height="82" rx="10" /><rect x="314" y="124" width="122" height="82" rx="10" /><rect x="314" y="234" width="122" height="52" rx="10" /><rect x="464" y="14" width="122" height="82" rx="10" /><rect x="464" y="124" width="122" height="82" rx="10" /><rect x="464" y="234" width="122" height="52" rx="10" /></g><defs><radialGradient id="ba-b"><stop offset="0" stop-color="#c98a3a" stop-opacity="0.6" /><stop offset="1" stop-color="#c98a3a" stop-opacity="0" /></radialGradient></defs><circle cx="230" cy="96" r="72" fill="url(#ba-b)" /><circle cx="80" cy="206" r="62" fill="url(#ba-b)" /><circle cx="380" cy="150" r="60" fill="url(#ba-b)" /><circle cx="76" cy="56" r="46" fill="url(#ba-b)" /><circle cx="530" cy="250" r="52" fill="url(#ba-b)" /><circle cx="526" cy="60" r="46" fill="url(#ba-b)" /><circle cx="230" cy="262" r="46" fill="url(#ba-b)" /><g transform="translate(230 104)"><path d="M0 0c-9-11-13-17-13-23a13 13 0 0 1 26 0c0 6-4 12-13 23z" fill="#e1ec97" stroke="#101110" stroke-width="1.5" /><text y="-19" text-anchor="middle" font-family="Martian Mono" font-weight="700" font-size="12" fill="#151814">1</text></g><g transform="translate(80 214)"><path d="M0 0c-9-11-13-17-13-23a13 13 0 0 1 26 0c0 6-4 12-13 23z" fill="#e1ec97" stroke="#101110" stroke-width="1.5" /><text y="-19" text-anchor="middle" font-family="Martian Mono" font-weight="700" font-size="12" fill="#151814">2</text></g><g transform="translate(380 158)"><path d="M0 0c-9-11-13-17-13-23a13 13 0 0 1 26 0c0 6-4 12-13 23z" fill="#e1ec97" stroke="#101110" stroke-width="1.5" /><text y="-19" text-anchor="middle" font-family="Martian Mono" font-weight="700" font-size="12" fill="#151814">3</text></g></svg></div>
+              <div class="ba-pane ba-after" aria-hidden="true"><svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="rgba(249,253,214,.1)" stroke-width="14"><path d="M0 110H600M0 220H600M150 0V300M300 0V300M450 0V300" /></g><g fill="rgba(249,253,214,.06)" stroke="rgba(249,253,214,.18)"><rect x="14" y="14" width="122" height="82" rx="10" /><rect x="14" y="124" width="122" height="82" rx="10" /><rect x="14" y="234" width="122" height="52" rx="10" /><rect x="164" y="14" width="122" height="82" rx="10" /><rect x="164" y="124" width="122" height="82" rx="10" /><rect x="164" y="234" width="122" height="52" rx="10" /><rect x="314" y="14" width="122" height="82" rx="10" /><rect x="314" y="124" width="122" height="82" rx="10" /><rect x="314" y="234" width="122" height="52" rx="10" /><rect x="464" y="14" width="122" height="82" rx="10" /><rect x="464" y="124" width="122" height="82" rx="10" /><rect x="464" y="234" width="122" height="52" rx="10" /></g><defs><radialGradient id="ba-a"><stop offset="0" stop-color="#b2c74b" stop-opacity="0.45" /><stop offset="1" stop-color="#b2c74b" stop-opacity="0" /></radialGradient></defs><circle cx="230" cy="96" r="38" fill="url(#ba-a)" /><circle cx="380" cy="150" r="32" fill="url(#ba-a)" /><g transform="translate(230 90)"><circle r="11" fill="#b2c74b" /><path d="M-5 0l3.5 3.5L5-4" fill="none" stroke="#2a4224" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></g><g transform="translate(80 200)"><circle r="11" fill="#b2c74b" /><path d="M-5 0l3.5 3.5L5-4" fill="none" stroke="#2a4224" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></g><g transform="translate(380 144)"><circle r="11" fill="#b2c74b" /><path d="M-5 0l3.5 3.5L5-4" fill="none" stroke="#2a4224" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></g></svg></div>
+              <span class="ba-tag" aria-hidden="true">Before</span><span class="ba-tag is-after" aria-hidden="true">After</span>
+              <i class="ba-line" aria-hidden="true"><b>‹ ›</b></i>
+              <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="Compare the plan before and after" />
+            </div>
+          </figure>
+          <div class="rb rb-res glass reveal">
+            <p class="rb-k"><svg class="rb-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2" /><path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 5.5a3 3 0 0 1 0 6M18.5 19a5 5 0 0 0-3-4.6" /></svg><span><b>Residents</b>Everyone who joined, and the power to remove an outsider.</span></p>
+            <div class="rb-avs" aria-hidden="true"><i style="background: var(--fern)">MK</i><i style="background: var(--sage)">AV</i><i style="background: var(--moss)">SD</i><i style="background: var(--khaki)">AM</i><i style="background: var(--deep)">RS</i><i style="background: #223019">+</i></div>
+            <span class="rb-act" aria-hidden="true">Remove an outsider</span>
+          </div>
+          <div class="rb rb-pick glass reveal">
+            <p class="rb-k"><svg class="rb-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3" /><path d="M4 10h16M9 3v4M15 3v4" /></svg><span><b>Pickups</b>Schedule pickups from your drop point, with slots and capacity.</span></p>
+            <div class="rb-slots" aria-hidden="true"><span class="on">Tue · morning</span><span>Fri · evening</span></div>
+            <div class="rb-cap" aria-hidden="true"><b></b></div>
+          </div>
         </div>
       </section>
 
-      <!-- 7 · SCREENS -->
+      <!-- 7 · SCREENS — a bento of the app's screens; hovering one opens it into a whole phone while the others make room -->
       <section class="screens">
         <header class="section-head reveal">
           <p class="eyebrow"><svg class="eb-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5" /><path d="M11 18.5h2" /></svg>Inside the app</p>
           <h2 class="display h2">Made to feel like dappled light.</h2>
         </header>
-        <div class="reel" aria-label="App screens">
-          <div class="reel-track">
-            <figure class="phone"><img src="assets/shots/welcome.webp" alt="Welcome" loading="lazy" /></figure>
-            <figure class="phone"><img src="assets/shots/home.webp" alt="Home" loading="lazy" /></figure>
-            <figure class="phone"><img src="assets/shots/scan.webp" alt="Collect" loading="lazy" /></figure>
-            <figure class="phone"><img src="assets/shots/report.webp" alt="Report" loading="lazy" /></figure>
-            <figure class="phone"><img src="assets/shots/marketplace.webp" alt="Rewards" loading="lazy" /></figure>
-            <figure class="phone"><img src="assets/shots/leaderboard.webp" alt="Ranks" loading="lazy" /></figure>
-            <figure class="phone"><img src="assets/shots/profile.webp" alt="Profile" loading="lazy" /></figure>
-            <figure class="phone"><img src="assets/shots/hotspots.webp" alt="RWA hotspots" loading="lazy" /></figure>
-          </div>
+        <div class="sb reveal" data-open="-1">
+          <figure class="sb-cell" tabindex="0" style="--crop: 50% 16%">
+            <img class="sb-crop" src="assets/shots/home.webp" alt="" loading="lazy" />
+            <div class="sb-open"><div class="sb-phone"><img src="assets/shots/home.webp" alt="The Home screen" loading="lazy" /></div><p><b>Home</b>Your streak, your squad and the month's goal, the moment you open it.</p></div>
+            <figcaption>Home</figcaption>
+          </figure>
+          <figure class="sb-cell" tabindex="0" style="--crop: 50% 8%">
+            <img class="sb-crop" src="assets/shots/scan.webp" alt="" loading="lazy" />
+            <div class="sb-open"><div class="sb-phone"><img src="assets/shots/scan.webp" alt="The Collect screen" loading="lazy" /></div><p><b>Collect</b>The camera checks it's loose litter in reach; two photos make a bag.</p></div>
+            <figcaption>Collect</figcaption>
+          </figure>
+          <figure class="sb-cell" tabindex="0" style="--crop: 50% 32%">
+            <img class="sb-crop" src="assets/shots/report.webp" alt="" loading="lazy" />
+            <div class="sb-open"><div class="sb-phone"><img src="assets/shots/report.webp" alt="The Report screen" loading="lazy" /></div><p><b>Report</b>Open cases on a map. Point one out without touching it.</p></div>
+            <figcaption>Report</figcaption>
+          </figure>
+          <figure class="sb-cell" tabindex="0" style="--crop: 50% 14%">
+            <img class="sb-crop" src="assets/shots/marketplace.webp" alt="" loading="lazy" />
+            <div class="sb-open"><div class="sb-phone"><img src="assets/shots/marketplace.webp" alt="The Rewards screen" loading="lazy" /></div><p><b>Rewards</b>Today's menu from partner cafés, cheapest first.</p></div>
+            <figcaption>Rewards</figcaption>
+          </figure>
+          <figure class="sb-cell" tabindex="0" style="--crop: 50% 12%">
+            <img class="sb-crop" src="assets/shots/leaderboard.webp" alt="" loading="lazy" />
+            <div class="sb-open"><div class="sb-phone"><img src="assets/shots/leaderboard.webp" alt="The Ranks screen" loading="lazy" /></div><p><b>Ranks</b>This week's leaders in your society, and where you stand.</p></div>
+            <figcaption>Ranks</figcaption>
+          </figure>
+          <figure class="sb-cell" tabindex="0" style="--crop: 50% 44%">
+            <img class="sb-crop" src="assets/shots/profile.webp" alt="" loading="lazy" />
+            <div class="sb-open"><div class="sb-phone"><img src="assets/shots/profile.webp" alt="The Profile screen" loading="lazy" /></div><p><b>Profile</b>Your stamps, your bags and every coin you've earned.</p></div>
+            <figcaption>Profile</figcaption>
+          </figure>
         </div>
       </section>
 
-      <!-- 8 · FILM -->
+      <!-- 8 · FILM — watched through the canopy: boughs grow over the frame's corners and part when it plays -->
       <section class="film" id="film">
-        <header class="section-head reveal">
+        <div class="film-copy reveal">
           <p class="eyebrow"><svg class="eb-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M10 8.5v7l5.5-3.5z" /></svg>The film</p>
           <h2 class="display h2">Sixty seconds on one street.</h2>
-        </header>
-        <div class="film-frame reveal">
-          <div class="film-poster">
-            <img data-poster src="assets/shots/home.webp" alt="" />
-            <button class="film-play magnetic" type="button" aria-label="Play the film"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></button>
-            <p class="film-soon mono-label">Film coming soon</p>
+          <p class="lede">One street, one morning: noticing a wrapper, picking it up, dropping it at the society's point, and the coins that follow.</p>
+        </div>
+        <div class="film-window reveal">
+          <div class="film-frame">
+            <div class="film-poster">
+              <img data-poster src="assets/img/pile.webp" alt="" />
+              <button class="film-play magnetic" type="button" aria-label="Play the film"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></button>
+              <p class="film-soon">Film coming soon</p>
+            </div>
           </div>
+          <div class="film-leaves" aria-hidden="true"><img class="fl fl1" src="assets/img/canopy/neem1-near.svg" alt="" /><img class="fl fl2" src="assets/img/canopy/mango1-near.svg" alt="" /><img class="fl fl3" src="assets/img/canopy/fork1-near.svg" alt="" /><img class="fl fl4" src="assets/img/canopy/twig2-near.svg" alt="" /></div>
         </div>
       </section>
 
-      <!-- 9 · NUMBERS -->
+      <!-- 9 · NUMBERS — a station board: split-flap tiles flick over to each number as it arrives -->
       <section class="numbers">
-        <div class="num reveal"><b data-count="40">0</b><span>starter coins when you join</span></div>
-        <div class="num reveal"><b data-count="30">0</b><span>coins for every verified bag</span></div>
-        <div class="num reveal"><b data-count="2">0</b><span>photos make a bag</span></div>
-        <div class="num reveal"><b data-count="100">0</b><span>days to the biggest streak bonus</span></div>
+        <div class="board">
+          <div class="fl-item reveal"><p class="flaps"><span class="sr-only">40</span><span aria-hidden="true">0</span><span aria-hidden="true">4</span><span aria-hidden="true">0</span></p><p class="fl-lab">starter coins when you join</p></div>
+          <div class="fl-item reveal"><p class="flaps"><span class="sr-only">30</span><span aria-hidden="true">0</span><span aria-hidden="true">3</span><span aria-hidden="true">0</span></p><p class="fl-lab">coins for every verified bag</p></div>
+          <div class="fl-item reveal"><p class="flaps"><span class="sr-only">2</span><span aria-hidden="true">0</span><span aria-hidden="true">0</span><span aria-hidden="true">2</span></p><p class="fl-lab">photos make a bag</p></div>
+          <div class="fl-item reveal"><p class="flaps"><span class="sr-only">100</span><span aria-hidden="true">1</span><span aria-hidden="true">0</span><span aria-hidden="true">0</span></p><p class="fl-lab">days to the biggest streak bonus</p></div>
+        </div>
       </section>
 
-      <!-- 10 · CTA -->
+      <!-- 10 · CTA — an invitation to your RWA: write your society's name in and send it -->
       <section class="cta">
-        <div class="cta-card reveal">
-          <div class="coin coin-cta" aria-hidden="true"><span>✦</span></div>
-          <h2 class="display h2">Bring <span data-app-name>Cathartic</span> to your street.</h2>
-          <p class="lede">We launch society by society in Gurgaon, starting with each RWA. Tell us about yours and we'll be in touch.</p>
-          <a class="btn btn-big btn-coin magnetic" data-contact href="#">Get early access<span class="coin-chip" aria-hidden="true"><b>+40</b></span></a>
+        <div class="invite">
+          <div class="inv-copy reveal">
+            <h2 class="display h2">Bring <span data-app-name>Cathartic</span> to your street.</h2>
+            <p class="lede">We launch society by society in Gurgaon, starting with each RWA. Write your society's name in and send it; we'll be in touch.</p>
+          </div>
+          <div class="letter glass reveal">
+            <p class="eyebrow"><svg class="eb-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" /><path d="M4 7l8 6 8-6" /></svg>An invitation</p>
+            <label class="letter-to" for="society">To the RWA of</label>
+            <input class="letter-field" id="society" type="text" placeholder="your society's name" autocomplete="organization" />
+            <p class="letter-body">Residents pick up loose litter, drop it at the society's point, and earn coins they spend at partner cafés.</p>
+            <a class="btn btn-big btn-coin magnetic" data-contact href="#">Get early access<span class="coin-chip" aria-hidden="true"><b>+40</b></span></a>
+            <div class="coin letter-seal" aria-hidden="true"><span>✦</span></div>
+          </div>
         </div>
       </section>
     </main>
@@ -359,6 +391,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="main.js?v=2026-11-25a"></script>
+    <script src="main.js?v=2026-11-26a"></script>
   </body>
 </html>

@@ -22,6 +22,7 @@
     film.classList.add('has-video');
     $('.film-play').addEventListener('click', () => {
       const frame = $('.film-frame');
+      $('.film-window').classList.add('is-playing'); // the boughs part
       const isFile = /\.(mp4|webm|mov)(\?|$)/i.test(SITE.video);
       frame.innerHTML = isFile
         ? `<video src="${SITE.video}" controls autoplay playsinline></video>`
@@ -46,26 +47,31 @@
   );
   $$('.reveal').forEach((el) => io.observe(el));
 
-  /* ── Counters ───────────────────────────────────────────────────────────────── */
-  const countIo = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((e) => {
-        if (!e.isIntersecting) return;
-        countIo.unobserve(e.target);
-        const end = Number(e.target.dataset.count);
-        if (calm) return void (e.target.textContent = end);
-        const t0 = performance.now();
-        const dur = 1400;
-        const tick = (t) => {
-          const p = Math.min(1, (t - t0) / dur);
-          e.target.textContent = Math.round(end * (1 - Math.pow(1 - p, 4)));
-          if (p < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      }),
-    { threshold: 0.6 },
-  );
-  $$('[data-count]').forEach((el) => countIo.observe(el));
+  /* ── Numbers: the station board flicks over to each number ──────────────────── */
+  if (!calm) {
+    const flapIo = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          flapIo.unobserve(e.target);
+          // Each tile rolls forward through a few digits and lands on its own, the later tiles a little later.
+          $$('span[aria-hidden]', e.target).forEach((s, i) => {
+            const end = +s.textContent;
+            let k = 5 + i * 2;
+            const tick = () => {
+              s.textContent = (end - k + 100) % 10;
+              s.classList.remove('flip');
+              void s.offsetWidth;
+              s.classList.add('flip');
+              if (k-- > 0) setTimeout(tick, 75);
+            };
+            tick();
+          });
+        }),
+      { threshold: 0.6 },
+    );
+    $$('.flaps').forEach((f) => flapIo.observe(f));
+  }
 
   /* ── Scroll: progress, the rail's current section, the top corners ─────────── */
   const bar = $('.progress');
@@ -119,11 +125,7 @@
       }
     }),
   );
-  $$('.hero, .marquee, .how, .screens, .rwa, .film, .cta').forEach((el) => seen.observe(el));
-
-  /* ── Reel: a second copy so the loop never shows a seam ─────────────────────── */
-  const reel = $('.reel-track');
-  if (reel) [...reel.children].forEach((c) => reel.appendChild(Object.assign(c.cloneNode(true), { ariaHidden: 'true' })));
+  $$('.hero, .marquee, .how, .rwa, .film, .cta').forEach((el) => seen.observe(el));
 
   /* ── Pointer: glow, tilt, magnetic buttons (fine pointers only) ─────────────── */
   if (fine && !calm) {
@@ -253,11 +255,39 @@
     flip(p, on);
   }));
 
+  /* ── For RWAs: drag across the plan to compare it before and after ───────────── */
+  const ba = $('.ba');
+  const baRange = ba && $('.ba-range', ba);
+  const split = (v) => ba.style.setProperty('--split', `${v}%`);
+  baRange?.addEventListener('input', () => split(baRange.value));
+
+  /* ── Inside the app: hovering (or focusing) a screen opens it in the bento ──── */
+  const sb = $('.sb');
+  if (sb) {
+    const sbCells = $$('.sb-cell', sb);
+    const open = (i) => ((sb.dataset.open = i), sbCells.forEach((c, k) => c.classList.toggle('is-open', k === i)));
+    sbCells.forEach((c, i) => {
+      c.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && open(i));
+      c.addEventListener('focus', () => open(i));
+    });
+    sb.addEventListener('pointerleave', (e) => e.pointerType === 'mouse' && open(-1));
+    sb.addEventListener('focusout', (e) => sb.contains(e.relatedTarget) || open(-1));
+  }
+
+  /* ── The invitation: the society's name rides along in the email's subject ──── */
+  const society = $('#society');
+  const send = society?.closest('.letter').querySelector('[data-contact]');
+  if (society && send && /^mailto:/i.test(SITE.contact || '')) {
+    const to = SITE.contact.split('?')[0];
+    society.addEventListener('input', () => {
+      const v = society.value.trim();
+      send.href = `${to}?subject=${encodeURIComponent(v ? `Early access for ${v}` : 'Early access')}`;
+    });
+    society.addEventListener('keydown', (e) => e.key === 'Enter' && send.click());
+  }
+
   /* ── The finished state, for "reduce motion" or no GSAP ─────────────────────── */
-  const settle = () => {
-    $$('.ms').forEach((m) => m.classList.add('on'));
-    $('.ms-track b').style.transform = 'none';
-  };
+  const settle = () => {};
   if (calm || !hasGsap) return settle();
 
   /* ── GSAP from here ─────────────────────────────────────────────────────────── */
@@ -425,24 +455,15 @@
     },
   });
 
-  // Ranks: the three stubs fan out of a stack (as wide as the screen allows); the streak track fills.
-  const fan = innerWidth < 561 ? 112 : innerWidth < 961 ? 170 : 205;
-  gsap
-    .timeline({ scrollTrigger: { trigger: '.stubs', start: 'top 70%' } })
-    .from('.stub', { y: 80, opacity: 0, duration: 0.8, ease, stagger: 0.1 })
-    .to('.s2', { x: -fan, rotate: -9, y: 26, duration: 1.2, ease: 'back.out(1.3)' }, 0.6)
-    .to('.s3', { x: fan, rotate: 9, y: 26, duration: 1.2, ease: 'back.out(1.3)' }, 0.6)
-    .to('.s1', { y: -14, duration: 1.2, ease: 'back.out(1.3)' }, 0.6);
-  const msTl = gsap.timeline({ scrollTrigger: { trigger: '.streak', start: 'top 70%' } });
-  msTl.to('.ms-track b', { scaleX: 1, duration: 1.8, ease: 'power2.inOut' });
-  $$('.ms').forEach((m, i) => msTl.call(() => m.classList.add('on'), null, i * 0.85));
-
-  // RWA: pins drop onto the plan, the phone rises past it.
-  gsap.from('.pin', { y: -70, opacity: 0, duration: 0.9, ease: 'bounce.out', stagger: 0.25, scrollTrigger: { trigger: '.plan', start: 'top 70%' } });
-  gsap.from('.plan-blocks rect', { opacity: 0, scale: 0.85, transformOrigin: 'center', duration: 0.7, ease, stagger: 0.04, scrollTrigger: { trigger: '.plan', start: 'top 75%' } });
-  gsap.fromTo('.phone-admin', { y: 120 }, { y: -60, ease: 'none', scrollTrigger: { trigger: '.rwa', start: 'top bottom', end: 'bottom top', scrub: true } });
-
-  // Film and CTA: a slow push-in as they arrive.
-  gsap.from('.film-frame', { scale: 0.9, duration: 1.4, ease, scrollTrigger: { trigger: '.film', start: 'top 75%' } });
-  gsap.from('.cta-card', { y: 60, scale: 0.96, duration: 1.4, ease, scrollTrigger: { trigger: '.cta', start: 'top 80%' } });
+  // For RWAs: the plan's split sweeps across once as it arrives, from mostly "before" to the middle.
+  if (ba) {
+    split(88);
+    const sweep = { v: 88 };
+    ScrollTrigger.create({
+      trigger: ba,
+      start: 'top 75%',
+      once: true,
+      onEnter: () => gsap.to(sweep, { v: 50, duration: 1.6, delay: 0.4, ease: 'power2.inOut', onUpdate: () => (split(sweep.v), (baRange.value = sweep.v)) }),
+    });
+  }
 })();
