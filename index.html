@@ -13,14 +13,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700;800&family=Martian+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=2026-11-28c" />
+    <link rel="stylesheet" href="styles.css?v=2026-11-29a" />
     <script>document.documentElement.classList.add('js'); if ((navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4) document.documentElement.classList.add('lite');</script>
-    <script src="config.js?v=2026-11-28c"></script>
+    <script src="config.js?v=2026-11-29a"></script>
   </head>
   <body>
-    <!-- Until the page is ready (fonts, the hero's images, the motion), a curtain with the coin holds the screen, so nothing
-         is ever seen half-built. main.js lifts it; it lifts itself after a few seconds if the script never runs. -->
-    <div class="curtain" aria-hidden="true"><div class="coin curtain-coin"><svg class="coin-leaf" viewBox="0 0 64 64" aria-hidden="true"><g transform="rotate(45 32 32)" fill="none" stroke="#1d2719" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M32 19.5c6.8 4.8 6.8 20.2 0 25-6.8-4.8-6.8-20.2 0-25z" /><path d="M32 26.5v13" /></g></svg></div></div>
+    <!-- Until the page is ready (fonts, the hero's images, the motion), a curtain holds the screen: focus brackets close in
+         on the coin as it all comes in, lock on, and the coin rises into the name's mark. Nothing is seen half-built. -->
+    <div class="curtain" aria-hidden="true"><div class="curtain-sight"><i></i><i></i><i></i><i></i></div><div class="curtain-fly"><div class="coin curtain-coin"><svg class="coin-leaf" viewBox="0 0 64 64" aria-hidden="true"><g transform="rotate(45 32 32)" fill="none" stroke="#1d2719" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M32 19.5c6.8 4.8 6.8 20.2 0 25-6.8-4.8-6.8-20.2 0-25z" /><path pathLength="1" d="M32 26.5v13" /></g></svg></div></div></div>
     <!-- One canopy over the whole page, fixed behind every section: light drifting through it and boughs growing in
          from the side edges (the hero adds the boughs along its top). Grain on top, and a glow that follows the pointer. -->
     <div class="sky" aria-hidden="true">
@@ -313,32 +313,32 @@
           <h2 class="display h2">Made to feel like dappled light.</h2>
         </header>
         <div class="sb reveal" data-open="-1">
-          <figure class="sb-cell" tabindex="0" style="--k: 0; --crop: 50% 16%">
+          <figure class="sb-cell" tabindex="0" style="--k: 0; --oy: 9%">
             <img class="sb-crop" src="assets/shots/home.webp" alt="" loading="lazy" />
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/home.webp" alt="The Home screen" loading="lazy" /></div><p><b>Home</b>Your streak, your squad and the month's goal, the moment you open it.</p></div>
             <figcaption>Home</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 1; --crop: 50% 8%">
+          <figure class="sb-cell" tabindex="0" style="--k: 1; --oy: 4.5%">
             <img class="sb-crop" src="assets/shots/scan.webp" alt="" loading="lazy" />
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/scan.webp" alt="The Collect screen" loading="lazy" /></div><p><b>Collect</b>The camera checks it's loose litter in reach; two photos make a bag.</p></div>
             <figcaption>Collect</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 2; --crop: 50% 32%">
+          <figure class="sb-cell" tabindex="0" style="--k: 2; --oy: 18%">
             <img class="sb-crop" src="assets/shots/report.webp" alt="" loading="lazy" />
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/report.webp" alt="The Report screen" loading="lazy" /></div><p><b>Report</b>Open cases on a map. Point one out without touching it.</p></div>
             <figcaption>Report</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 3; --crop: 50% 14%">
+          <figure class="sb-cell" tabindex="0" style="--k: 3; --ob: 49%">
             <img class="sb-crop" src="assets/shots/marketplace.webp" alt="" loading="lazy" />
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/marketplace.webp" alt="The Rewards screen" loading="lazy" /></div><p><b>Rewards</b>Today's menu from partner cafés, cheapest first.</p></div>
             <figcaption>Rewards</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 4; --crop: 50% 12%">
+          <figure class="sb-cell" tabindex="0" style="--k: 4; --ob: 50%">
             <img class="sb-crop" src="assets/shots/leaderboard.webp" alt="" loading="lazy" />
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/leaderboard.webp" alt="The Ranks screen" loading="lazy" /></div><p><b>Ranks</b>This week's leaders in your society, and where you stand.</p></div>
             <figcaption>Ranks</figcaption>
           </figure>
-          <figure class="sb-cell" tabindex="0" style="--k: 5; --crop: 50% 44%">
+          <figure class="sb-cell" tabindex="0" style="--k: 5; --ob: 32%">
             <img class="sb-crop" src="assets/shots/profile.webp" alt="" loading="lazy" />
             <div class="sb-open"><div class="sb-phone"><img src="assets/shots/profile.webp" alt="The Profile screen" loading="lazy" /></div><p><b>Profile</b>Your stamps, your bags and every coin you've earned.</p></div>
             <figcaption>Profile</figcaption>
@@ -421,6 +421,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="main.js?v=2026-11-28c"></script>
+    <script src="main.js?v=2026-11-29a"></script>
   </body>
 </html>

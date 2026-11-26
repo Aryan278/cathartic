@@ -31,18 +31,22 @@ from `main`, root). The owner is Aryan.
   screen, its name and progress sit in the middle of the top bar (`.top-step`).
 - The rest: Ranks & streaks is a podium of stubs beside a month of the streak; For RWAs a control room of glass tiles
   whose hotspot plan is a draggable before/after (a range input); Inside the app a bento of screens that opens one into
-  a whole phone on hover (grid tracks animate; phones get a strip); the film a vertical reel cover; the numbers a
+  a whole phone on hover (grid tracks glide; phones get a strip). Nothing inside a tile may depend on the tile's size
+  (crops and the open view are sized in cq units of the bento and pinned to the tile's outer edge), so the glide only
+  clips and never re-lays out or redraws; keep it that way; the film a vertical reel cover; the numbers a
   split-flap board; the closing call an invitation card whose blank fills the email subject.
 - Coins are the app's coin: a green disc with a ridged, poker-chip edge and a lighter face, with a leaf or a value on
   it (`.coin`, `.coin-chip`; `.coin-ic` is the small SVG one).
-- Loading: a curtain (`.curtain`, the coin turning) holds the screen until the fonts, the hero's images and the canopy's
-  drawings are in (3 s at most); then it lifts and the hero's intro and the reveals play. Lower-end machines (≤4 cores
+- Loading: a curtain (`.curtain`) holds the screen until the fonts, the hero's images and the canopy's drawings are in
+  (1 s at least, 3 s at most): focus brackets close in on the coin as they arrive (`--p`), lock on, and the coin rises
+  into the name's mark in the corner while the hero's intro and the reveals play; then the curtain is removed. Lower-end machines (≤4 cores
   or ≤4 GB, set in the head as `.lite`) get a still canopy and no cursor-chasing boughs. Smoothness comes first.
-- The hero's title and the field guide's titles are split into letters (`.ch`) that lift and light up under the cursor.
+- The hero's title, the field guide's titles and every section heading (`h2.h2`) are split into letters (`.ch`) that
+  lift and glow under the cursor, keeping their own colour.
 - The footer is columns, with the canopy's boughs growing up from the ground under it. The invitation asks for the
   society's email and puts it in the body of the email it opens.
-- Cursors (fine pointers only): a classic black arrow with a white rim, and a white pointing hand with a black outline,
-  like macOS (and the reference site). SVG
+- Cursors (fine pointers only): a classic black arrow with a white rim, and a white pointing hand with a black outline
+  (index finger up, thumb out to the left, the folded fingers with long creases), like macOS. SVG
   sources in `assets/cursors/`, with 1x/2x PNGs rendered from them (the CSS uses `image-set`). Bump the `?v=` on
   their URLs in `styles.css` when you redraw them, or browsers keep showing the old ones.
 - `assets/shots/` are real app screenshots (demo data); `assets/img/` holds the app's field

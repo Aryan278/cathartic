@@ -36,12 +36,35 @@
   const lite = document.documentElement.classList.contains('lite');
   const loaded = (img) => (img.complete ? Promise.resolve() : new Promise((r) => (img.addEventListener('load', r, { once: true }), img.addEventListener('error', r, { once: true }))));
   const drawings = [...new Set($$('.hero-field .leaf b, .sky .leaf b').map((b) => getComputedStyle(b).backgroundImage.slice(5, -2)).filter(Boolean))];
-  const ready = Promise.race([
-    Promise.all([document.fonts?.ready, ...$$('.hero img, .sky img').map(loaded), ...drawings.map((src) => loaded(Object.assign(new Image(), { src })))]),
-    new Promise((r) => setTimeout(r, 3000)),
-  ]).then(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+  const parts = [document.fonts?.ready, ...$$('.hero img, .sky img').map(loaded), ...drawings.map((src) => loaded(Object.assign(new Image(), { src })))];
+  const curtain = $('.curtain');
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  // The curtain's brackets close in as the parts arrive (--p), and lock on once they're all in.
+  let got = 0;
+  parts.forEach((p) => Promise.resolve(p).then(() => curtain?.style.setProperty('--p', (++got / parts.length).toFixed(2))));
+  const ready = Promise.race([Promise.all(parts), wait(3000)])
+    // A second on screen at least, so the brackets are seen closing in rather than flashing past.
+    .then(() => wait(calm ? 0 : 1000 - performance.now()))
+    .then(() => {
+      curtain?.style.setProperty('--p', 1);
+      curtain?.classList.add('is-locked');
+      return wait(calm || !curtain ? 0 : 420);
+    })
+    .then(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
   ready.then(() => {
+    // The coin rises into the name's mark in the corner (its centre and size), then the curtain clears.
+    const coin = $('.curtain-coin');
+    const a = coin?.getBoundingClientRect();
+    const b = $('.brand-mark')?.getBoundingClientRect();
+    if (a && b?.width) {
+      const fly = coin.parentElement.style;
+      fly.setProperty('--fx', `${(b.left + b.width / 2 - a.left - a.width / 2).toFixed(1)}px`);
+      fly.setProperty('--fy', `${(b.top + b.height / 2 - a.top - a.height / 2).toFixed(1)}px`);
+      fly.setProperty('--fs', (b.width / a.width).toFixed(3));
+    }
     document.documentElement.classList.add('is-ready');
+    // Once it has cleared, the curtain goes altogether, so nothing in it keeps ticking behind the page.
+    setTimeout(() => curtain?.remove(), 1400);
     // Then, quietly, fetch the images further down, so they're there before anyone scrolls to them.
     setTimeout(() => $$('img[loading="lazy"]').forEach((img) => (img.loading = 'eager')), 1200);
   });
@@ -55,7 +78,7 @@
       .join(' ');
   });
 
-  /* ── Letters that lift when you point at them (the hero's title, the field guide's) ── */
+  /* ── Letters that lift when you point at them (the hero's title, the field guide's, every section's) ── */
   if (fine) {
     const letters = (root) => {
       root.setAttribute('aria-label', root.textContent.replace(/\s+/g, ' ').trim());
@@ -76,7 +99,7 @@
       });
       root.classList.add('has-ch');
     };
-    $$('.hero h1, .fg-title').forEach(letters);
+    $$('.hero h1, .fg-title, h2.h2').forEach(letters);
     if (calm || !hasGsap) $('.hero h1').classList.add('intro-done');
     // The second line's gradient runs across the whole line: each letter carries its own slice of it.
     const lit = $('.hero .lit');
@@ -340,12 +363,15 @@
   const sb = $('.sb');
   if (sb) {
     const sbCells = $$('.sb-cell', sb);
-    const open = (i) => ((sb.dataset.open = i), sbCells.forEach((c, k) => c.classList.toggle('is-open', k === i)));
+    const open = (i) => +sb.dataset.open !== i && ((sb.dataset.open = i), sbCells.forEach((c, k) => c.classList.toggle('is-open', k === i)));
+    // A moment's grace, so a cursor passing over the bento on its way somewhere doesn't set every tile moving.
+    let pending;
+    const soon = (i, ms) => (clearTimeout(pending), (pending = setTimeout(() => open(i), ms)));
     sbCells.forEach((c, i) => {
-      c.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && open(i));
+      c.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && soon(i, 80));
       c.addEventListener('focus', () => open(i));
     });
-    sb.addEventListener('pointerleave', (e) => e.pointerType === 'mouse' && open(-1));
+    sb.addEventListener('pointerleave', (e) => e.pointerType === 'mouse' && soon(-1, 180));
     sb.addEventListener('focusout', (e) => sb.contains(e.relatedTarget) || open(-1));
     sb.addEventListener('hint', (e) => open(e.detail));
   }
